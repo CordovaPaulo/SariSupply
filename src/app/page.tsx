@@ -4,6 +4,24 @@ import styles from "./page.module.css";
 export default function Home() {
   return (
     <div className={styles.page}>
+      <header className={styles.header}>
+        <nav className={styles.nav}>
+          <div className={styles.logo}>
+            <Image
+              src="/next.svg"
+              alt="SariSupply Logo"
+              width={120}
+              height={25}
+            />
+          </div>
+          <ul className={styles.navLinks}>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/products">Products</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </nav>
+      </header>
       <main className={styles.main}>
         <Image
           className={styles.logo}
