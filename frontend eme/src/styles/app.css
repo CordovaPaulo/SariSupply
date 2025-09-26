@@ -1,0 +1,127 @@
+/* Global semantic styles for the Sari-Sari Store UI */
+
+/* Layout */
+.page {
+  min-height: 100vh;
+  background-image: linear-gradient(to bottom right in oklab, var(--color-orange-50), var(--color-yellow-50), var(--color-red-50));
+}
+
+/* Header */
+.header {
+  background-image: linear-gradient(to right in oklab, var(--color-orange-500), var(--color-red-500), var(--color-pink-500));
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+}
+.header-inner { max-width: var(--container-6xl); margin-inline: auto; }
+.header-bar { display: flex; align-items: center; justify-content: space-between; height: 4rem; }
+.brand { display: flex; align-items: center; gap: 1rem; }
+.brand-logo { background: #fff; padding: 0.75rem; border-radius: calc(var(--radius) + 4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); }
+.brand-title { display: flex; flex-direction: column; justify-content: center; }
+.brand-title h1 { color: #fff; font-size: var(--text-2xl); font-weight: var(--font-weight-bold); line-height: 1.25; }
+.brand-subtitle { color: var(--color-orange-100); font-size: var(--text-base); font-weight: var(--font-weight-medium); }
+.header-btn { background: #fff; color: var(--color-orange-600); padding: 0.5rem 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+.header-btn:hover { background: var(--color-orange-50); }
+
+/* Tabs */
+.tabs-wrap { background-image: linear-gradient(to right in oklab, var(--color-orange-500), var(--color-red-500), var(--color-pink-500)); padding-bottom: 1rem; }
+.tabs-inner { max-width: var(--container-6xl); margin-inline: auto; padding-inline: 1rem; display: flex; justify-content: center; }
+.tabs-list { background: rgba(255,255,255,0.2); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 0; }
+.tabs-trigger { color: #fff; }
+.tabs-trigger[data-state="active"] { background: #fff; color: var(--color-orange-600); }
+
+/* Main container */
+.container { max-width: var(--container-6xl); margin-inline: auto; padding: 1rem; }
+
+/* Dashboard cards */
+.cards { display: grid; grid-template-columns: repeat(1, minmax(0,1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+@media (width >= 48rem) { .cards { grid-template-columns: repeat(4, minmax(0,1fr)); } }
+.stat { color: #fff; border: 0; background-color: transparent !important; }
+.stat:hover { background-color: transparent !important; }
+.stat .inner { padding: 1rem; }
+.stat .row { display: flex; align-items: center; justify-content: space-between; }
+.stat .hint { font-size: var(--text-sm); }
+.stat-blue .hint { color: var(--color-blue-100); }
+.stat-green .hint { color: var(--color-green-100); }
+.stat-red .hint { color: var(--color-red-100); }
+.stat-orange .hint { color: var(--color-orange-100); }
+.stat .value { font-size: var(--text-2xl); font-weight: var(--font-weight-bold); }
+.stat-blue { background: linear-gradient(to bottom right in oklab, var(--color-blue-500), var(--color-blue-600)) !important; }
+.stat-green { background: linear-gradient(to bottom right in oklab, var(--color-green-500), var(--color-green-600)) !important; }
+.stat-red { background: linear-gradient(to bottom right in oklab, var(--color-red-500), var(--color-red-600)) !important; }
+.stat-orange { background: linear-gradient(to bottom right in oklab, var(--color-orange-500), var(--color-orange-600)) !important; }
+/* Ensure no hover-to-white effect on stat cards */
+.stat-blue:hover { background: linear-gradient(to bottom right in oklab, var(--color-blue-500), var(--color-blue-600)) !important; }
+.stat-green:hover { background: linear-gradient(to bottom right in oklab, var(--color-green-500), var(--color-green-600)) !important; }
+.stat-red:hover { background: linear-gradient(to bottom right in oklab, var(--color-red-500), var(--color-red-600)) !important; }
+.stat-orange:hover { background: linear-gradient(to bottom right in oklab, var(--color-orange-500), var(--color-orange-600)) !important; }
+
+/* Alerts */
+.alert { border-color: var(--color-red-200); background: var(--color-red-50); }
+.alert-title { color: var(--color-red-800); }
+.alert-list { display: grid; gap: 0.5rem; }
+.alert-item { display: flex; align-items: center; justify-content: space-between; background: #fff; padding: 0.75rem; border-radius: var(--radius); border: 1px solid var(--color-red-200); }
+.alert-item .name { font-weight: var(--font-weight-medium); color: var(--color-red-800); }
+.alert-item .info { font-size: var(--text-sm); color: var(--color-red-600); }
+
+/* Recent items card and table wrappers */
+.card-soft { border-color: var(--color-orange-200); background: var(--color-orange-50); }
+.table-wrap { background: #fff; border: 1px solid var(--color-orange-200); border-radius: var(--radius); overflow: hidden; }
+.thead { background-image: linear-gradient(to right in oklab, var(--color-orange-100), var(--color-yellow-100)); }
+.th { font-weight: var(--font-weight-semibold); color: var(--color-orange-800); }
+.trow { transition: background-color var(--default-transition-duration) var(--default-transition-timing-function); }
+.trow:hover { background: var(--color-orange-50); }
+.trow-alt { background: #fff; }
+.trow-alt:nth-child(even) { background: color-mix(in oklab, var(--color-orange-50) 25%, white); }
+.cell-strong { font-weight: var(--font-weight-medium); color: var(--color-gray-900); }
+.cell-muted { color: var(--color-gray-600); }
+.cell-money { font-weight: var(--font-weight-medium); color: var(--color-green-600); }
+.stock-low { color: var(--color-red-600); }
+.stock-ok { color: var(--color-green-600); }
+.tag-xs { font-size: var(--text-xs); }
+.title-accent { color: var(--color-orange-800); }
+.badge-cat { background: var(--color-orange-100); color: var(--color-orange-700); }
+@media (hover: hover) { .badge-cat:hover { background: var(--color-orange-200); } }
+.badge-ok { background: var(--color-green-100); color: var(--color-green-700); }
+.foot { background-image: linear-gradient(to right in oklab, var(--color-orange-50), var(--color-yellow-50)); padding: 0.75rem 1rem; border-top: 1px solid var(--color-orange-200); }
+.foot-row { display: flex; flex-direction: column; gap: 0.5rem; justify-content: space-between; align-items: center; color: var(--color-orange-800); font-size: var(--text-sm); }
+@media (width >= 40rem) { .foot-row { flex-direction: row; } }
+
+/* Search & filter */
+.filter { background: var(--color-yellow-50); border-left: 4px solid var(--color-yellow-400); padding: 1rem; margin-bottom: 1.5rem; }
+.filter-row { display: flex; flex-direction: column; gap: 1rem; }
+@media (width >= 48rem) { .filter-row { flex-direction: row; } }
+.search { position: relative; flex: 1; }
+.search-icon { position: absolute; left: 0.75rem; top: 0.75rem; width: 1rem; height: 1rem; color: var(--color-gray-400); }
+.search-input { padding-left: 2.5rem; background: #fff; border: 1px solid var(--color-yellow-300); }
+.search-input:focus { border-color: var(--color-yellow-500); }
+.select-trigger { width: 100%; background: #fff; border: 1px solid var(--color-yellow-300); }
+@media (width >= 48rem) { .select-trigger { width: 12rem; } }
+.btn-export { background: var(--color-green-600); color: #fff; }
+.btn-export:hover { background: color-mix(in oklab, var(--color-green-700) 100%, transparent); }
+
+/* Forms */
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1rem; }
+.btn-submit { width: 100%; background: var(--color-orange-600); }
+.btn-submit:hover { background: var(--color-orange-700); }
+
+/* Dialog */
+.dialog-title { color: var(--color-orange-800); }
+.dialog-desc { color: var(--color-gray-600); }
+
+/* Actions */
+.btn-icon { display: inline-flex; align-items: center; justify-content: center; height: 2rem; }
+.btn-edit { border: 1px solid var(--color-blue-300); color: var(--color-blue-600); }
+.btn-edit:hover { background: var(--color-blue-50); }
+.btn-archive { border: 1px solid var(--color-orange-300); color: var(--color-orange-600); }
+.btn-archive:hover { background: var(--color-orange-50); }
+.btn-restore { border: 1px solid var(--color-green-300); color: var(--color-green-600); }
+.btn-restore:hover { background: var(--color-green-50); }
+
+/* Icons */
+.icon-xs { width: 12px; height: 12px; }
+.icon-sm { width: 16px; height: 16px; }
+.icon-md { width: 20px; height: 20px; }
+.icon-lg { width: 24px; height: 24px; }
+.icon-xl { width: 32px; height: 32px; }
+
+
