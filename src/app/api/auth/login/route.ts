@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { LoginRequest } from '../../../../models/user';
 import { connectDB } from '../../../../lib/mongodb';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { generateToken } from '@/lib/jwt';
 
 export async function POST(request: NextRequest) {
   try {
@@ -55,14 +55,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate JWT token
-    const token = jwt.sign(
+    const token = generateToken(
       { 
-        userId: user._id,
+        id: user._id.toString(),
         email: user.email,
-        username: user.username 
+        name: user.username 
       },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '24h' }
     );
 
     return NextResponse.json({

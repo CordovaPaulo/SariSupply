@@ -1,24 +1,22 @@
 :root {
-    --background: #ffffff;
-    --foreground: #171717;
-    --primary-color: #fff;
-    --secondary-color: #fff;
-    --accent-color: #fff;
-    --button-primary: #fff;
-    --button-primary-hover: #fff;
-    --button-primary-active: #fff;
-    --button-secondary: #fff;
-    --button-secondary-hover: #fff;
-    --button-secondary-active: #fff;
-
     font-family: Arial, sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    --background: #f8f2dd;
+    --foreground: #f7f7f0;
+    --primary-color: #c9e2b8;
+    --secondary-color: #fff;
+    --accent-color: #ffa4a4;
+    --button-primary: #ffffff;
+    --button-primary-hover: #fafafa;
+    --button-primary-active: #cfcccc;
+    --button-secondary: #ffe44d;
+    --button-secondary-hover: #f1cf34;
+    --button-secondary-active: #ccaf2c;
+    --button-disabled: #a5a5a5;
+    --text-color: #000000;
+    --alt-text-color: #ffffff;
+    --major-action: #ff6347;
+    --major-action-hover: rgb(192, 45, 22);
+    --major-action-active: #9b3e2e;
 }
 
 html,
@@ -28,8 +26,6 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -45,9 +41,3 @@ a {
   color: inherit;
   text-decoration: none;
 }
-
-/* @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-} */

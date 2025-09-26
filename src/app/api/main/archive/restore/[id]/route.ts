@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken, extractTokenFromHeader } from '@/lib/jwt';
-import { ProductStatus } from '../../../../../models/product';
+import { ProductStatus } from '../../../../../../models/product';
 import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/mongodb/Product';
 import mongoose from 'mongoose';
@@ -19,7 +19,7 @@ export async function POST(
     // Get the authorization header
     const authHeader = request.headers.get('authorization');
     const token = extractTokenFromHeader(authHeader);
-    
+
     if (!token) {
       return NextResponse.json(
         { error: 'Authorization token required' },
@@ -58,28 +58,32 @@ export async function POST(
     // Check if the product exists and belongs to the user
     const existingProduct = await Product.findOne({
       _id: productId,
+      ownerId: userId
     });
 
     if (!existingProduct) {
       return NextResponse.json(
-        { error: 'Product not found' },
+        { error: 'Product not found or you do not have permission to restore it' },
         { status: 404 }
       );
     }
 
-    // Check if product is already discontinued (archived)
-    if (existingProduct.status === ProductStatus.DISCONTINUED) {
+    // Check if product is actually archived (discontinued)
+    if (existingProduct.status !== ProductStatus.DISCONTINUED) {
       return NextResponse.json(
-        { error: 'Product is already archived' },
+        { error: 'Product is not archived and cannot be restored' },
         { status: 400 }
       );
     }
 
-    // Archive the product by setting status to DISCONTINUED
-    const archivedProduct = await Product.findByIdAndUpdate(
+    // Determine new status based on quantity
+    const newStatus = existingProduct.quantity > 0 ? ProductStatus.IN_STOCK : ProductStatus.OUT_OF_STOCK;
+
+    // Restore the product
+    const restoredProduct = await Product.findByIdAndUpdate(
       productId,
       {
-        status: ProductStatus.DISCONTINUED,
+        status: newStatus,
         owner: userId,
         ownerId: userId,
         updatedAt: new Date()
@@ -87,29 +91,39 @@ export async function POST(
       { new: true }
     );
 
-    if (!archivedProduct) {
+    if (!restoredProduct) {
       return NextResponse.json(
-        { error: 'Failed to archive product' },
+        { error: 'Failed to restore product' },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Product archived successfully',
+      message: 'Product restored successfully',
       data: {
-        id: archivedProduct._id,
-        name: archivedProduct.name,
-        status: archivedProduct.status,
-        owner: archivedProduct.owner,
-        archivedBy: decoded.name || decoded.email,
-        archivedAt: archivedProduct.updatedAt
+        id: restoredProduct._id,
+        name: restoredProduct.name,
+        status: restoredProduct.status,
+        owner: restoredProduct.owner,
+        restoredBy: decoded.name || decoded.email,
+        restoredAt: restoredProduct.updatedAt
       }
     }, { status: 200 });
 
   } catch (error) {
-    console.error('Archive product error:', error);
+    console.error('Restore product error:', error);
     
+    // Handle specific MongoDB errors
+    if (error instanceof Error) {
+      if (error.message.includes('Cast to ObjectId failed')) {
+        return NextResponse.json(
+          { error: 'Invalid product ID format' },
+          { status: 400 }
+        );
+      }
+    }
+
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -4,6 +4,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  category: ProductCategory;
   status: ProductStatus;
   createdAt: Date;
   updatedAt: Date;
@@ -15,10 +16,21 @@ export enum ProductStatus {
   DISCONTINUED = 'discontinued'
 }
 
+export enum ProductCategory {
+  FOOD = 'food',
+  BEVERAGE = 'beverage',
+  CLEANING = 'cleaning',
+  PERSONAL_CARE = 'personal_care',
+  SCHOOL_SUPPLIES = 'school_supplies',
+  OTHER = 'other'
+}
+
 export interface CreateProductRequest {
-  owner: string;
+  owner?: string;
   name: string;
   description: string;
+  category: ProductCategory;
+  quantity: number;
   price: number;
   status: ProductStatus;
 }
@@ -37,10 +49,14 @@ export interface ArchiveProductRequest {
 }
 
 export interface ProductResponse {
+  _id: string;
   owner: string;
-  id: string;
+  id?: string;
   name: string;
   description: string;
+  quantity: number;
+  category: ProductCategory;
   price: number;
   status: ProductStatus;
+  createdAt: Date;
 }

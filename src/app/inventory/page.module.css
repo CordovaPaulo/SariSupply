@@ -1,14 +1,451 @@
-:root {
-    font-family: Arial, sans-serif;
-    --primary-color: #fff;
-    --secondary-color: #fff;
-    --accent-color: #fff;
-    --button-primary: #fff;
-    --button-primary-hover: #fff;
-    --button-primary-active: #fff;
-    --button-secondary: #fff;
-    --button-secondary-hover: #fff;
-    --button-secondary-active: #fff;
+.dashboard {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    min-height: 100dvh;
+    height: 100dvh;
+    background-color: #f8f2dd;
 }
 
+.header {
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(90deg, #ff5252 0%, #69ff69 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 3% 4%;
+    color: var(--alt-text-color);
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav {
+    display: flex;
+    gap: 50px;
+    border-radius: 60px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+    justify-content: space-around;
+}
+
+.navButton, .addButton, .logoutButton{
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.navButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 8px;
+    border-radius: 50px;
+}
+
+.navButton:hover {
+    background-color: var(--button-primary-hover);
+    color: var(--text-color);
+    border-radius: 50px;
+}
+
+.navButton:active {
+    background-color: var(--button-primary-active);
+    color: var(--text-color);
+    border-radius: 50px;
+}
+
+
+.active {
+    background-color: var(--button-primary);
+    color: var(--text-color);
+    border-radius: 50px;
+}
+
+.storeIcon {
+    width: 50px;
+    height: 50px;
+    color: var(--alt-text-color);
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.addButton {
+    background-color: var(--button-primary);
+    color: var(--text-color);
+    border-radius: 15px;
+}
+
+.addButton:hover {
+    background-color: var(--button-primary-hover);
+    color: var(--text-color);
+    border-radius: 15px;
+}
+
+.addButton:active {
+    background-color: var(--button-primary-active);
+    color: var(--text-color);
+    border-radius: 15px;
+}
+
+.logoutButton {
+    border: 2px solid var(--major-action);
+    color: var(--major-action);
+    border-radius: 15px;
+    font-weight: 600;
+}
+
+.logoutButton:hover {
+    background-color: var(--major-action);
+    color: var(--text-color);
+    border-radius: 15px;
+}
+
+.logoutButton:active {
+    background-color: var(--major-action);
+    color: var(--text-color);
+    border-radius: 15px;
+    border: 2px solid var(--major-action);
+
+}   
+
+.main {
+    padding: 20px 40px;
+    background: var(--background);
+    height: auto;
+    box-sizing: border-box;
+    overflow-y: auto;
+    width: 85%;
+    min-width: 100dvh;
+    justify-self: center;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.sectionHeader h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #8B4513;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.viewAllButton {
+  background: none;
+  border: 1px solid #d1d5db;
+  color: #6b7280;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: auto;
+}
+
+.viewAllButton:hover {
+  background: #f9fafb;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  border-radius: 12px;
+  background: #FEF7ED;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #FEF7ED;
+}
+
+.table thead {
+  background: #FEF7ED;
+}
+
+.table th {
+  padding: 16px 20px;
+  text-align: center;
+  font-weight: 600;
+  color: #8B4513;
+  font-size: 14px;
+  border-bottom: 1px solid #F3E8D0;
+}
+
+.table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #F3E8D0;
+  font-size: 14px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.table tbody tr {
+  background: white;
+}
+
+.table tbody tr:hover {
+  background: #FFFBF7;
+}
+
+.productCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.productCell strong {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.productDescription {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.categoryCell {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.quantityCell {
+  font-weight: 600;
+  color: #059669;
+}
+
+.priceCell {
+  font-weight: 600;
+  color: #059669;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 70px;
+}
+
+.statusBadge.in_stock {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.statusBadge.out_of_stock,
+.statusBadge.low_stock {
+  background: #FECACA;
+  color: #991B1B;
+}
+
+.statusBadge.discontinued {
+  background: #F3F4F6;
+  color: #6B7280;
+}
+
+.dateCell {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.emptyState {
+  padding: 48px 24px;
+  text-align: center;
+  color: #6b7280;
+  background: white;
+  border-radius: 12px;
+}
+
+.addFirstButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 16px;
+  font-weight: 500;
+}
+
+.addFirstButton:hover {
+  background: #2563eb;
+}
+
+.errorMessage {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.dataFilters {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  margin: 50px;
+  flex-wrap: wrap;
+  width: 80%;
+  justify-content: space-around;
+  font-size: 1.1rem; /* Increased font size */
+}
+
+.searchBar input,
+.categoryFilters select,
+.statusFilters select {
+  padding: 12px 16px;
+  border: 1px solid var(--accent-color);
+  border-radius: 8px;
+  min-width: 150px;
+  font-size: 1.1rem; /* Increased font size */
+  color: #374151;
+  background: white;
+}
+
+.clearFiltersButton {
+  background: var(--major-action);
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 16px;
+  font-size: 1.1rem; /* Increased font size */
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.clearFiltersButton:disabled {
+  border-color: var(--button-disabled);
+  color: var(--button-disabled);
+  cursor: not-allowed;
+  background: #f9fafb; /* Optional: different background for disabled state */
+}
+
+.clearFiltersButton:hover:not(:disabled) {
+  background: var(--major-action-hover);
+}
+
+.clearFiltersButton:active:not(:disabled) {
+  background: var(--major-action-active);
+}
+
+.searchBar input {
+  width: 550px;
+}
+
+.searchBar input::placeholder {
+  font-size: 1.1rem; /* Increased placeholder font size */
+  color: #9ca3af;
+}
+
+.exportButton {
+    padding: 12px 20px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem; /* Increased font size */
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 140px;
+    transition: background-color 0.2s;
+}
+
+.exportButton:hover {
+    background: #059669;
+}
+
+.actionCell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 8px;
+    padding: 8px;
+    min-width: 150px;
+}
+
+.actionButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    color: white;
+}
+
+.actionButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.viewButton {
+    background-color: #3b82f6;
+}
+
+.viewButton:hover {
+    background-color: #2563eb;
+}
+
+.editButton {
+    background-color: #f59e0b;
+}
+
+.editButton:hover {
+    background-color: #d97706;
+}
+
+.editButton:active {
+    background-color: #b45309;
+}
+
+.archiveButton {
+    background-color: #ef4444;
+}
+
+.archiveButton:hover {
+    background-color: #dc2626;
+}
+
+.archiveButton:active {
+    background-color: #b91c1c;
+}
+
+/* Icon sizing for action buttons */
+.actionButton svg {
+    width: 18px;
+    height: 18px;
+}
 

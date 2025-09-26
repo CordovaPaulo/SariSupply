@@ -1,0 +1,6 @@
+[
+    { "email": "admin123@gmail.com", "username": "admin" },
+    { "email": "manager233@gmail.com", "username": "manager" },
+    { "email": "john.doe@gmail.com", "username": "johndoe" },
+    { "email": "jane.doe@gmail.com", "username": "janedoe" }
+]

@@ -1,0 +1,124 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.header {
+  padding: 24px 24px 0 24px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  margin: 0 0 20px 0;
+  color: #374151;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.content {
+  padding: 0 24px 20px 24px;
+}
+
+.content p {
+  margin: 0 0 12px 0;
+  color: #374151;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.subtitle {
+  color: #6b7280 !important;
+  font-size: 0.9rem !important;
+}
+
+.error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 16px;
+  font-size: 0.9rem;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  padding: 20px 24px 24px 24px;
+  border-top: 1px solid #e5e7eb;
+  justify-content: flex-end;
+}
+
+.cancelButton {
+  padding: 12px 24px;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.cancelButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.archiveButton {
+  padding: 12px 24px;
+  background: var(--major-action);
+  color: var(--alt-text-color);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  min-width: 140px;
+}
+
+.archiveButton:hover:not(:disabled) {
+  background: var(--major-action-hover);
+}
+
+.archiveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -1,12 +1,38 @@
-const { connectDB } = require('../src/lib/mongodb');
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const dotenv = require('dotenv');
 const fs = require('fs');
 const path = require('path');
+
+// MongoDB connection function (CommonJS compatible)
+async function connectDB() {
+  const MONGODB_URI = process.env.MONGODB_URI;
+
+  if (!MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+  }
+
+  if (mongoose.connections[0].readyState) {
+    return { db: mongoose.connection.db };
+  }
+
+  try {
+    const connection = await mongoose.connect(MONGODB_URI, {
+      bufferCommands: false,
+    });
+    return { db: connection.connection.db };
+  } catch (error) {
+    throw error;
+  }
+}
 
 async function registerBatchUsers(filePath) {
   try {
     console.log('🚀 Starting batch user registration...');
     console.log('─'.repeat(50));
+
+    // Load environment variables
+    dotenv.config({ path: '.env.local' });
 
     // Check if file exists
     if (!fs.existsSync(filePath)) {
@@ -102,6 +128,7 @@ async function registerBatchUsers(filePath) {
     console.error('❌ Batch registration error:', error.message);
     process.exit(1);
   } finally {
+    await mongoose.connection.close();
     process.exit(0);
   }
 }
@@ -109,5 +136,27 @@ async function registerBatchUsers(filePath) {
 // Get command line arguments
 const args = process.argv.slice(2);
 const filePath = args[0] || path.join(__dirname, 'users.json');
+
+console.log('📂 Batch User Registration');
+console.log('─'.repeat(50));
+
+if (!fs.existsSync(filePath)) {
+  console.log(`❌ Default file not found: ${filePath}`);
+  console.log('');
+  console.log('Usage: npm run register-many [filepath]');
+  console.log('');
+  console.log('Examples:');
+  console.log('  npm run register-many');
+  console.log('  npm run register-many scripts/my-users.json');
+  console.log('  npm run register-many data/employees.json');
+  console.log('');
+  console.log('Create a JSON file with this format:');
+  console.log(JSON.stringify([
+    { email: "admin@sarisupply.com", username: "admin" },
+    { email: "manager@sarisupply.com", username: "manager" },
+    { email: "employee@sarisupply.com", username: "employee" }
+  ], null, 2));
+  process.exit(1);
+}
 
 registerBatchUsers(filePath);

@@ -1,113 +1,132 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
 
-export default function Home() {
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { LoginRequest } from '../models/user';
+import Style from './page.module.css';
+import { generateToken } from '@/lib/jwt';
+import { Eye, EyeOff } from 'lucide-react';
+
+export default function LoginPage() {
+  const [formData, setFormData] = useState<LoginRequest>({
+    email: '',
+    password: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+
+  // Handle input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Store token in localStorage or cookies
+        localStorage.setItem('token', data.token);
+        // Navigate to main page
+        router.push('/dashboard');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Login failed');
+      }
+    } catch (error) {
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle forgot password click
+  const handleForgotPasswordClick = () => {
+    router.push('/forgot-password');
+  };
+
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <nav className={styles.nav}>
-          <div className={styles.logo}>
-            <Image
-              src="/next.svg"
-              alt="SariSupply Logo"
-              width={120}
-              height={25}
+    <div className={Style.loginPage}>
+      <div className={Style.loginContainer}>
+        <h1>Login</h1>
+        
+        <form className={Style.loginForm} onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="email">Email:</label>
+            <input
+              type="string"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
             />
           </div>
-          <ul className={styles.navLinks}>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/products">Products</a></li>
-            <li><a href="/contact">Contact</a></li>
-          </ul>
-        </nav>
-      </header>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+          
+          <div className={Style.passwordContainer}>
+            <label htmlFor="password">Password:</label>
+            <div className={Style.passwordInputWrapper}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+              />
+              <button
+                type="button"
+                className={Style.passwordToggle}
+                onClick={togglePasswordVisibility}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? (
+                  <EyeOff className={Style.eyeIcon} />
+                ) : (
+                  <Eye className={Style.eyeIcon} />
+                )}
+              </button>
+            </div>
+          </div>
+          
+          {error && <div className={Style.error}>{error}</div>}
+          
+          <div>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Logging in...' : 'Login'}
+            </button>
+          </div>
+        </form>
+        
+        <div className={Style.actions}>
+          <button className={Style.linkButton} type="button" onClick={handleForgotPasswordClick}>
+            Forgot Password?
+          </button>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
