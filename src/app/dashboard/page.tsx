@@ -323,14 +323,14 @@ export default function DashboardPage() {
                   <tr>
                     <th>Product Name</th>
                     <th>Quantity</th>
-                    <th>Price</th>
+                    <th>Price</th>  
                     <th>Status</th>
                     <th>Date Added</th>
                   </tr>
                 </thead>
                 <tbody>
                   {recentProducts.map((product) => (
-                    <tr key={product.id}>
+                    <tr key={product._id}>
                       <td>
                         <div className={Style.productCell}>
                           <strong>{product.name}</strong>
