@@ -843,152 +843,130 @@ export default function ArchivePage() { // Changed function name to ArchivePage
             </div>
           </div>
 
-          <div className={Style.tableContainer}>
-            {filteredProducts.length === 0 ? (
-              <div className={Style.emptyState}>
-                <Archive className={Style.emptyIcon} size={48} />
-                <p>
-                  {stats.archivedProducts === 0 
-                    ? 'No archived products found' 
-                    : 'No archived products match your filters'
-                  }
-                </p>
-                {stats.archivedProducts === 0 ? (
-                  <p className={Style.emptySubtitle}>
-                    Products that are archived will appear here
-                  </p>
-                ) : (
-                  <button 
-                    className={Style.clearFiltersButton}
-                    onClick={clearFilters}
-                  >
-                    Clear Filters
-                  </button>
-                )}
-              </div>
-            ) : (
-              <>
-                <table className={Style.table}>
-                  <thead>
-                    <tr>
-                      <th>Product Name</th>
-                      <th>Description</th>
-                      <th>Category</th>
-                      <th>Quantity</th>
-                      <th>Price</th>
-                      <th>Total Value</th>
-                      <th>Archived Date</th>
-                      <th>Actions</th>
+          {/* Wrap table and footer in a section */}
+          <div className={Style.tableSection}>
+            <div className={Style.tableContainer}>
+              <table className={Style.table}>
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total Value</th>
+                    <th>Archived Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentProducts.map((product) => (
+                    <tr key={product._id}>
+                      <td>
+                        <div className={Style.productCell}>
+                          <strong>{product.name}</strong>
+                        </div>
+                      </td>
+                      <td>
+                        <div className={Style.descriptionCell}>
+                          {product.description}
+                        </div>
+                      </td>
+                      <td>{formatCategoryName(product.category)}</td>
+                      <td>{product.quantity}</td>
+                      <td className={Style.totalPriceCell}>
+                        {formatCurrency(product.price)}
+                      </td>
+                      <td className={Style.priceCell}>
+                        {formatCurrency(product.price * product.quantity)}
+                      </td>
+                      <td>{formatDate(product.createdAt)}</td>
+                      <td className={Style.actionCell}>
+                        <button 
+                          className={`${Style.viewButton} ${Style.actionButton}`}
+                          onClick={() => handleRestoreClick(product)}
+                          title={`Restore ${product.name}`}
+                        >
+                          <ArchiveRestore/>
+                        </button>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {currentProducts.map((product) => (
-                      <tr key={product._id}>
-                        <td>
-                          <div className={Style.productCell}>
-                            <strong>{product.name}</strong>
-                          </div>
-                        </td>
-                        <td>
-                          <div className={Style.descriptionCell}>
-                            {product.description}
-                          </div>
-                        </td>
-                        <td>{formatCategoryName(product.category)}</td>
-                        <td>{product.quantity}</td>
-                        <td className={Style.totalPriceCell}>
-                          {formatCurrency(product.price)}
-                        </td>
-                        <td className={Style.priceCell}>
-                          {formatCurrency(product.price * product.quantity)}
-                        </td>
-                        <td>{formatDate(product.createdAt)}</td>
-                        <td className={Style.actionCell}>
-                          <button 
-                            className={`${Style.viewButton} ${Style.actionButton}`}
-                            onClick={() => handleRestoreClick(product)}
-                            title={`Restore ${product.name}`}
-                          >
-                            <ArchiveRestore/>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-
-                <div className={Style.tableFooter}>
-                <div className={Style.statisticsSummary}>
-                  <div className={Style.statItem}>
-                    <span className={Style.statLabel}>Total Archived Products:</span>
-                    <span className={Style.statValue}>{stats.archivedProducts}</span>
-                  </div>
-                  <div className={Style.statItem}>
-                    <span className={Style.statLabel}>Total Archived Value:</span>
-                    <span className={Style.statValue}>{formatCurrency(stats.totalValue)}</span>
-                  </div>
-                  {(searchTerm || selectedCategory) && (
-                    <div className={Style.statNote}>
-                      * Statistics based on filtered results
-                    </div>
-                  )}
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            {/* Footer outside of scrollable container */}
+            <div className={Style.tableFooter}>
+              <div className={Style.statisticsSummary}>
+                <div className={Style.statItem}>
+                  <span className={Style.statLabel}>Total Archived Products:</span>
+                  <span className={Style.statValue}>{stats.archivedProducts}</span>
                 </div>
-              </div>
-
-                {/* Pagination Controls */}
-                {totalPages > 1 && (
-                  <div className={Style.paginationContainer}>
-                    <button 
-                      className={Style.paginationButton}
-                      onClick={handlePreviousPage}
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className={Style.paginationIcon} />
-                      Previous
-                    </button>
-
-                    <div className={Style.pageNumbers}>
-                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                        let pageNumber;
-                        if (totalPages <= 5) {
-                          pageNumber = i + 1;
-                        } else if (currentPage <= 3) {
-                          pageNumber = i + 1;
-                        } else if (currentPage >= totalPages - 2) {
-                          pageNumber = totalPages - 4 + i;
-                        } else {
-                          pageNumber = currentPage - 2 + i;
-                        }
-
-                        return (
-                          <button
-                            key={pageNumber}
-                            className={`${Style.pageNumber} ${currentPage === pageNumber ? Style.activePage : ''}`}
-                            onClick={() => handlePageClick(pageNumber)}
-                          >
-                            {pageNumber}
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    <button 
-                      className={Style.paginationButton}
-                      onClick={handleNextPage}
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                      <ChevronRight className={Style.paginationIcon} />
-                    </button>
+                <div className={Style.statItem}>
+                  <span className={Style.statLabel}>Total Archived Value:</span>
+                  <span className={Style.statValue}>{formatCurrency(stats.totalValue)}</span>
+                </div>
+                {(searchTerm || selectedCategory) && (
+                  <div className={Style.statNote}>
+                    * Statistics based on filtered results
                   </div>
                 )}
-              </>
-            )}
+              </div>
+            </div>
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className={Style.paginationContainer}>
+              <button 
+                className={Style.paginationButton}
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className={Style.paginationIcon} />
+                Previous
+              </button>
+
+              <div className={Style.pageNumbers}>
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNumber;
+                  if (totalPages <= 5) {
+                    pageNumber = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNumber = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNumber = totalPages - 4 + i;
+                  } else {
+                    pageNumber = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <button
+                      key={pageNumber}
+                      className={`${Style.pageNumber} ${currentPage === pageNumber ? Style.activePage : ''}`}
+                      onClick={() => handlePageClick(pageNumber)}
+                    >
+                      {pageNumber}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button 
+                className={Style.paginationButton}
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+              >
+                Next
+                <ChevronRight className={Style.paginationIcon} />
+              </button>
+            </div>
+          )}
         </section>
       </main>
-
-       <AddProductPopup
+      
+      <AddProductPopup
             isOpen={showAddPopup}
             onClose={handleClosePopup}
             onProductAdded={handleProductAdded}

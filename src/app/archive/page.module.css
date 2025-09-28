@@ -158,10 +158,18 @@
   gap: 8px;
 }
 
-.tableContainer {
-  overflow-x: auto;
+.tableSection {
   border-radius: 12px;
   background: #FEF7ED;
+  overflow: hidden;
+  margin-bottom: 20px; /* Add consistent margin */
+}
+
+.tableContainer {
+  overflow-x: auto;
+  border-radius: 12px 12px 0 0;
+  background: #FEF7ED;
+  margin-bottom: 0; /* Remove any margin */
 }
 
 .table {
@@ -532,6 +540,9 @@
   border-top: 2px solid #e9ecef;
   padding: 16px 20px;
   border-radius: 0 0 12px 12px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0; /* Ensure no top margin */
 }
 
 .statisticsSummary {
@@ -567,29 +578,571 @@
   margin-left: auto;
 }
 
-/* Responsive design for statistics */
+/* Mobile Responsive Styles */
 @media (max-width: 768px) {
+  .dashboard {
+    background-color: #f8f2dd;
+    padding-bottom: 120px; /* Add space for bottom nav */
+  }
+
+  .header {
+    flex-direction: column;
+    padding: 15px 20px;
+    gap: 15px;
+    position: fixed;
+    border-radius: 0 0 20px 20px;
+    bottom: auto; /* Keep header at top */
+  }
+
+  .headerLeft {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .storeIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .headerName h1 {
+    font-size: 1.3rem;
+  }
+
+  .headerName p {
+    font-size: 1rem;
+  }
+
+  /* Bottom Navigation Styles */
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 15px 20px 25px 20px;
+    gap: 0;
+    justify-content: space-around;
+    background: var(--page-header-bg);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 20px 20px 0 0;
+    z-index: 1000;
+    order: unset;
+    min-height: 80px;
+  }
+
+  .navButton {
+    flex-direction: column;
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+    border-radius: 12px;
+    background: none;
+  }
+
+  .navButton:hover {
+    background-color: var(--button-primary-hover);
+    border-radius: 12px;
+  }
+
+  .navButton.active {
+    background-color: var(--button-primary);
+    border-radius: 12px;
+  }
+
+  .navIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .headerRight {
+    width: 100%;
+    justify-content: space-between;
+    order: 3;
+  }
+
+  .addButton, .logoutButton {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .main {
+    padding: 140px 20px 60px 20px; /* Increased bottom padding significantly */
+    width: 100%;
+    min-width: auto;
+  }
+
+  /* Data Filters Section */
+  .dataFilters {
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+    padding: 16px;
+    width: 100%;
+    max-width: none;
+  }
+
+  .searchBar input {
+    width: 100%;
+    max-width: none;
+    min-width: unset;
+  }
+
+  .categoryFilters {
+    width: 100%;
+  }
+
+  .customSelect {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .selectButton {
+    width: 100%;
+  }
+
+  .clearFiltersButton,
+  .exportButton {
+    width: 100%;
+    min-width: unset;
+  }
+
+  /* Section adjustments */
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .paginationInfo {
+    font-size: 14px;
+  }
+
+  .filterInfo {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+  }
+
+  /* Table adjustments */
+  .tableSection {
+    border-radius: 12px;
+    background: #FEF7ED;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .tableContainer {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 0; /* Remove margin */
+    border-radius: 12px 12px 0 0;
+    background: #FEF7ED;
+  }
+
+  .tableFooter {
+    padding: 12px 16px;
+    border-radius: 0 0 12px 12px;
+    margin-top: 0; /* Ensure no gap */
+    background: var(--table-header-footer);
+    border-top: 2px solid #e9ecef;
+  }
+
+  .table {
+    min-width: 700px; /* Ensure horizontal scroll */
+  }
+
+  .table th,
+  .table td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+
+  .productCell strong {
+    font-size: 14px;
+  }
+
+  .productDescription {
+    font-size: 11px;
+  }
+
+  .actionCell {
+    min-width: 80px;
+    padding: 8px;
+  }
+
+  .actionButton {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+  }
+
+  /* Empty state */
+  .emptyState {
+    padding: 32px 16px;
+    margin-bottom: 40px;
+  }
+
+  .emptyIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Table footer adjustments */
+  .tableFooter {
+    padding: 12px 16px;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    border-radius: 0 0 12px 12px;
+  }
+
   .statisticsSummary {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  
+
+  .statItem {
+    justify-content: space-between;
+    width: 100%;
+  }
+
   .statNote {
     margin-left: 0;
     align-self: center;
+    text-align: center;
   }
-  
-  .statItem {
-    justify-content: space between;
+
+  /* Pagination adjustments */
+  .paginationContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    margin-top: 20px;
+    padding: 0 16px;
+  }
+
+  .paginationButton {
+    padding: 10px 16px;
+    font-size: 14px;
     width: 100%;
+    max-width: 200px;
+  }
+
+  .pageNumbers {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pageNumber {
+    padding: 8px 12px;
+    font-size: 14px;
+    min-width: 40px;
   }
 }
 
 @media (max-width: 480px) {
+  .dashboard {
+    padding-bottom: 110px;
+  }
+
+  .header {
+    padding: 12px 15px;
+    gap: 12px;
+  }
+
+  .headerLeft {
+    gap: 8px;
+  }
+
+  .storeIcon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .headerName h1 {
+    font-size: 1.2rem;
+  }
+
+  .headerName p {
+    font-size: 0.9rem;
+  }
+
+  .nav {
+    padding: 12px 15px 22px 15px;
+    border-radius: 15px 15px 0 0;
+    min-height: 75px;
+  }
+
+  .navButton {
+    padding: 6px 8px;
+    font-size: 0.7rem;
+    border-radius: 10px;
+  }
+
+  .navIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .main {
+    padding: 120px 15px 50px 15px;
+  }
+
+  .dataFilters {
+    padding: 12px;
+    gap: 12px;
+    margin: 15px 0;
+  }
+
+  .searchBar input,
+  .categoryFilters select,
+  .statusFilters select {
+    padding: 10px 12px;
+    font-size: 1rem;
+    min-width: unset;
+  }
+
+  .clearFiltersButton,
+  .exportButton {
+    padding: 10px 16px;
+    font-size: 1rem;
+  }
+
+  .sectionHeader h2 {
+    font-size: 15px;
+  }
+
+  .paginationInfo {
+    font-size: 13px;
+  }
+
+  .table {
+    min-width: 650px;
+  }
+
+  .table th,
+  .table td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+
+  .productCell strong {
+    font-size: 13px;
+  }
+
+  .actionButton {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+  }
+
+  .addButton, .logoutButton {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .tableFooter {
+    padding: 10px 12px;
+  }
+
   .statItem {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+  }
+
+  .paginationButton {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  .pageNumber {
+    padding: 6px 10px;
+    font-size: 13px;
+    min-width: 36px;
+  }
+}
+
+/* Landscape mobile orientation - Keep nav at bottom */
+@media (max-width: 768px) and (orientation: landscape) {
+  .dashboard {
+    padding-bottom: 80px;
+  }
+
+  .header {
+    flex-direction: row;
+    padding: 8px 20px;
+  }
+
+  .headerLeft {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex: unset;
+    order: unset;
+    max-width: unset;
+    margin: 0;
+    padding: 8px 20px 15px 20px;
+    border-radius: 15px 15px 0 0;
+    min-height: 65px;
+  }
+
+  .headerRight {
+    flex: 0 0 auto;
+    width: auto;
+    order: 0;
+  }
+
+  .main {
+    padding: 60px 20px 25px 20px;
+  }
+
+  .dataFilters {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+
+  .searchBar {
+    flex: 2;
+    min-width: 200px;
+  }
+
+  .categoryFilters {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .clearFiltersButton,
+  .exportButton {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 100px;
+  }
+}
+
+/* Tablet styles - Keep nav in header */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard {
+    padding-bottom: 0;
+  }
+
+  .header {
+    padding: 15px 30px;
+  }
+
+  .nav {
+    position: static;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 60px;
+    box-shadow: none;
+  }
+
+  .main {
+    padding: 120px 30px 20px 30px;
+    width: 90%;
+  }
+
+  .tableSection {
+    border-radius: 12px;
+    background: #FEF7ED;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .tableContainer {
+    overflow-x: auto;
+    margin-bottom: 0; /* Remove gap */
+    border-radius: 12px 12px 0 0;
+  }
+
+  .tableFooter {
+    padding: 14px 18px; /* Adjusted for tablet */
+    border-radius: 0 0 12px 12px;
+    margin-top: 0; /* Ensure no gap */
+  }
+
+  .dataFilters {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 95%;
+    max-width: 1000px;
+    margin-bottom: 20px; /* Ensure consistent spacing */
+  }
+
+  .searchBar {
+    flex: 2;
+  }
+
+  .categoryFilters {
+    flex: 1;
+  }
+
+  .nav {
+    gap: 30px;
+  }
+
+  .table th,
+  .table td {
+    padding: 14px 16px;
+  }
+
+  .statisticsSummary {
+    flex-direction: row; /* Keep horizontal on tablet */
+    align-items: center;
+    gap: 20px;
+  }
+
+  .statItem {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+/* Medium tablet size adjustment */
+@media (min-width: 600px) and (max-width: 768px) {
+  .tableSection {
+    margin-bottom: 20px;
+  }
+
+  .tableContainer {
+    margin-bottom: 0; /* Ensure no gap */
+  }
+
+  .tableFooter {
+    margin-top: 0; /* Ensure no gap */
+    padding: 12px 16px;
+  }
+
+  .statisticsSummary {
+    flex-direction: column; /* Stack on medium tablet */
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .statItem {
+    justify-content: space-between;
+    width: 100%;
   }
 }

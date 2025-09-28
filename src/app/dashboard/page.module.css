@@ -398,3 +398,427 @@
     opacity: 0.8;
   }
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .dashboard {
+    background-color: #f8f2dd;
+    padding-bottom: 120px; /* Increased bottom padding further */
+  }
+
+  .header {
+    flex-direction: column;
+    padding: 15px 20px;
+    gap: 15px;
+    position: fixed;
+    border-radius: 0 0 20px 20px;
+    bottom: auto;
+  }
+
+  .headerLeft {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .storeIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .headerName h1 {
+    font-size: 1.3rem;
+  }
+
+  .headerName p {
+    font-size: 1rem;
+  }
+
+  /* Bottom Navigation Styles */
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 15px 20px 25px 20px;
+    gap: 0;
+    justify-content: space-around;
+    background: var(--page-header-bg);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 20px 20px 0 0;
+    z-index: 1000;
+    order: unset;
+    min-height: 80px;
+  }
+
+  .navButton {
+    flex-direction: column;
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+    border-radius: 12px;
+    background: none;
+  }
+
+  .navButton:hover {
+    background-color: var(--button-primary-hover);
+    border-radius: 12px;
+  }
+
+  .navButton.active {
+    background-color: var(--button-primary);
+    border-radius: 12px;
+  }
+
+  .navIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .headerRight {
+    width: 100%;
+    justify-content: space-between;
+    order: 3;
+  }
+
+  .addButton, .logoutButton {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .main {
+    padding: 140px 20px 60px 20px; /* Increased bottom padding significantly */
+    width: 100%;
+    min-width: auto;
+  }
+
+  .statsGrid {
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+
+  .statCard {
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 110px;
+    max-height: 130px;
+    padding: 18px;
+  }
+
+  .statValue {
+    font-size: 1.7rem;
+  }
+
+  .statLabel {
+    font-size: 0.95rem;
+  }
+
+  .statIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .recentSection {
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 60px; /* Increased significantly to prevent overlap */
+    position: relative; /* Added for better positioning */
+  }
+
+  .sectionHeader {
+    flex-direction: row; /* Changed back to row for better mobile layout */
+    align-items: center;
+    justify-content: space-between; /* Better distribution */
+    gap: 10px; /* Reduced gap */
+    margin-bottom: 20px; /* Reduced margin */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+  }
+
+  .sectionHeader h2 {
+    font-size: 16px; /* Slightly reduced */
+    margin: 0;
+    flex: 1;
+    min-width: 150px; /* Ensure minimum width */
+  }
+
+  /* Clock icon specific adjustments */
+  .sectionHeader h2::before {
+    margin-right: 6px; /* Adjust icon spacing if needed */
+  }
+
+  .viewAllButton {
+    flex-shrink: 0; /* Prevent button from shrinking */
+    align-self: center;
+    margin-left: 0; /* Remove auto margin */
+    padding: 6px 12px; /* Smaller padding */
+    font-size: 13px; /* Smaller font */
+  }
+
+  .tableContainer {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 40px; /* Increased margin significantly */
+    border-radius: 12px;
+  }
+
+  .table {
+    min-width: 600px;
+  }
+
+  .table th,
+  .table td {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .productCell strong {
+    font-size: 14px;
+  }
+
+  .productDescription {
+    font-size: 11px;
+  }
+
+  .statusBadge {
+    padding: 3px 10px;
+    font-size: 11px;
+    min-width: 60px;
+  }
+
+  .emptyState {
+    padding: 32px 16px;
+    margin-bottom: 40px; /* Increased margin */
+  }
+
+  .addFirstButton {
+    width: 100%;
+    padding: 14px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding-bottom: 110px; /* Increased bottom padding */
+  }
+
+  .header {
+    padding: 12px 15px;
+    gap: 12px;
+  }
+
+  .headerLeft {
+    gap: 8px;
+  }
+
+  .storeIcon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .headerName h1 {
+    font-size: 1.2rem;
+  }
+
+  .headerName p {
+    font-size: 0.9rem;
+  }
+
+  .nav {
+    padding: 12px 15px 22px 15px;
+    border-radius: 15px 15px 0 0;
+    min-height: 75px;
+  }
+
+  .navButton {
+    padding: 6px 8px;
+    font-size: 0.7rem;
+    border-radius: 10px;
+  }
+
+  .navIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .main {
+    padding: 120px 15px 50px 15px; /* Increased bottom padding */
+  }
+
+  .statsGrid {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .statCard {
+    min-height: 100px;
+    padding: 16px;
+  }
+
+  .statValue {
+    font-size: 1.5rem;
+  }
+
+  .statIcon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .recentSection {
+    padding: 16px;
+    margin-bottom: 50px; /* Increased bottom margin significantly */
+  }
+
+  .sectionHeader {
+    flex-direction: column; /* Stack vertically on very small screens */
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 15px;
+  }
+
+  .viewAllButton {
+    align-self: stretch;
+    text-align: center;
+    width: 100%; /* Full width on small screens */
+  }
+
+  .table {
+    min-width: 550px;
+  }
+
+  .table th,
+  .table td {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .productCell strong {
+    font-size: 13px;
+  }
+
+  .productDescription {
+    font-size: 10px;
+  }
+
+  .statusBadge {
+    padding: 2px 8px;
+    font-size: 10px;
+    min-width: 55px;
+  }
+
+  .addButton, .logoutButton {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .tableContainer {
+    margin-bottom: 30px; /* Increased margin */
+  }
+}
+
+/* Landscape mobile orientation - Keep nav at bottom */
+@media (max-width: 768px) and (orientation: landscape) {
+  .dashboard {
+    padding-bottom: 80px; /* Increased */
+  }
+
+  .header {
+    flex-direction: row;
+    padding: 8px 20px; /* Slightly increased */
+    gap: 12px;
+  }
+
+  .headerLeft {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex: unset;
+    order: unset;
+    max-width: unset;
+    margin: 0;
+    padding: 8px 20px 15px 20px; /* Increased bottom padding */
+    border-radius: 15px 15px 0 0;
+    min-height: 65px; /* Increased */
+  }
+
+  .headerRight {
+    flex: 0 0 auto;
+    width: auto;
+    order: 0;
+  }
+
+  .main {
+    padding: 60px 20px 25px 20px; /* Increased bottom padding */
+  }
+
+  .statsGrid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .statCard {
+    flex: 1;
+    min-width: 45%;
+    max-width: 48%;
+    min-height: 85px;
+    padding: 14px;
+  }
+
+  .statValue {
+    font-size: 1.4rem;
+  }
+
+  .recentSection {
+    margin-bottom: 25px; /* Increased */
+  }
+}
+
+/* Tablet styles - Keep nav in header */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard {
+    padding-bottom: 0; /* Remove bottom padding for tablets */
+  }
+
+  .header {
+    padding: 15px 30px;
+  }
+
+  .nav {
+    position: static; /* Reset to normal position */
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 60px;
+    box-shadow: none;
+  }
+
+  .main {
+    padding: 120px 30px 20px 30px;
+    width: 90%;
+  }
+
+  .statsGrid {
+    gap: 15px;
+  }
+
+  .statCard {
+    min-width: 200px;
+    max-width: 250px;
+  }
+
+  .nav {
+    gap: 30px;
+  }
+}

@@ -969,184 +969,188 @@ export default function InventoryPage() {
             </div>
           </div>
 
-          <div className={Style.tableContainer}>
-            {filteredProducts.length === 0 ? (
-              <div className={Style.emptyState}>
-                <p>
-                  {products.length === 0 
-                    ? 'No products found' 
-                    : 'No products match your filters'
-                  }
-                </p>
-                {(products.length === 0 || selectedCategory && !selectedStatus) ? (
-                  <button 
-                    className={Style.addFirstButton}
-                    onClick={handleAddProduct}
-                  >
-                    {products.length === 0 ? 'Add Your First Product' : 'Add Product'}
-                  </button>
-                ) : (
-                  <button 
-                    className={Style.clearFiltersButton}
-                    onClick={clearFilters}
-                  >
-                    Clear Filters
-                  </button>
-                )}
-              </div>
-            ) : (
-              <>
-                <table className={Style.table}>
-                  <thead>
-                    <tr>
-                      <th>Product Name</th>
-                      <th>Category</th>
-                      <th>Quantity</th>
-                      <th>Price</th>
-                      <th>Total Value</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentProducts.map((product) => {
-                      // Determine the actual status to display
-                      const displayStatus = determineProductStatus(product.quantity, product.status);
-                      const isLowStock = displayStatus === ProductStatus.LOW_STOCK;
-                      
-                      return (
-                        <tr key={product._id} className={isLowStock ? Style.lowStockRow : ''}>
-                          <td>
-                            <div className={Style.productCell}>
-                              <strong>{product.name}</strong>
-                              <p className={Style.productDescription}>
-                                {product.description}
-                              </p>
-                            </div>
-                          </td>
-                          <td>{formatCategoryName(product.category)}</td>
-                          <td className={isLowStock ? Style.lowStockQuantity : ''}>
-                            {product.quantity}
-                            {product.quantity <= 5 && product.quantity > 0 && (
-                              <span className={Style.criticalStock}> (Critical!)</span>
-                            )}
-                          </td>
-                          <td className={Style.totalPriceCell}>
-                            {formatCurrency(product.price)}
-                          </td>
-                          <td className={Style.priceCell}>
-                            {formatCurrency(product.price * product.quantity)}
-                          </td>
-                          <td>
-                            <span className={`${Style.statusBadge} ${Style[displayStatus.toLowerCase()]}`}>
-                              {formatStatusName(displayStatus)}
-                            </span>
-                          </td>
-                          <td className={Style.actionCell}>
-                            <button className={`${Style.viewButton} ${Style.actionButton}`}
-                              onClick={() => {
-                                console.log('View button clicked, product:', product);
-                                handleViewClick(product);
-                              }}
-                            >
+          {filteredProducts.length === 0 ? (
+            <div className={Style.emptyState}>
+              <p>
+                {products.length === 0 
+                  ? 'No products found' 
+                  : 'No products match your filters'
+                }
+              </p>
+              {(products.length === 0 || selectedCategory && !selectedStatus) ? (
+                <button 
+                  className={Style.addFirstButton}
+                  onClick={handleAddProduct}
+                >
+                  {products.length === 0 ? 'Add Your First Product' : 'Add Product'}
+                </button>
+              ) : (
+                <button 
+                  className={Style.clearFiltersButton}
+                  onClick={clearFilters}
+                >
+                  Clear Filters
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              {/* Wrap table and footer in a section */}
+              <div className={Style.tableSection}>
+                <div className={Style.tableContainer}>
+                  <table className={Style.table}>
+                    <thead>
+                      <tr>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total Value</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentProducts.map((product) => {
+                        // Determine the actual status to display
+                        const displayStatus = determineProductStatus(product.quantity, product.status);
+                        const isLowStock = displayStatus === ProductStatus.LOW_STOCK;
+                        
+                        return (
+                          <tr key={product._id} className={isLowStock ? Style.lowStockRow : ''}>
+                            <td>
+                              <div className={Style.productCell}>
+                                <strong>{product.name}</strong>
+                                <p className={Style.productDescription}>
+                                  {product.description}
+                                </p>
+                              </div>
+                            </td>
+                            <td>{formatCategoryName(product.category)}</td>
+                            <td className={isLowStock ? Style.lowStockQuantity : ''}>
+                              {product.quantity}
+                              {product.quantity <= 5 && product.quantity > 0 && (
+                                <span className={Style.criticalStock}> (Critical!)</span>
+                              )}
+                            </td>
+                            <td className={Style.totalPriceCell}>
+                              {formatCurrency(product.price)}
+                            </td>
+                            <td className={Style.priceCell}>
+                              {formatCurrency(product.price * product.quantity)}
+                            </td>
+                            <td>
+                              <span className={`${Style.statusBadge} ${Style[displayStatus.toLowerCase()]}`}>
+                                {formatStatusName(displayStatus)}
+                              </span>
+                            </td>
+                            <td className={Style.actionCell}>
+                              <button className={`${Style.viewButton} ${Style.actionButton}`}
+                                onClick={() => {
+                                  console.log('View button clicked, product:', product);
+                                  handleViewClick(product);
+                                }}
+                              >
 
-                              <Eye/>
-                            </button>
-                            <button 
-                              className={`${Style.editButton} ${Style.actionButton}`}
-                              onClick={() => {
-                                console.log('Edit button clicked, product:', product);
-                                handleEditClick(product);
-                              }}
-                              title={`Edit ${product.name}`}
-                            >
-                              <Pencil/>
-                            </button>
-                            <button 
-                              className={`${Style.archiveButton} ${Style.actionButton}`}
-                              onClick={() => {
-                                console.log('Button clicked, product:', product); // Debug log
-                                handleArchiveClick(product);
-                              }}
-                              title={`Archive ${product.name}`}
-                            >
-                              <Archive/>
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-
+                                <Eye/>
+                              </button>
+                              <button 
+                                className={`${Style.editButton} ${Style.actionButton}`}
+                                onClick={() => {
+                                  console.log('Edit button clicked, product:', product);
+                                  handleEditClick(product);
+                                }}
+                                title={`Edit ${product.name}`}
+                              >
+                                <Pencil/>
+                              </button>
+                              <button 
+                                className={`${Style.archiveButton} ${Style.actionButton}`}
+                                onClick={() => {
+                                  console.log('Button clicked, product:', product); // Debug log
+                                  handleArchiveClick(product);
+                                }}
+                                title={`Archive ${product.name}`}
+                              >
+                                <Archive/>
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                
+                {/* Footer outside of scrollable container */}
                 <div className={Style.tableFooter}>
-                <div className={Style.statisticsSummary}>
-                  <div className={Style.statItem}>
-                    <span className={Style.statLabel}>Total Products:</span>
-                    <span className={Style.statValue}>{stats.totalItems}</span>
-                  </div>
-                  <div className={Style.statItem}>
-                    <span className={Style.statLabel}>Total Value:</span>
-                    <span className={Style.statValue}>{formatCurrency(stats.totalValue)}</span>
-                  </div>
-                  {(searchTerm || selectedCategory) && (
-                    <div className={Style.statNote}>
-                      * Statistics based on filtered results
+                  <div className={Style.statisticsSummary}>
+                    <div className={Style.statItem}>
+                      <span className={Style.statLabel}>Total Products:</span>
+                      <span className={Style.statValue}>{stats.totalItems}</span>
                     </div>
-                  )}
+                    <div className={Style.statItem}>
+                      <span className={Style.statLabel}>Total Value:</span>
+                      <span className={Style.statValue}>{formatCurrency(stats.totalValue)}</span>
+                    </div>
+                    {(searchTerm || selectedCategory) && (
+                      <div className={Style.statNote}>
+                        * Statistics based on filtered results
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
-                {/* Pagination Controls */}
-                {totalPages > 1 && (
-                  <div className={Style.paginationContainer}>
-                    <button 
-                      className={Style.paginationButton}
-                      onClick={handlePreviousPage}
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className={Style.paginationIcon} />
-                      Previous
-                    </button>
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className={Style.paginationContainer}>
+                  <button 
+                    className={Style.paginationButton}
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className={Style.paginationIcon} />
+                    Previous
+                  </button>
 
-                    <div className={Style.pageNumbers}>
-                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                        let pageNumber;
-                        if (totalPages <= 5) {
-                          pageNumber = i + 1;
-                        } else if (currentPage <= 3) {
-                          pageNumber = i + 1;
-                        } else if (currentPage >= totalPages - 2) {
-                          pageNumber = totalPages - 4 + i;
-                        } else {
-                          pageNumber = currentPage - 2 + i;
-                        }
+                  <div className={Style.pageNumbers}>
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      let pageNumber;
+                      if (totalPages <= 5) {
+                        pageNumber = i + 1;
+                      } else if (currentPage <= 3) {
+                        pageNumber = i + 1;
+                      } else if (currentPage >= totalPages - 2) {
+                        pageNumber = totalPages - 4 + i;
+                      } else {
+                        pageNumber = currentPage - 2 + i;
+                      }
 
-                        return (
-                          <button
-                            key={pageNumber}
-                            className={`${Style.pageNumber} ${currentPage === pageNumber ? Style.activePage : ''}`}
-                            onClick={() => handlePageClick(pageNumber)}
-                          >
-                            {pageNumber}
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    <button 
-                      className={Style.paginationButton}
-                      onClick={handleNextPage}
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                      <ChevronRight className={Style.paginationIcon} />
-                    </button>
+                      return (
+                        <button
+                          key={pageNumber}
+                          className={`${Style.pageNumber} ${currentPage === pageNumber ? Style.activePage : ''}`}
+                          onClick={() => handlePageClick(pageNumber)}
+                        >
+                          {pageNumber}
+                        </button>
+                      );
+                    })}
                   </div>
-                )}
-              </>
-            )}
-          </div>
+
+                  <button 
+                    className={Style.paginationButton}
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                    <ChevronRight className={Style.paginationIcon} />
+                  </button>
+                </div>
+              )}
+            </>
+          )}
         </section>
       </main>
 

@@ -3,8 +3,8 @@
     padding: 0;
     margin: 0;
     width: 100%;
-    min-height: 100dvh;
-    height: 100dvh;
+    min-height: 100vh; /* Changed from 100dvh */
+    height: auto; /* Changed from 100dvh to auto */
     background-color: #f8f2dd;
 }
 
@@ -133,12 +133,12 @@
 
 .main {
     padding: 120px 40px 20px 40px;
-    background: var(--background);
-    min-height: calc(100vh - 100px);
+    background: transparent; /* Changed from var(--background) to transparent */
+    min-height: calc(100vh - 120px); /* Adjusted calculation */
     box-sizing: border-box;
     overflow-y: auto;
     width: 85%;
-    min-width: 100dvh;
+    min-width: auto; /* Changed from 100dvh */
     justify-self: center;
 }
 
@@ -674,4 +674,590 @@
     align-items: flex-start;
     gap: 4px;
   }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    background-color: #f8f2dd;
+    padding-bottom: 80px; /* Further reduced from 90px */
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .header {
+    flex-direction: column;
+    padding: 12px 20px; 
+    gap: 12px; 
+    position: fixed;
+    border-radius: 0 0 20px 20px;
+    bottom: auto;
+  }
+
+  .headerLeft {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .storeIcon {
+    width: 35px; 
+    height: 35px;
+  }
+
+  .headerName h1 {
+    font-size: 1.2rem; 
+  }
+
+  .headerName p {
+    font-size: 0.9rem; 
+  }
+
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 15px 20px 25px 20px;
+    gap: 0;
+    justify-content: space-around;
+    background: var(--page-header-bg);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 20px 20px 0 0;
+    z-index: 1000;
+    order: unset;
+    min-height: 80px;
+  }
+
+  .navButton {
+    flex-direction: column;
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+    border-radius: 12px;
+    background: none;
+  }
+
+  .navButton:hover {
+    background-color: var(--button-primary-hover);
+    border-radius: 12px;
+  }
+
+  .navButton.active {
+    background-color: var(--button-primary);
+    border-radius: 12px;
+  }
+
+  .navIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .headerRight {
+    width: 100%;
+    justify-content: space-between;
+    order: 3;
+  }
+
+  .addButton, .logoutButton {
+    padding: 6px 14px; 
+    font-size: 0.85rem; 
+  }
+
+  .main {
+    padding: 120px 20px 25px 20px; /* Reduced bottom padding from 40px to 25px */
+    width: 100%;
+    min-width: auto;
+    background: transparent;
+    min-height: calc(100vh - 180px);
+  }
+
+  .dataFilters {
+    flex-direction: column;
+    gap: 12px;
+    margin: 15px 0 20px 0; /* Reduced bottom margin from 25px to 20px */
+    padding: 14px;
+    width: 100%;
+    max-width: none;
+  }
+
+  .searchBar input {
+    width: 100%;
+    max-width: none;
+    min-width: unset;
+  }
+
+  .categoryFilters,
+  .statusFilters {
+    width: 100%;
+  }
+
+  .customSelect {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .selectButton {
+    width: 100%;
+  }
+
+  .clearFiltersButton,
+  .exportButton {
+    width: 100%;
+    min-width: unset;
+  }
+
+  /* Section adjustments */
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px; /* Reduced from 10px */
+    margin-bottom: 12px; /* Reduced from 16px */
+  }
+
+  .sectionHeader h2 {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .paginationInfo {
+    font-size: 14px;
+  }
+
+  .filterInfo {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+  }
+
+  /* Table Section */
+  .tableSection {
+    border-radius: 12px;
+    background: #FEF7ED;
+    overflow: hidden;
+    margin-bottom: 20px; /* Reduced from 30px */
+  }
+
+  /* Table adjustments */
+  .tableContainer {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 0;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .table {
+    min-width: 700px;
+  }
+
+  .table th,
+  .table td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+
+  .productCell strong {
+    font-size: 14px;
+  }
+
+  .productDescription {
+    font-size: 11px;
+  }
+
+  .actionCell {
+    min-width: 100px;
+    padding: 8px;
+  }
+
+  .actionButton {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+  }
+
+  .tableFooter {
+    padding: 12px 16px;
+    border-radius: 0 0 12px 12px;
+    margin-top: 0;
+    margin-bottom: 8px; /* Reduced from 15px */
+  }
+
+  .statisticsSummary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .statItem {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .statNote {
+    margin-left: 0;
+    align-self: center;
+    text-align: center;
+  }
+
+  .emptyState {
+    padding: 32px 16px;
+    margin-bottom: 20px; /* Reduced from 30px */
+  }
+
+  .paginationContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    margin-top: 15px; /* Reduced from 20px */
+    padding: 0 16px;
+    margin-bottom: 25px; /* Reduced from 40px */
+  }
+
+  .paginationButton {
+    padding: 10px 16px;
+    font-size: 14px;
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .pageNumbers {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pageNumber {
+    padding: 8px 12px;
+    font-size: 14px;
+    min-width: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    background-color: #f8f2dd;
+    padding-bottom: 75px; /* Further reduced from 85px */
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .header {
+    padding: 10px 15px; 
+    gap: 10px; 
+  }
+
+  .headerLeft {
+    gap: 6px; 
+  }
+
+  .storeIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .headerName h1 {
+    font-size: 1.1rem;
+  }
+
+  .headerName p {
+    font-size: 0.8rem; 
+  }
+
+  .nav {
+    padding: 12px 15px 22px 15px;
+    border-radius: 15px 15px 0 0;
+    min-height: 75px;
+  }
+
+  .navButton {
+    padding: 6px 8px;
+    font-size: 0.7rem;
+    border-radius: 10px;
+  }
+
+  .navIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .main {
+    padding: 100px 15px 20px 15px; /* Reduced bottom padding from 35px to 20px */
+    background: transparent;
+    min-height: calc(100vh - 150px);
+  }
+
+  .dataFilters {
+    padding: 10px;
+    gap: 10px;
+    margin: 12px 0 15px 0; /* Reduced bottom margin from 20px to 15px */
+  }
+
+  .searchBar input,
+  .categoryFilters select,
+  .statusFilters select {
+    padding: 10px 12px;
+    font-size: 1rem;
+    min-width: unset;
+  }
+
+  .clearFiltersButton,
+  .exportButton {
+    padding: 10px 16px;
+    font-size: 1rem;
+  }
+
+  .sectionHeader h2 {
+    font-size: 15px;
+  }
+
+  .sectionHeader {
+    gap: 6px; /* Reduced from 8px */
+    margin-bottom: 10px; /* Reduced from 14px */
+  }
+
+  .paginationInfo {
+    font-size: 13px;
+  }
+
+  /* Table Section */
+  .tableSection {
+    margin-bottom: 15px; /* Reduced from 25px */
+  }
+
+  .table {
+    min-width: 650px;
+  }
+
+  .table th,
+  .table td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+
+  .productCell strong {
+    font-size: 13px;
+  }
+
+  .actionButton {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+  }
+
+  .addButton, .logoutButton {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .tableFooter {
+    padding: 10px 12px;
+    margin-bottom: 5px; /* Reduced from 10px */
+  }
+
+  .statItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .paginationButton {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  .pageNumber {
+    padding: 6px 10px;
+    font-size: 13px;
+    min-width: 36px;
+  }
+
+  .paginationContainer {
+    margin-bottom: 20px; /* Reduced from 35px */
+  }
+
+  .emptyState {
+    margin-bottom: 15px; /* Reduced from 25px */
+  }
+}
+
+/* Landscape mobile orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+  .dashboard {
+    background-color: #f8f2dd;
+    padding-bottom: 65px; /* Further reduced from 75px */
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .header {
+    flex-direction: row;
+    padding: 8px 20px;
+  }
+
+  .headerLeft {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex: unset;
+    order: unset;
+    max-width: unset;
+    margin: 0;
+    padding: 8px 20px 15px 20px;
+    border-radius: 15px 15px 0 0;
+    min-height: 65px;
+  }
+
+  .headerRight {
+    flex: 0 0 auto;
+    width: auto;
+    order: 0;
+  }
+
+  .main {
+    padding: 60px 20px 20px 20px; /* Reduced bottom padding from 30px to 20px */
+    min-height: calc(100vh - 105px);
+  }
+
+  .dataFilters {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 16px;
+    margin: 15px 0 15px 0; /* Reduced margins */
+  }
+
+  .paginationContainer {
+    margin-bottom: 15px; /* Reduced from 20px */
+  }
+
+  .tableSection {
+    margin-bottom: 15px; /* Reduced from 20px */
+  }
+
+  .emptyState {
+    margin-bottom: 15px; /* Reduced from 20px */
+  }
+}
+
+/* Tablet styles - Keep nav in header */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard {
+    padding-bottom: 0;
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .header {
+    padding: 15px 30px;
+  }
+
+  .nav {
+    position: static;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 60px;
+    box-shadow: none;
+  }
+
+  .main {
+    padding: 120px 30px 20px 30px;
+    width: 90%;
+    min-height: calc(100vh - 140px);
+  }
+
+  .dataFilters {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 95%;
+    max-width: 1000px;
+  }
+
+  .searchBar {
+    flex: 2;
+  }
+
+  .categoryFilters,
+  .statusFilters {
+    flex: 1;
+  }
+
+  .nav {
+    gap: 30px;
+  }
+
+  .table th,
+  .table td {
+    padding: 14px 16px;
+  }
+
+  .tableFooter {
+    padding: 14px 18px;
+  }
+
+  .statisticsSummary {
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .statItem {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .paginationContainer {
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .paginationButton {
+    width: auto;
+    max-width: none;
+  }
+}
+
+/* Medium tablet size adjustment */
+@media (min-width: 600px) and (max-width: 768px) {
+  .dashboard {
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .tableFooter {
+    margin-top: 0;
+    padding: 12px 16px;
+  }
+
+  .statisticsSummary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .statItem {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .paginationContainer {
+    margin-bottom: 20px;
+  }
+}
+
+.tableSection {
+  border-radius: 12px;
+  background: #FEF7ED;
+  overflow: hidden;
+  margin-bottom: 15px; /* Reduced from 20px */
 }
