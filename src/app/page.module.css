@@ -25,11 +25,70 @@
     padding: 20px;
     min-height: 100vh;
     display: flex;
+    flex-direction: column; /* Changed to column to stack brand and login */
     justify-content: center;
     align-items: center;
     background: var(--background);
     color: var(--text-color);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Brand Header Styles */
+.brandHeader {
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 3;
+}
+
+.brandTitle {
+    font-size: 5rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--button-secondary) 50%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.brandSubtitle {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 8px 0 0 0;
+    color: var(--text-color);
+    opacity: 0.8;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Wave Shape Divider */
+.customShapeDividerBottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+    z-index: 1; /* Behind the login form */
+}
+
+.customShapeDividerBottom svg {
+    position: relative;
+    display: block;
+    width: calc(166% + 1.3px);
+    height: 203px;
+}
+
+.shapeFill {
+    fill: var(--table-header-footer); /* Use your existing accent color */
 }
 
 .loginContainer {
@@ -41,6 +100,9 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     background-color: white;
     text-align: center;
+    position: relative;
+    z-index: 2; /* Above the wave */
+    margin-top: 80px; /* Add space for the brand header */
 }
 
 .loginContainer h1 {
@@ -194,13 +256,46 @@
 }
 
 /* Responsive design */
-@media (max-width: 480px) {
-    .loginContainer {
-        padding: 30px 20px;
-        margin: 10px;
+@media (max-width: 768px) {
+    .customShapeDividerBottom svg {
+        height: 150px;
     }
     
-    .loginContainer h1 {
-        font-size: 1.8rem;
+    .brandHeader {
+        top: 40px;
+    }
+    
+    .brandTitle {
+        font-size: 2.8rem;
+    }
+    
+    .brandSubtitle {
+        font-size: 1rem;
+    }
+    
+    .loginContainer {
+        margin-top: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .customShapeDividerBottom svg {
+        height: 120px;
+    }
+    
+    .brandHeader {
+        top: 30px;
+    }
+    
+    .brandTitle {
+        font-size: 2.2rem;
+    }
+    
+    .brandSubtitle {
+        font-size: 0.9rem;
+    }
+    
+    .loginContainer {
+        margin-top: 50px;
     }
 }
