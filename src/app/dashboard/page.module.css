@@ -131,7 +131,7 @@
 }   
 
 .main {
-    padding: 120px 40px 20px 40px;
+    padding: 150px 40px 20px 40px;
     background: var(--background);
     min-height: calc(100vh - 100px);
     box-sizing: border-box;

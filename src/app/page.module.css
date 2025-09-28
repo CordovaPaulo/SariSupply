@@ -1,24 +1,3 @@
-:root {
-    --background: #f8f2dd;
-    --foreground: #f7f7f0;
-    --primary-color: #c9e2b8;
-    --secondary-color: #fff;
-    --accent-color: #ffa4a4;
-    --button-primary: #ffffff;
-    --button-primary-hover: #d1c7c7;
-    --button-primary-active: #9b9a9a;
-    --button-secondary: #fff;
-    --button-secondary-hover: #fff;
-    --button-secondary-active: #fff;
-    --button-disabled: #a5a5a5;
-    --text-color: #000000;
-    --alt-text-color: #ffffff;
-    --major-action: #ff6347;
-    --table-header-footer: #ffcf76;
-    --table-header-footer-text: #8b4513;
-    --page-header-bg: #ffffff
-}
-
 .loginPage {
     box-sizing: border-box;
     margin: 0;
