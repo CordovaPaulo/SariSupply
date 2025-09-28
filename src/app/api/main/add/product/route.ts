@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body: CreateProductRequest = await request.json();
-    const { name, description, quantity, price, status, category } = body;
+    const { name, description, price, status, } = body;
 
     if (!name || !description || !price || !status) {
       return NextResponse.json(

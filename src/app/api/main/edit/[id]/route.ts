@@ -61,7 +61,7 @@ export async function PUT(
       requestData = await request.json();
     } catch (error) {
       return NextResponse.json(
-        { error: 'Invalid JSON in request body' },
+        { error: error instanceof Error ? error.message : 'Invalid JSON'},
         { status: 400 }
       );
     }

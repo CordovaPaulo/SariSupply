@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProductResponse, ProductStatus, ProductCategory } from '../../models/product';
-import { Store, LayoutDashboard, PackageOpen, Archive, ChevronLeft, ChevronRight, Search, ArchiveRestore, ChevronDown, Cookie, GlassWater, Bubbles, SquareUser, Backpack, CircleEllipsis } from 'lucide-react';
+import { Store, LayoutDashboard, PackageOpen, Archive, ChevronLeft, ChevronRight, ArchiveRestore, ChevronDown, Cookie, GlassWater, Bubbles, SquareUser, Backpack, CircleEllipsis } from 'lucide-react';
 import AddProductPopup from '../../components/AddProductPopup/AddProductPopup';
 import UnarchiveProductPopup from '../../components/UnarchiveProductPopup/UnarchiveProductPopup';
 import Style from './page.module.css';

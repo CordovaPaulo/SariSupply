@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const dotenv = require('dotenv');
-
+s
 // MongoDB connection function (CommonJS compatible)
 async function connectDB() {
   const MONGODB_URI = process.env.MONGODB_URI;

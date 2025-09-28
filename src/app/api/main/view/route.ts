@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CreateProductRequest } from '@/models/product';
 import { connectDB } from '@/lib/mongodb';
 import { verifyToken } from '@/lib/jwt';
-import { request } from 'http';
 
 export async function GET(request: NextRequest) {
     try{
