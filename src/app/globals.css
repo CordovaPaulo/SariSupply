@@ -14,9 +14,12 @@
     --button-disabled: #a5a5a5;
     --text-color: #000000;
     --alt-text-color: #ffffff;
-    --major-action: #ff6347;
+    --major-action: #fc4423;
     --major-action-hover: rgb(192, 45, 22);
     --major-action-active: #9b3e2e;
+    --table-header-footer: #ffcf76;
+    --table-header-footer-text: #8b4513;
+    --page-header-bg: #f1b23d;
 }
 
 html,

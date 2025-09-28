@@ -38,3 +38,15 @@ export interface UserResponse {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface ForgotPasswordRequest {
+  email: string;
+  username: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  username: string;
+  newPassword: string;
+  confirmPassword?: string;
+}

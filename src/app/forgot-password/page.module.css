@@ -1,25 +1,4 @@
-:root {
-    --background: #f8f2dd;
-    --foreground: #f7f7f0;
-    --primary-color: #c9e2b8;
-    --secondary-color: #fff;
-    --accent-color: #ffa4a4;
-    --button-primary: #ffffff;
-    --button-primary-hover: #d1c7c7;
-    --button-primary-active: #9b9a9a;
-    --button-secondary: #fff;
-    --button-secondary-hover: #fff;
-    --button-secondary-active: #fff;
-    --button-disabled: #a5a5a5;
-    --text-color: #000000;
-    --alt-text-color: #ffffff;
-    --major-action: #ff6347;
-    --table-header-footer: #ffcf76;
-    --table-header-footer-text: #8b4513;
-    --page-header-bg: #ffffff
-}
-
-.loginPage {
+.forgotPasswordPage {
     box-sizing: border-box;
     margin: 0;
     padding: 20px;
@@ -32,7 +11,7 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.loginContainer {
+.forgotPasswordContainer {
     width: 100%;
     max-width: 450px;
     padding: 40px;
@@ -43,34 +22,72 @@
     text-align: center;
 }
 
-.loginContainer h1 {
-    font-size: 2.2rem;
+.header {
     margin-bottom: 2rem;
-    color: var(--text-color);
-    font-weight: 600;
+    text-align: left;
 }
 
-.loginForm {
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    padding: 8px 0;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.backButton:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.backIcon {
+    width: 16px;
+    height: 16px;
+}
+
+.header h1 {
+    font-size: 2.2rem;
+    margin: 0;
+    color: var(--text-color);
+    font-weight: 600;
+    text-align: center;
+}
+
+.description {
+    text-align: center;
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.forgotPasswordForm {
     display: flex;
     flex-direction: column;
     width: 100%;
     gap: 1.5rem;
 }
 
-.loginForm > div {
+.forgotPasswordForm > div {
     display: flex;
     flex-direction: column;
     text-align: left;
 }
 
-.loginForm label {
+.forgotPasswordForm label {
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: var(--text-color);
     font-size: 0.95rem;
 }
 
-.loginForm input {
+.forgotPasswordForm input {
     width: 100%;
     padding: 12px 16px;
     border: 2px solid #e1e5e9;
@@ -81,7 +98,7 @@
     background: white;
 }
 
-.loginForm input:focus {
+.forgotPasswordForm input:focus {
     outline: none;
     border-color: var(--accent-color);
     box-shadow: 0 0 0 3px rgba(255, 164, 164, 0.1);
@@ -126,7 +143,7 @@
     height: 20px;
 }
 
-.loginForm button[type="submit"] {
+.submitButton {
     width: 100%;
     padding: 12px;
     background: linear-gradient(135deg, var(--accent-color) 0%, #ff8a80 100%);
@@ -141,18 +158,18 @@
     box-shadow: 0 2px 4px rgba(255, 164, 164, 0.3);
 }
 
-.loginForm button[type="submit"]:hover:not(:disabled) {
+.submitButton:hover:not(:disabled) {
     background: linear-gradient(135deg, #ff8a80 0%, var(--accent-color) 100%);
     box-shadow: 0 4px 8px rgba(255, 164, 164, 0.4);
     transform: translateY(-1px);
 }
 
-.loginForm button[type="submit"]:active:not(:disabled) {
+.submitButton:active:not(:disabled) {
     transform: translateY(0);
     box-shadow: 0 2px 4px rgba(255, 164, 164, 0.3);
 }
 
-.loginForm button[type="submit"]:disabled {
+.submitButton:disabled {
     background: var(--button-disabled);
     cursor: not-allowed;
     box-shadow: none;
@@ -170,37 +187,25 @@
     margin: 0;
 }
 
-.actions {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: 1.5rem;
-}
-
-.linkButton {
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: underline;
-    padding: 0.5rem;
-    font-size: 0.95rem;
-    transition: color 0.2s;
-}
-
-.linkButton:hover {
-    color: #0056b3;
-    text-decoration: none;
+.success {
+    color: #28a745;
+    font-size: 0.875rem;
+    text-align: center;
+    padding: 10px;
+    background: #e8f5e8;
+    border: 1px solid #c3e6c3;
+    border-radius: 6px;
+    margin: 0;
 }
 
 /* Responsive design */
 @media (max-width: 480px) {
-    .loginContainer {
+    .forgotPasswordContainer {
         padding: 30px 20px;
         margin: 10px;
     }
     
-    .loginContainer h1 {
+    .header h1 {
         font-size: 1.8rem;
     }
 }

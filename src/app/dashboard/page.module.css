@@ -15,7 +15,7 @@
     right: 0;
     z-index: 1000;
     width: 100%;
-    background: linear-gradient(90deg, #ff5252 0%, #69ff69 100%);
+    background: var(--page-header-bg);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -258,14 +258,14 @@
 }
 
 .table thead {
-  background: #FEF7ED;
+  background: var(--table-header-footer);
 }
 
 .table th {
   padding: 16px 20px;
   text-align: left;
   font-weight: 600;
-  color: #8B4513;
+  color: var(--table-header-footer-text);
   font-size: 14px;
   border-bottom: 1px solid #F3E8D0;
 }

@@ -9,7 +9,7 @@ import EditProductPopup from '../../components/EditProductPopup/EditProductPopup
 import ViewProductPopup from '../../components/ViewProductPopup/ViewProductPopup';
 import { CircleCheck, CircleAlert, CircleMinus, ChevronDown, Cookie, GlassWater, Bubbles, SquareUser, Backpack, CircleEllipsis, Store, LayoutDashboard, PackageOpen, Archive, ChevronLeft, ChevronRight, Pencil, Eye, Search } from 'lucide-react';
 import Style from './page.module.css';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 import PageLoader from '../../components/PageLoader/PageLoader';
 
 interface InventoryStats {
@@ -208,80 +208,329 @@ export default function InventoryPage() {
     setSearchTerm(e.target.value);
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value);
-  };
-
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedStatus(e.target.value);
-  };
-
-  // Clear filters
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedCategory('');
     setSelectedStatus('');
   };
 
-  // Export functionality
-  const handleExport = () => {
-    const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
-    const filename = `inventory_${timestamp}`;
+  // Add this function to calculate totals for filtered products
+  const calculateFilteredTotals = () => {
+    const totalProducts = filteredProducts.length;
+    const totalValue = filteredProducts.reduce((sum, product) => sum + (product.price * product.quantity), 0);
+    return { totalProducts, totalValue };
+  };
+
+  // Replace the handleExport function with this styled version:
+  const handleExport = async () => {
+    const timestamp = new Date().toISOString().split('T')[0];
+    const currentTime = new Date().toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    const filename = `inventory_report_${timestamp}`;
     
-    const headers = ['Product Name', 'Description', 'Category', 'Quantity', 'Price', 'Total Value', 'Status', 'Created Date'];
+    const totals = calculateFilteredTotals();
     
-    const data = [
-      headers,
-      ...filteredProducts.map(product => [
-        product.name,
-        product.description,
-        formatCategoryName(product.category),
-        product.quantity,
-        `₱${product.price.toFixed(2)}`, // Format as currency
-        `₱${(product.price * product.quantity).toFixed(2)}`, // Format as currency
-        formatStatusName(product.status),
-        formatDate(product.createdAt || new Date())
-      ])
+    // Create a new workbook
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Inventory Report');
+
+    // Set column widths
+    worksheet.columns = [
+      { width: 50 },   // No.
+      { width: 25 },  // Product Name
+      { width: 40 },  // Description
+      { width: 18 },  // Category
+      { width: 12 },  // Quantity
+      { width: 15 },  // Unit Price
+      { width: 18 },  // Total Value
+      { width: 18 },  // Status
+      { width: 15 },  // Stock Level
+      { width: 18 }   // Created Date
     ];
 
-    const worksheet = XLSX.utils.aoa_to_sheet(data);
-    
-    // Set column widths for better readability
-    worksheet['!cols'] = [
-      { width: 25 }, // Product Name
-      { width: 35 }, // Description
-      { width: 18 }, // Category
-      { width: 12 }, // Quantity
-      { width: 15 }, // Price
-      { width: 18 }, // Total Value
-      { width: 18 }, // Status
-      { width: 18 }  // Created Date
-    ];
+    let currentRow = 1;
 
-    // Style the header row
-    const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1:H1');
-    for (let col = range.s.c; col <= range.e.c; col++) {
-      const cellRef = XLSX.utils.encode_cell({ r: 0, c: col });
-      if (!worksheet[cellRef]) continue;
-      worksheet[cellRef].s = {
-        font: { bold: true },
-        fill: { fgColor: { rgb: "D4E6F1" } },
-        alignment: { horizontal: "center" }
-      };
-    }
-
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Inventory');
-    
-    // Add metadata to the workbook
-    workbook.Props = {
-      Title: "Inventory Export",
-      Subject: "Product Inventory Data",
-      Author: user?.username || "Inventory System",
-      CreatedDate: new Date()
+    // Add title
+    const titleRow = worksheet.getRow(currentRow);
+    titleRow.getCell(1).value = 'INVENTORY MANAGEMENT SYSTEM';
+    titleRow.getCell(1).style = {
+      font: { bold: true, size: 16, color: { argb: 'FFFFFFFF' } },
+      fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF2E4057' } },
+      alignment: { horizontal: 'center', vertical: 'middle' },
+      border: {
+        top: { style: 'thick', color: { argb: 'FF000000' } },
+        left: { style: 'thick', color: { argb: 'FF000000' } },
+        bottom: { style: 'thick', color: { argb: 'FF000000' } },
+        right: { style: 'thick', color: { argb: 'FF000000' } }
+      }
     };
+    worksheet.mergeCells(currentRow, 1, currentRow, 10);
+    titleRow.height = 30;
+    currentRow++;
+
+    // Add subtitle
+    const subtitleRow = worksheet.getRow(currentRow);
+    subtitleRow.getCell(1).value = 'PRODUCT INVENTORY REPORT';
+    subtitleRow.getCell(1).style = {
+      font: { bold: true, size: 14, color: { argb: 'FFFFFFFF' } },
+      fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4A90A4' } },
+      alignment: { horizontal: 'center', vertical: 'middle' },
+      border: {
+        top: { style: 'medium', color: { argb: 'FF000000' } },
+        left: { style: 'medium', color: { argb: 'FF000000' } },
+        bottom: { style: 'medium', color: { argb: 'FF000000' } },
+        right: { style: 'medium', color: { argb: 'FF000000' } }
+      }
+    };
+    worksheet.mergeCells(currentRow, 1, currentRow, 10);
+    subtitleRow.height = 25;
+    currentRow += 2;
+
+    // Add report info
+    const reportInfo = [
+      ['Generated on:', currentTime],
+      ['Generated by:', user?.username || user?.email || 'System'],
+      ['Total Products:', totals.totalProducts.toString()],
+      ['Total Inventory Value:', formatCurrency(totals.totalValue)]
+    ];
+
+    reportInfo.forEach(([label, value]) => {
+      const row = worksheet.getRow(currentRow);
+      row.getCell(1).value = label;
+      row.getCell(2).value = value;
+      
+      // Style the info rows
+      row.getCell(1).style = {
+        font: { bold: true, size: 11 },
+        fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE8F4F8' } },
+        border: {
+          top: { style: 'thin', color: { argb: 'FFCCCCCC' } },
+          left: { style: 'thin', color: { argb: 'FFCCCCCC' } },
+          bottom: { style: 'thin', color: { argb: 'FFCCCCCC' } },
+          right: { style: 'thin', color: { argb: 'FFCCCCCC' } }
+        }
+      };
+      row.getCell(2).style = {
+        font: { size: 11 },
+        fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE8F4F8' } },
+        border: {
+          top: { style: 'thin', color: { argb: 'FFCCCCCC' } },
+          left: { style: 'thin', color: { argb: 'FFCCCCCC' } },
+          bottom: { style: 'thin', color: { argb: 'FFCCCCCC' } },
+          right: { style: 'thin', color: { argb: 'FFCCCCCC' } }
+        }
+      };
+      currentRow++;
+    });
+
+    currentRow += 2; // Add space
+
+    // Filter criteria
+    const filterRow = worksheet.getRow(currentRow);
+    filterRow.getCell(1).value = 'FILTER CRITERIA:';
+    filterRow.getCell(1).style = {
+      font: { bold: true, size: 12 },
+      fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF5F5F5' } }
+    };
+    currentRow++;
+
+    const filterInfo = [
+      ['Search Term:', searchTerm || 'None'],
+      ['Category Filter:', selectedCategory ? formatCategoryName(selectedCategory as ProductCategory) : 'All Categories'],
+      ['Status Filter:', selectedStatus ? formatStatusName(selectedStatus as ProductStatus) : 'All Status']
+    ];
+
+    filterInfo.forEach(([label, value]) => {
+      const row = worksheet.getRow(currentRow);
+      row.getCell(1).value = label;
+      row.getCell(2).value = value;
+      row.getCell(1).style = {
+        font: { italic: true, size: 10 },
+        fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF5F5F5' } }
+      };
+      row.getCell(2).style = {
+        font: { size: 10 },
+        fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF5F5F5' } }
+      };
+      currentRow++;
+    });
+
+    currentRow += 2; // Add space
+
+    // Add table headers
+    const headers = [
+      'No.', 'Product Name', 'Description', 'Category', 'Quantity', 
+      'Unit Price', 'Total Value', 'Status', 'Stock Level', 'Created Date'
+    ];
+
+    const headerRow = worksheet.getRow(currentRow);
+    headers.forEach((header, index) => {
+      const cell = headerRow.getCell(index + 1);
+      cell.value = header;
+      cell.style = {
+        font: { bold: true, size: 12, color: { argb: 'FFFFFFFF' } },
+        fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF34495E' } },
+        alignment: { horizontal: 'center', vertical: 'middle' },
+        border: {
+          top: { style: 'thick', color: { argb: 'FF000000' } },
+          left: { style: 'medium', color: { argb: 'FF000000' } },
+          bottom: { style: 'thick', color: { argb: 'FF000000' } },
+          right: { style: 'medium', color: { argb: 'FF000000' } }
+        }
+      };
+    });
+    headerRow.height = 20;
+    currentRow++;
+
+    // Add product data
+    filteredProducts.forEach((product, index) => {
+      const displayStatus = determineProductStatus(product.quantity, product.status);
+      let stockLevel = 'Normal';
+      
+      if (product.quantity === 0) {
+        stockLevel = 'Out of Stock';
+      } else if (product.quantity <= 5) {
+        stockLevel = 'Critical';
+      } else if (product.quantity <= 10) {
+        stockLevel = 'Low';
+      }
+
+      const row = worksheet.getRow(currentRow);
+      const isEvenRow = index % 2 === 0;
+      
+      // Set cell values
+      row.getCell(1).value = index + 1;
+      row.getCell(2).value = product.name;
+      row.getCell(3).value = product.description;
+      row.getCell(4).value = formatCategoryName(product.category);
+      row.getCell(5).value = product.quantity;
+      row.getCell(6).value = product.price;
+      row.getCell(7).value = product.price * product.quantity;
+      row.getCell(8).value = formatStatusName(displayStatus);
+      row.getCell(9).value = stockLevel;
+      row.getCell(10).value = formatDate(product.createdAt || new Date());
+
+      // Apply styles to each cell
+      for (let col = 1; col <= 10; col++) {
+        const cell = row.getCell(col);
+        
+        // Base style
+        let cellStyle: any = {
+          fill: { 
+            type: 'pattern', 
+            pattern: 'solid', 
+            fgColor: { argb: isEvenRow ? 'FFF8F9FA' : 'FFFFFFFF' } 
+          },
+          alignment: { 
+            horizontal: col === 2 || col === 3 ? 'left' : 'center',
+            vertical: 'middle'
+          },
+          border: {
+            top: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+            left: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+            bottom: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+            right: { style: 'thin', color: { argb: 'FFE0E0E0' } }
+          }
+        };
+
+        // Currency formatting for price columns
+        if (col === 6 || col === 7) {
+          cellStyle.numFmt = '"₱"#,##0.00';
+        }
+
+        // Highlight critical stock levels (quantity column)
+        if (col === 5) {
+          if (product.quantity === 0) {
+            cellStyle.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFEBEE' } };
+            cellStyle.font = { color: { argb: 'FFC62828' }, bold: true };
+          } else if (product.quantity <= 5) {
+            cellStyle.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF3E0' } };
+            cellStyle.font = { color: { argb: 'FFF57C00' }, bold: true };
+          }
+        }
+
+        // Highlight status column
+        if (col === 8) {
+          if (displayStatus === ProductStatus.OUT_OF_STOCK) {
+            cellStyle.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFCDD2' } };
+            cellStyle.font = { color: { argb: 'FFD32F2F' }, bold: true };
+          } else if (displayStatus === ProductStatus.LOW_STOCK) {
+            cellStyle.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFE0B2' } };
+            cellStyle.font = { color: { argb: 'FFF57C00' }, bold: true };
+          } else {
+            cellStyle.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFC8E6C9' } };
+            cellStyle.font = { color: { argb: 'FF388E3C' }, bold: true };
+          }
+        }
+
+        cell.style = cellStyle;
+      }
+      
+      currentRow++;
+    });
+
+    currentRow += 2; // Add space before summary
+
+    // Add summary section
+    const summaryTitle = worksheet.getRow(currentRow);
+    summaryTitle.getCell(1).value = 'INVENTORY SUMMARY:';
+    summaryTitle.getCell(1).style = {
+      font: { bold: true, size: 12 },
+      fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE3F2FD' } }
+    };
+    currentRow++;
+
+    const summaryData = [
+      ['Total Number of Products:', totals.totalProducts],
+      ['Total Inventory Value:', totals.totalValue],
+      ['', ''],
+      ['STOCK LEVEL BREAKDOWN:', ''],
+      ['In Stock:', filteredProducts.filter(p => p.quantity > 10).length],
+      ['Low Stock (6-10):', filteredProducts.filter(p => p.quantity > 5 && p.quantity <= 10).length],
+      ['Critical Stock (1-5):', filteredProducts.filter(p => p.quantity > 0 && p.quantity <= 5).length],
+      ['Out of Stock:', filteredProducts.filter(p => p.quantity === 0).length]
+    ];
+
+    summaryData.forEach(([label, value]) => {
+      const row = worksheet.getRow(currentRow);
+      row.getCell(1).value = label;
+      row.getCell(2).value = value;
+      
+      if (label && label.toString().includes(':')) {
+        row.getCell(1).style = {
+          font: { bold: true, size: 11 },
+          fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE3F2FD' } }
+        };
+        
+        if (label === 'Total Inventory Value:') {
+          row.getCell(2).style = {
+            numFmt: '"₱"#,##0.00',
+            font: { bold: true },
+            fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE3F2FD' } }
+          };
+        }
+      }
+      currentRow++;
+    });
+
+    // Save the file
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { 
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+    });
     
-    XLSX.writeFile(workbook, `${filename}.xlsx`);
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${filename}.xlsx`;
+    link.click();
+    
+    window.URL.revokeObjectURL(url);
   };
 
   const handlePreviousPage = () => {
@@ -713,7 +962,7 @@ export default function InventoryPage() {
         <section className={Style.recentSection}>
           <div className={Style.sectionHeader}>
             <div className={Style.paginationInfo}>
-              Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} items
+              Showing {startIndex + 1} - {Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} items
               {(searchTerm || selectedCategory || selectedStatus) && (
                 <span className={Style.filterInfo}> (filtered from {products.length} total)</span>
               )}
@@ -782,10 +1031,10 @@ export default function InventoryPage() {
                               <span className={Style.criticalStock}> (Critical!)</span>
                             )}
                           </td>
-                          <td className={Style.priceCell}>
+                          <td className={Style.totalPriceCell}>
                             {formatCurrency(product.price)}
                           </td>
-                          <td className={Style.totalPriceCell}>
+                          <td className={Style.priceCell}>
                             {formatCurrency(product.price * product.quantity)}
                           </td>
                           <td>
@@ -829,6 +1078,24 @@ export default function InventoryPage() {
                     })}
                   </tbody>
                 </table>
+
+                <div className={Style.tableFooter}>
+                <div className={Style.statisticsSummary}>
+                  <div className={Style.statItem}>
+                    <span className={Style.statLabel}>Total Products:</span>
+                    <span className={Style.statValue}>{stats.totalItems}</span>
+                  </div>
+                  <div className={Style.statItem}>
+                    <span className={Style.statLabel}>Total Value:</span>
+                    <span className={Style.statValue}>{formatCurrency(stats.totalValue)}</span>
+                  </div>
+                  {(searchTerm || selectedCategory) && (
+                    <div className={Style.statNote}>
+                      * Statistics based on filtered results
+                    </div>
+                  )}
+                </div>
+              </div>
 
                 {/* Pagination Controls */}
                 {totalPages > 1 && (
