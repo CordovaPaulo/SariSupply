@@ -7,7 +7,7 @@ import AddProductPopup from '../../components/AddProductPopup/AddProductPopup';
 import ArchiveProductPopup from '../../components/ArchiveProductPopup/ArchiveProductPopup';
 import EditProductPopup from '../../components/EditProductPopup/EditProductPopup';
 import ViewProductPopup from '../../components/ViewProductPopup/ViewProductPopup';
-import { Store, LayoutDashboard, PackageOpen, Archive, ChevronLeft, ChevronRight, Pencil, Eye, Search } from 'lucide-react';
+import { CircleCheck, CircleAlert, CircleMinus, ChevronDown, Cookie, GlassWater, Bubbles, SquareUser, Backpack, CircleEllipsis, Store, LayoutDashboard, PackageOpen, Archive, ChevronLeft, ChevronRight, Pencil, Eye, Search } from 'lucide-react';
 import Style from './page.module.css';
 import * as XLSX from 'xlsx';
 import PageLoader from '../../components/PageLoader/PageLoader';
@@ -180,7 +180,10 @@ export default function InventoryPage() {
         acc.totalValue += product.price * product.quantity;
       }
       
-      if (product.status === ProductStatus.OUT_OF_STOCK) {
+      // Count products with different statuses
+      if (product.status === ProductStatus.OUT_OF_STOCK || 
+          product.status === ProductStatus.LOW_STOCK || 
+          (product.quantity > 0 && product.quantity <= 10 && product.status === ProductStatus.IN_STOCK)) {
         acc.lowStocks += 1;
       }
       
@@ -411,6 +414,78 @@ export default function InventoryPage() {
     return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
+  // Add this function after your state declarations (around line 60):
+  const determineProductStatus = (quantity: number, currentStatus: ProductStatus): ProductStatus => {
+    // Don't change status if it's manually set to discontinued
+    if (currentStatus === ProductStatus.DISCONTINUED) {
+      return ProductStatus.DISCONTINUED;
+    }
+    
+    if (quantity === 0) {
+      return ProductStatus.OUT_OF_STOCK;
+    } else if (quantity <= 5) {  // Critical low stock
+      return ProductStatus.LOW_STOCK;
+    } else if (quantity <= 10) { // Warning low stock
+      return ProductStatus.LOW_STOCK;
+    } else {
+      return ProductStatus.IN_STOCK;
+    }
+  };
+
+  // Add this state for the custom dropdown
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+
+  // Add this function to get category icon
+  const getCategoryIcon = (category: ProductCategory | string) => {
+    switch (category) {
+      case ProductCategory.FOOD:
+        return <Cookie className={Style.categoryIcon} />;
+      case ProductCategory.BEVERAGE:
+        return <GlassWater className={Style.categoryIcon} />;
+      case ProductCategory.CLEANING:
+        return <Bubbles className={Style.categoryIcon} />;
+      case ProductCategory.PERSONAL_CARE:
+        return <SquareUser className={Style.categoryIcon} />;
+      case ProductCategory.SCHOOL_SUPPLIES:
+        return <Backpack className={Style.categoryIcon} />;
+      case ProductCategory.OTHER:
+        return <CircleEllipsis className={Style.categoryIcon} />;
+      default:
+        return null;
+    }
+  };
+
+  // Add this function to get status icon
+  const getStatusIcon = (status: ProductStatus | string) => {
+    switch (status) {
+      case ProductStatus.IN_STOCK:
+        return <CircleCheck className={`${Style.statusIcon} ${Style.inStock}`} />;
+      case ProductStatus.LOW_STOCK:
+        return <CircleAlert className={`${Style.statusIcon} ${Style.lowStock}`} />;
+      case ProductStatus.OUT_OF_STOCK:
+        return <CircleMinus className={`${Style.statusIcon} ${Style.outOfStock}`} />;
+      default:
+        return null;
+    }
+  };
+
+  // Update the click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest(`.${Style.customSelect}`)) {
+        setShowCategoryDropdown(false);
+        setShowStatusDropdown(false);
+      }
+    };
+
+    if (showCategoryDropdown || showStatusDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showCategoryDropdown, showStatusDropdown]);
+
   if (loading) {
     return <PageLoader message="Loading inventory..." />;
   }
@@ -490,50 +565,138 @@ export default function InventoryPage() {
               onChange={handleSearchChange}
             />
           </div>
+
+          {/* Custom Category Dropdown */}
           <div className={Style.categoryFilters}>
-            <select
-              id="category"
-              name="category"
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-            >
-              <option value="">All Categories</option>
-              <option value={ProductCategory.FOOD}>
-                {formatCategoryName(ProductCategory.FOOD)}
-              </option>
-              <option value={ProductCategory.BEVERAGE}>
-                {formatCategoryName(ProductCategory.BEVERAGE)}
-              </option>
-              <option value={ProductCategory.CLEANING}>
-                {formatCategoryName(ProductCategory.CLEANING)}
-              </option>
-              <option value={ProductCategory.PERSONAL_CARE}>
-                {formatCategoryName(ProductCategory.PERSONAL_CARE)}
-              </option>
-              <option value={ProductCategory.SCHOOL_SUPPLIES}>
-                {formatCategoryName(ProductCategory.SCHOOL_SUPPLIES)}
-              </option>
-              <option value={ProductCategory.OTHER}>
-                {formatCategoryName(ProductCategory.OTHER)}
-              </option>
-            </select>
+            <div className={Style.customSelect}>
+              <button
+                className={Style.selectButton}
+                onClick={() => {
+                  setShowCategoryDropdown(!showCategoryDropdown);
+                  setShowStatusDropdown(false);
+                }}
+                type="button"
+              >
+                <div className={Style.selectButtonContent}>
+                  {selectedCategory ? (
+                    <>
+                      {getCategoryIcon(selectedCategory as ProductCategory)}
+                      {formatCategoryName(selectedCategory as ProductCategory)}
+                    </>
+                  ) : (
+                    'All Categories'
+                  )}
+                </div>
+                <ChevronDown 
+                  className={`${Style.dropdownArrow} ${showCategoryDropdown ? Style.open : ''}`} 
+                />
+              </button>
+              
+              {showCategoryDropdown && (
+                <div className={Style.dropdownList}>
+                  <div
+                    className={`${Style.dropdownOption} ${!selectedCategory ? Style.selected : ''}`}
+                    onClick={() => {
+                      setSelectedCategory('');
+                      setShowCategoryDropdown(false);
+                    }}
+                  >
+                    All Categories
+                  </div>
+                  
+                  {Object.values(ProductCategory).map((category) => (
+                    <div
+                      key={category}
+                      className={`${Style.dropdownOption} ${selectedCategory === category ? Style.selected : ''}`}
+                      onClick={() => {
+                        setSelectedCategory(category);
+                        setShowCategoryDropdown(false);
+                      }}
+                    >
+                      {getCategoryIcon(category)}
+                      {formatCategoryName(category)}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
+
+          {/* Custom Status Dropdown */}
           <div className={Style.statusFilters}>
-            <select
-              id="status"
-              name="status"
-              value={selectedStatus}
-              onChange={handleStatusChange}
-            >
-              <option value="">All Statuses</option>
-              <option value={ProductStatus.IN_STOCK}>
-                {formatStatusName(ProductStatus.IN_STOCK)}
-              </option>
-              <option value={ProductStatus.OUT_OF_STOCK}>
-                {formatStatusName(ProductStatus.OUT_OF_STOCK)}
-              </option>
-            </select>
+            <div className={Style.customSelect}>
+              <button
+                className={Style.selectButton}
+                onClick={() => {
+                  setShowStatusDropdown(!showStatusDropdown);
+                  setShowCategoryDropdown(false);
+                }}
+                type="button"
+              >
+                <div className={Style.selectButtonContent}>
+                  {selectedStatus ? (
+                    <>
+                      {getStatusIcon(selectedStatus as ProductStatus)}
+                      {formatStatusName(selectedStatus as ProductStatus)}
+                    </>
+                  ) : (
+                    'All Status'
+                  )}
+                </div>
+                <ChevronDown 
+                  className={`${Style.dropdownArrow} ${showStatusDropdown ? Style.open : ''}`} 
+                />
+              </button>
+              
+              {showStatusDropdown && (
+                <div className={Style.dropdownList}>
+                  <div
+                    className={`${Style.dropdownOption} ${!selectedStatus ? Style.selected : ''}`}
+                    onClick={() => {
+                      setSelectedStatus('');
+                      setShowStatusDropdown(false);
+                    }}
+                  >
+                    All Status
+                  </div>
+                  
+                  <div
+                    className={`${Style.dropdownOption} ${selectedStatus === ProductStatus.IN_STOCK ? Style.selected : ''}`}
+                    onClick={() => {
+                      setSelectedStatus(ProductStatus.IN_STOCK);
+                      setShowStatusDropdown(false);
+                    }}
+                  >
+                    {getStatusIcon(ProductStatus.IN_STOCK)}
+                    In Stock
+                  </div>
+                  
+                  <div
+                    className={`${Style.dropdownOption} ${selectedStatus === ProductStatus.LOW_STOCK ? Style.selected : ''}`}
+                    onClick={() => {
+                      setSelectedStatus(ProductStatus.LOW_STOCK);
+                      setShowStatusDropdown(false);
+                    }}
+                  >
+                    {getStatusIcon(ProductStatus.LOW_STOCK)}
+                    Low Stock
+                  </div>
+                  
+                  <div
+                    className={`${Style.dropdownOption} ${selectedStatus === ProductStatus.OUT_OF_STOCK ? Style.selected : ''}`}
+                    onClick={() => {
+                      setSelectedStatus(ProductStatus.OUT_OF_STOCK);
+                      setShowStatusDropdown(false);
+                    }}
+                  >
+                    {getStatusIcon(ProductStatus.OUT_OF_STOCK)}
+                    Out of Stock
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
+
           <button 
             className={Style.clearFiltersButton} 
             onClick={clearFilters}
@@ -541,8 +704,9 @@ export default function InventoryPage() {
           >
             Clear Filters
           </button>
+
           <button className={Style.exportButton} onClick={handleExport}>
-            Export Excel
+            Export Data
           </button>
         </section>
 
@@ -587,7 +751,6 @@ export default function InventoryPage() {
                   <thead>
                     <tr>
                       <th>Product Name</th>
-                      <th>Description</th>
                       <th>Category</th>
                       <th>Quantity</th>
                       <th>Price</th>
@@ -597,64 +760,73 @@ export default function InventoryPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentProducts.map((product) => (
-                      <tr key={product._id}>
-                        <td>
-                          <div className={Style.productCell}>
-                            <strong>{product.name}</strong>
-                          </div>
-                        </td>
-                        <td>
-                          <div className={Style.descriptionCell}>
-                            {product.description}
-                          </div>
-                        </td>
-                        <td>{formatCategoryName(product.category)}</td>
-                        <td>{product.quantity}</td>
-                        <td className={Style.priceCell}>
-                          {formatCurrency(product.price)}
-                        </td>
-                        <td className={Style.totalPriceCell}>
-                          {formatCurrency(product.price * product.quantity)}
-                        </td>
-                        <td>
-                          <span className={`${Style.statusBadge} ${Style[product.status.toLowerCase()]}`}>
-                            {product.status.replace('_', ' ')}
-                          </span>
-                        </td>
-                        <td className={Style.actionCell}>
-                          <button className={`${Style.viewButton} ${Style.actionButton}`}
-                            onClick={() => {
-                              console.log('View button clicked, product:', product);
-                              handleViewClick(product);
-                            }}
-                          >
+                    {currentProducts.map((product) => {
+                      // Determine the actual status to display
+                      const displayStatus = determineProductStatus(product.quantity, product.status);
+                      const isLowStock = displayStatus === ProductStatus.LOW_STOCK;
+                      
+                      return (
+                        <tr key={product._id} className={isLowStock ? Style.lowStockRow : ''}>
+                          <td>
+                            <div className={Style.productCell}>
+                              <strong>{product.name}</strong>
+                              <p className={Style.productDescription}>
+                                {product.description}
+                              </p>
+                            </div>
+                          </td>
+                          <td>{formatCategoryName(product.category)}</td>
+                          <td className={isLowStock ? Style.lowStockQuantity : ''}>
+                            {product.quantity}
+                            {product.quantity <= 5 && product.quantity > 0 && (
+                              <span className={Style.criticalStock}> (Critical!)</span>
+                            )}
+                          </td>
+                          <td className={Style.priceCell}>
+                            {formatCurrency(product.price)}
+                          </td>
+                          <td className={Style.totalPriceCell}>
+                            {formatCurrency(product.price * product.quantity)}
+                          </td>
+                          <td>
+                            <span className={`${Style.statusBadge} ${Style[displayStatus.toLowerCase()]}`}>
+                              {formatStatusName(displayStatus)}
+                            </span>
+                          </td>
+                          <td className={Style.actionCell}>
+                            <button className={`${Style.viewButton} ${Style.actionButton}`}
+                              onClick={() => {
+                                console.log('View button clicked, product:', product);
+                                handleViewClick(product);
+                              }}
+                            >
 
-                            <Eye/>
-                          </button>
-                          <button 
-                            className={`${Style.editButton} ${Style.actionButton}`}
-                            onClick={() => {
-                              console.log('Edit button clicked, product:', product);
-                              handleEditClick(product);
-                            }}
-                            title={`Edit ${product.name}`}
-                          >
-                            <Pencil/>
-                          </button>
-                          <button 
-                            className={`${Style.archiveButton} ${Style.actionButton}`}
-                            onClick={() => {
-                              console.log('Button clicked, product:', product); // Debug log
-                              handleArchiveClick(product);
-                            }}
-                            title={`Archive ${product.name}`}
-                          >
-                            <Archive/>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                              <Eye/>
+                            </button>
+                            <button 
+                              className={`${Style.editButton} ${Style.actionButton}`}
+                              onClick={() => {
+                                console.log('Edit button clicked, product:', product);
+                                handleEditClick(product);
+                              }}
+                              title={`Edit ${product.name}`}
+                            >
+                              <Pencil/>
+                            </button>
+                            <button 
+                              className={`${Style.archiveButton} ${Style.actionButton}`}
+                              onClick={() => {
+                                console.log('Button clicked, product:', product); // Debug log
+                                handleArchiveClick(product);
+                              }}
+                              title={`Archive ${product.name}`}
+                            >
+                              <Archive/>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
 

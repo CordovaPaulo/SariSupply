@@ -11,8 +11,9 @@ export interface Product {
 }
 
 export enum ProductStatus {
-  IN_STOCK = 'in stock',
-  OUT_OF_STOCK = 'out of stock',
+  IN_STOCK = 'in_stock',
+  LOW_STOCK = 'low_stock',
+  OUT_OF_STOCK = 'out_of_stock',
   DISCONTINUED = 'discontinued'
 }
 

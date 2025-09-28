@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProductResponse, ProductStatus, ProductCategory } from '../../models/product';
-import { Store, LayoutDashboard, PackageOpen, Archive, ChevronLeft, ChevronRight, Search, ArchiveRestore } from 'lucide-react';
+import { Store, LayoutDashboard, PackageOpen, Archive, ChevronLeft, ChevronRight, Search, ArchiveRestore, ChevronDown, Cookie, GlassWater, Bubbles, SquareUser, Backpack, CircleEllipsis } from 'lucide-react';
 import AddProductPopup from '../../components/AddProductPopup/AddProductPopup';
 import UnarchiveProductPopup from '../../components/UnarchiveProductPopup/UnarchiveProductPopup';
 import Style from './page.module.css';
@@ -50,6 +50,9 @@ export default function ArchivePage() { // Changed function name to ArchivePage
 
   // Add product popup state
   const [showAddPopup, setShowAddPopup] = useState(false);
+
+  // Custom dropdown state
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
   // Calculate pagination values using filtered products
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
@@ -347,6 +350,40 @@ export default function ArchivePage() { // Changed function name to ArchivePage
     return category.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
+  const getCategoryIcon = (category: ProductCategory | string) => {
+    switch (category) {
+      case ProductCategory.FOOD:
+        return <Cookie className={Style.categoryIcon} />;
+      case ProductCategory.BEVERAGE:
+        return <GlassWater className={Style.categoryIcon} />;
+      case ProductCategory.CLEANING:
+        return <Bubbles className={Style.categoryIcon} />;
+      case ProductCategory.PERSONAL_CARE:
+        return <SquareUser className={Style.categoryIcon} />;
+      case ProductCategory.SCHOOL_SUPPLIES:
+        return <Backpack className={Style.categoryIcon} />;
+      case ProductCategory.OTHER:
+        return <CircleEllipsis className={Style.categoryIcon} />;
+      default:
+        return null;
+    }
+  };
+
+  // Add click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest(`.${Style.customSelect}`)) {
+        setShowCategoryDropdown(false);
+      }
+    };
+
+    if (showCategoryDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showCategoryDropdown]);
+
   if (loading) {
     return <PageLoader message="Loading archived products..." />;
   }
@@ -412,34 +449,60 @@ export default function ArchivePage() { // Changed function name to ArchivePage
               onChange={handleSearchChange}
             />
           </div>
+
+          {/* Custom Category Dropdown */}
           <div className={Style.categoryFilters}>
-            <select
-              id="category"
-              name="category"
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-            >
-              <option value="">All Categories</option>
-              <option value={ProductCategory.FOOD}>
-                {formatCategoryName(ProductCategory.FOOD)}
-              </option>
-              <option value={ProductCategory.BEVERAGE}>
-                {formatCategoryName(ProductCategory.BEVERAGE)}
-              </option>
-              <option value={ProductCategory.CLEANING}>
-                {formatCategoryName(ProductCategory.CLEANING)}
-              </option>
-              <option value={ProductCategory.PERSONAL_CARE}>
-                {formatCategoryName(ProductCategory.PERSONAL_CARE)}
-              </option>
-              <option value={ProductCategory.SCHOOL_SUPPLIES}>
-                {formatCategoryName(ProductCategory.SCHOOL_SUPPLIES)}
-              </option>
-              <option value={ProductCategory.OTHER}>
-                {formatCategoryName(ProductCategory.OTHER)}
-              </option>
-            </select>
+            <div className={Style.customSelect}>
+              <button
+                className={Style.selectButton}
+                onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                type="button"
+              >
+                <div className={Style.selectButtonContent}>
+                  {selectedCategory ? (
+                    <>
+                      {getCategoryIcon(selectedCategory as ProductCategory)}
+                      {formatCategoryName(selectedCategory as ProductCategory)}
+                    </>
+                  ) : (
+                    'All Categories'
+                  )}
+                </div>
+                <ChevronDown 
+                  className={`${Style.dropdownArrow} ${showCategoryDropdown ? Style.open : ''}`} 
+                />
+              </button>
+              
+              {showCategoryDropdown && (
+                <div className={Style.dropdownList}>
+                  <div
+                    className={`${Style.dropdownOption} ${!selectedCategory ? Style.selected : ''}`}
+                    onClick={() => {
+                      setSelectedCategory('');
+                      setShowCategoryDropdown(false);
+                    }}
+                  >
+                    All Categories
+                  </div>
+                  
+                  {Object.values(ProductCategory).map((category) => (
+                    <div
+                      key={category}
+                      className={`${Style.dropdownOption} ${selectedCategory === category ? Style.selected : ''}`}
+                      onClick={() => {
+                        setSelectedCategory(category);
+                        setShowCategoryDropdown(false);
+                      }}
+                    >
+                      {getCategoryIcon(category)}
+                      {formatCategoryName(category)}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
+
           <button 
             className={Style.clearFiltersButton} 
             onClick={clearFilters}
@@ -447,8 +510,9 @@ export default function ArchivePage() { // Changed function name to ArchivePage
           >
             Clear Filters
           </button>
+
           <button className={Style.exportButton} onClick={handleExport}>
-            Export Archived
+            Export Data
           </button>
         </section>
 

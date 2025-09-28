@@ -9,16 +9,21 @@
 }
 
 .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
     width: 100%;
-    height: 20px;
     background: linear-gradient(90deg, #ff5252 0%, #69ff69 100%);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 20px 40px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 3% 4%;
     color: var(--alt-text-color);
+    box-sizing: border-box;
+    border-radius: 0 0 20px 20px;
 }
 
 .headerLeft {
@@ -123,13 +128,12 @@
     color: var(--text-color);
     border-radius: 15px;
     border: 2px solid var(--major-action);
-
 }   
 
 .main {
-    padding: 20px 40px;
+    padding: 120px 40px 20px 40px;
     background: var(--background);
-    height: auto;
+    min-height: calc(100vh - 100px);
     box-sizing: border-box;
     overflow-y: auto;
     width: 85%;
@@ -305,14 +309,19 @@
 }
 
 .dataFilters {
-  justify-self: center;
   display: flex;
   align-items: center;
-  margin: 50px;
+  justify-content: center;
+  gap: 20px;
+  margin: 30px auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 1200px;
+  font-size: 1.1rem;
   flex-wrap: wrap;
-  width: 80%;
-  justify-content: space-around;
-  font-size: 1.1rem; /* Increased font size */
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .searchBar input,
@@ -322,130 +331,175 @@
   border: 1px solid var(--accent-color);
   border-radius: 8px;
   min-width: 150px;
-  font-size: 1.1rem; /* Increased font size */
+  font-size: 1.1rem;
   color: #374151;
   background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.searchBar input {
+  width: 300px;
+  flex: 1;
+  max-width: 400px;
+}
+
+.categoryFilters select,
+.statusFilters select {
+  min-width: 160px;
+}
+
+.clearFiltersButton,
+.exportButton {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  min-width: 140px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .clearFiltersButton {
   background: var(--major-action);
   color: white;
-  border: none;
-  padding: 12px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin: 16px;
-  font-size: 1.1rem; /* Increased font size */
-  cursor: pointer;
-  transition: background-color 0.2s;
 }
 
 .clearFiltersButton:disabled {
-  border-color: var(--button-disabled);
+  background: #f9fafb;
   color: var(--button-disabled);
   cursor: not-allowed;
-  background: #f9fafb; /* Optional: different background for disabled state */
+  box-shadow: none;
 }
 
 .clearFiltersButton:hover:not(:disabled) {
   background: var(--major-action-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
 .clearFiltersButton:active:not(:disabled) {
   background: var(--major-action-active);
-}
-
-.searchBar input {
-  width: 550px;
-}
-
-.searchBar input::placeholder {
-  font-size: 1.1rem; /* Increased placeholder font size */
-  color: #9ca3af;
+  transform: translateY(0);
 }
 
 .exportButton {
-    padding: 12px 20px;
-    background: #10b981;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem; /* Increased font size */
-    font-weight: 500;
-    cursor: pointer;
-    min-width: 140px;
-    transition: background-color 0.2s;
+  background: #10b981;
+  color: white;
 }
 
 .exportButton:hover {
-    background: #059669;
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
-.actionCell {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    gap: 8px;
-    padding: 8px;
-    min-width: 150px;
+.exportButton:active {
+  transform: translateY(0);
 }
 
-.actionButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    padding: 8px;
-    color: white;
+.searchBar input::placeholder {
+  font-size: 1.1rem;
+  color: #9ca3af;
 }
 
-.actionButton:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+.customSelect {
+  position: relative;
+  display: inline-block;
+  min-width: 200px;
 }
 
-.viewButton {
-    background-color: #3b82f6;
+.selectButton {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--accent-color);
+  border-radius: 8px;
+  background: white;
+  font-size: 1.1rem;
+  color: #374151;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
 }
 
-.viewButton:hover {
-    background-color: #2563eb;
+.selectButton:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
 }
 
-.editButton {
-    background-color: #f59e0b;
+.selectButtonContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.editButton:hover {
-    background-color: #d97706;
+.dropdownArrow {
+  width: 16px;
+  height: 16px;
+  color: #6b7280;
+  transition: transform 0.2s;
+  flex-shrink: 0;
 }
 
-.editButton:active {
-    background-color: #b45309;
+.dropdownArrow.open {
+  transform: rotate(180deg);
 }
 
-.archiveButton {
-    background-color: #ef4444;
+.dropdownList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid var(--accent-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  max-height: 250px;
+  overflow-y: auto;
+  margin-top: 4px;
 }
 
-.archiveButton:hover {
-    background-color: #dc2626;
+.dropdownOption {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  color: #374151;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f3f4f6;
 }
 
-.archiveButton:active {
-    background-color: #b91c1c;
+.dropdownOption:last-child {
+  border-bottom: none;
 }
 
-/* Icon sizing for action buttons */
-.actionButton svg {
-    width: 18px;
-    height: 18px;
+.dropdownOption:hover {
+  background: #f3f4f6;
+}
+
+.dropdownOption.selected {
+  background: #e5e7eb;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.categoryIcon {
+  width: 18px;
+  height: 18px;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.dropdownOption.selected .categoryIcon {
+  color: #374151;
 }
 

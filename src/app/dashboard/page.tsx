@@ -44,7 +44,7 @@ export default function DashboardPage() {
   const checkAuthentication = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
-      setLoading(false); // Add this line
+      setLoading(false);
       router.push('/');
       return;
     }
@@ -58,20 +58,19 @@ export default function DashboardPage() {
       
       if (response.ok) {
         const responseData = await response.json();
-        console.log('API Response:', responseData); // Debug log
+        console.log('API Response:', responseData);
         
-        // Access the user data from the nested structure
-        setUser(responseData.user); // Changed from responseData to responseData.user
-        setIsAuthenticated(true); // Add this line
+        setUser(responseData.user);
+        setIsAuthenticated(true);
       } else {
         localStorage.removeItem('token');
-        setLoading(false); // Add this line
+        setLoading(false);
         router.push('/');
       }
     } catch (error) {
       console.error('Auth check failed:', error);
       localStorage.removeItem('token');
-      setLoading(false); // Add this line
+      setLoading(false);
       router.push('/');
     }
   };
@@ -92,13 +91,25 @@ export default function DashboardPage() {
       
       if (response.ok) {
         const responseData = await response.json();
-        console.log('API Response data:', responseData); // Add this to debug
+        console.log('API Response data:', responseData);
         
         const productsArray = Array.isArray(responseData.data) ? responseData.data : [];
         
         setProducts(productsArray);
         calculateStats(productsArray);
-        setRecentProducts(productsArray.slice(0, 5));
+        
+        const activeProducts = productsArray.filter((product: ProductResponse) => 
+          product.status !== ProductStatus.DISCONTINUED
+        );
+        
+        // Fix: Add explicit typing to sort function parameters
+        const sortedActiveProducts = activeProducts
+          .sort((a: ProductResponse, b: ProductResponse) => 
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )
+          .slice(0, 5);
+        
+        setRecentProducts(sortedActiveProducts);
       } else {
         setError('Failed to load products');
       }
@@ -111,29 +122,23 @@ export default function DashboardPage() {
   };
 
   const calculateStats = (products: ProductResponse[]) => {
-    // Add safety check
     if (!Array.isArray(products)) {
       console.error('calculateStats called with non-array:', products);
       return;
     }
 
-    const stats = products.reduce((acc, product) => {
-      // Total items (count of active products, not quantity sum)
+    const stats = products.reduce((acc: DashboardStats, product: ProductResponse) => {
       if (product.status !== ProductStatus.DISCONTINUED) {
         acc.totalItems += 1; 
-      }
-      
-      // Total value (price * quantity for each product)
-      if (product.status !== ProductStatus.DISCONTINUED) {
         acc.totalValue += product.price * product.quantity;
       }
       
-      // Low stocks (products with OUT_OF_STOCK status)
-      if (product.status === ProductStatus.OUT_OF_STOCK) {
+      if (product.status === ProductStatus.OUT_OF_STOCK || 
+          product.status === ProductStatus.LOW_STOCK || 
+          (product.quantity > 0 && product.quantity <= 10 && product.status === ProductStatus.IN_STOCK)) {
         acc.lowStocks += 1;
       }
       
-      // Archived products (discontinued)
       if (product.status === ProductStatus.DISCONTINUED) {
         acc.archivedProducts += 1;
       }
@@ -149,6 +154,24 @@ export default function DashboardPage() {
     setStats(stats);
   };
 
+  // Add the determineProductStatus function (same as inventory page)
+  const determineProductStatus = (quantity: number, currentStatus: ProductStatus): ProductStatus => {
+    // Don't change status if it's manually set to discontinued
+    if (currentStatus === ProductStatus.DISCONTINUED) {
+      return ProductStatus.DISCONTINUED;
+    }
+    
+    if (quantity === 0) {
+      return ProductStatus.OUT_OF_STOCK;
+    } else if (quantity <= 5) {  // Critical low stock
+      return ProductStatus.LOW_STOCK;
+    } else if (quantity <= 10) { // Warning low stock
+      return ProductStatus.LOW_STOCK;
+    } else {
+      return ProductStatus.IN_STOCK;
+    }
+  };
+
   const handleNavigation = (path: string) => {
     router.push(path);
   };
@@ -162,7 +185,7 @@ export default function DashboardPage() {
   };
 
   const handleProductAdded = () => {
-    loadData(); // Refresh data
+    loadData();
   };
 
   const handleLogout = () => {
@@ -183,6 +206,11 @@ export default function DashboardPage() {
       month: 'short',
       day: 'numeric'
     });
+  };
+
+  // Add formatStatusName function (same as inventory page)
+  const formatStatusName = (status: ProductStatus): string => {
+    return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
   if (loading) {
@@ -240,9 +268,7 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className={Style.main}>
-
         {/* Stats Cards */}
         <section className={Style.statsSection}>
           <div className={Style.statsGrid}>
@@ -288,16 +314,10 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* Recent Items Table */}
         <section className={Style.recentSection}>
           <div className={Style.sectionHeader}>
             <Clock className={Style.clockIcon} />
-            <h2>Recently Added Items</h2>
-            {/* {error && (
-              <div className={Style.errorMessage}>
-                {error}
-              </div>
-            )} */}
+            <h2>Recently Added Active Items</h2>
             <button 
               className={Style.viewAllButton}
               onClick={() => handleNavigation('/inventory')}
@@ -309,7 +329,10 @@ export default function DashboardPage() {
           <div className={Style.tableContainer}>
             {recentProducts.length === 0 ? (
               <div className={Style.emptyState}>
-                <p>No products found</p>
+                <p>No active products found</p>
+                <p>
+                  Discontinued products are not shown here
+                </p>
                 <button 
                   className={Style.addFirstButton}
                   onClick={handleAddProduct}
@@ -329,30 +352,41 @@ export default function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {recentProducts.map((product) => (
-                    <tr key={product._id}>
-                      <td>
-                        <div className={Style.productCell}>
-                          <strong>{product.name}</strong>
-                          <span className={Style.productDescription}>
-                            {product.description}
+                  {recentProducts.map((product) => {
+                    // Apply the same status determination logic as inventory page
+                    const displayStatus = determineProductStatus(product.quantity, product.status);
+                    const isLowStock = displayStatus === ProductStatus.LOW_STOCK;
+                    
+                    return (
+                      <tr key={product._id} className={isLowStock ? Style.lowStockRow : ''}>
+                        <td>
+                          <div className={Style.productCell}>
+                            <strong>{product.name}</strong>
+                            <span className={Style.productDescription}>
+                              {product.description}
+                            </span>
+                          </div>
+                        </td>
+                        <td className={isLowStock ? Style.lowStockQuantity : ''}>
+                          {product.quantity}
+                          {product.quantity <= 5 && product.quantity > 0 && (
+                            <span className={Style.criticalStock}> (Critical!)</span>
+                          )}
+                        </td>
+                        <td className={Style.priceCell}>
+                          {formatCurrency(product.price)}
+                        </td>
+                        <td>
+                          <span className={`${Style.statusBadge} ${Style[displayStatus.toLowerCase()]}`}>
+                            {formatStatusName(displayStatus)}
                           </span>
-                        </div>
-                      </td>
-                      <td>{product.quantity}</td>
-                      <td className={Style.priceCell}>
-                        {formatCurrency(product.price)}
-                      </td>
-                      <td>
-                        <span className={`${Style.statusBadge} ${Style[product.status.toLowerCase()]}`}>
-                          {product.status.replace('_', ' ')}
-                        </span>
-                      </td>
-                      <td>
-                        {formatDate(product.createdAt)}
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className={Style.dateCell}>
+                          {formatDate(product.createdAt)}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             )}
