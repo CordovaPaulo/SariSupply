@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-s
+
 // MongoDB connection function (CommonJS compatible)
 async function connectDB() {
   const MONGODB_URI = process.env.MONGODB_URI;
