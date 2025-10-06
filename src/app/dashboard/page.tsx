@@ -7,6 +7,7 @@ import AddProductPopup from '../../components/AddProductPopup/AddProductPopup';
 import Style from './page.module.css';
 import { Store, Package, Warehouse, ChartColumnDecreasing, Archive, Clock, LayoutDashboard, PackageOpen } from 'lucide-react';
 import PageLoader from '../../components/PageLoader/PageLoader';
+import NavBar from '../../components/NavBar/NavBar';
  
 interface DashboardStats {
   totalItems: number;
@@ -227,29 +228,14 @@ export default function DashboardPage() {
             <p>Inventory Manager</p>
           </div>
         </div>
-        <nav className={Style.nav}>
-          <button 
-            className={`${Style.navButton} ${Style.active}`}
-            onClick={() => handleNavigation('/dashboard')}
-          >
-            <LayoutDashboard className={Style.navIcon} />
-            Dashboard
-          </button>
-          <button 
-            className={Style.navButton}
-            onClick={() => handleNavigation('/inventory')}
-          >
-            <PackageOpen className={Style.navIcon} />
-            Inventory
-          </button>
-          <button 
-            className={Style.navButton}
-            onClick={() => handleNavigation('/archive')}
-          >
-            <Archive className={Style.navIcon} />
-            Archive
-          </button>
-        </nav>
+
+        {/* Replace inline nav with component */}
+        <NavBar
+          active="dashboard"
+          archivedCount={stats.archivedProducts}
+          classes={{ nav: Style.nav, navButton: Style.navButton, navIcon: Style.navIcon, active: Style.active }}
+        />
+
         <div className={Style.headerRight}>
           <button 
             className={Style.addButton}

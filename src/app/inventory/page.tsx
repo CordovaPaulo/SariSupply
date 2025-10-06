@@ -11,6 +11,7 @@ import { CircleCheck, CircleAlert, CircleMinus, ChevronDown, Cookie, GlassWater,
 import Style from './page.module.css';
 import ExcelJS from 'exceljs';
 import PageLoader from '../../components/PageLoader/PageLoader';
+import NavBar from '../../components/NavBar/NavBar';
 
 interface InventoryStats {
     totalItems: number;
@@ -763,29 +764,14 @@ export default function InventoryPage() {
             <p>Inventory Manager</p>
           </div>
         </div>
-        <nav className={Style.nav}>
-          <button 
-            className={Style.navButton}
-            onClick={() => handleNavigation('/dashboard')}
-          >
-            <LayoutDashboard className={Style.navIcon} />
-            Dashboard
-          </button>
-          <button 
-            className={`${Style.navButton} ${Style.active}`}
-            onClick={() => handleNavigation('/inventory')}
-          >
-            <PackageOpen className={Style.navIcon} />
-            Inventory
-          </button>
-          <button 
-            className={Style.navButton}
-            onClick={() => handleNavigation('/archive')}
-          >
-            <Archive className={Style.navIcon} />
-            Archive
-          </button>
-        </nav>
+
+        {/* Replace inline nav with component */}
+        <NavBar
+          active="inventory"
+          archivedCount={stats.archivedProducts}
+          classes={{ nav: Style.nav, navButton: Style.navButton, navIcon: Style.navIcon, active: Style.active }}
+        />
+
         <div className={Style.headerRight}>
           <button 
             className={Style.addButton}

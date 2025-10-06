@@ -9,6 +9,7 @@ import UnarchiveProductPopup from '../../components/UnarchiveProductPopup/Unarch
 import Style from './page.module.css';
 import ExcelJS from 'exceljs';
 import PageLoader from '../../components/PageLoader/PageLoader';
+import NavBar from '../../components/NavBar/NavBar';
 
 interface InventoryStats {
     totalItems: number;
@@ -715,36 +716,21 @@ export default function ArchivePage() { // Changed function name to ArchivePage
             <p>Archive Manager</p>
           </div>
         </div>
-        <nav className={Style.nav}>
-          <button 
-            className={Style.navButton}
-            onClick={() => handleNavigation('/dashboard')}
-          >
-            <LayoutDashboard className={Style.navIcon} />
-            Dashboard
-          </button>
-          <button 
-            className={Style.navButton}
-            onClick={() => handleNavigation('/inventory')}
-          >
-            <PackageOpen className={Style.navIcon} />
-            Inventory
-          </button>
-          <button 
-            className={`${Style.navButton} ${Style.active}`}
-            onClick={() => handleNavigation('/archive')}
-          >
-            <Archive className={Style.navIcon} />
-            Archive ({stats.archivedProducts})
-          </button>
-        </nav>
+
+        {/* Replace inline nav with component */}
+        <NavBar
+          active="archive"
+          archivedCount={stats.archivedProducts}
+          classes={{ nav: Style.nav, navButton: Style.navButton, navIcon: Style.navIcon, active: Style.active }}
+        />
+
         <div className={Style.headerRight}>
-            <button 
-                className={Style.addButton}
-                onClick={handleAddProduct}
-            >
-                + Add Product
-            </button>
+          <button 
+            className={Style.addButton}
+            onClick={handleAddProduct}
+          >
+            + Add Product
+          </button>
           <div className={Style.userSection}>
             <button 
               className={Style.logoutButton}
