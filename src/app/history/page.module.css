@@ -1,0 +1,219 @@
+.dashboard {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  background-color: #f8f2dd;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: var(--page-header-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  color: var(--alt-text-color);
+  box-sizing: border-box;
+  border-radius: 0 0 20px 20px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerName h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--alt-text-color);
+}
+
+.headerName p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.headerRight {
+  min-width: 40px;
+}
+
+.storeIcon {
+  width: 42px;
+  height: 42px;
+  color: var(--alt-text-color);
+}
+
+/* NavBar look to match other pages */
+.nav {
+  display: flex;
+  gap: 50px;
+  border-radius: 60px;
+  overflow: hidden;
+  background-color: rgba(255,255,255,0.5);
+  padding: 10px;
+  justify-content: space-around;
+}
+
+.navButton {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 10px 15px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.navButton:hover {
+  background-color: var(--button-primary-hover);
+  color: var(--text-color);
+}
+
+.active {
+  background-color: var(--button-primary);
+  color: var(--text-color);
+}
+
+.navIcon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Main content */
+.main {
+  padding: 120px 40px 24px 40px;
+  background: transparent;
+  min-height: calc(100vh - 120px);
+  box-sizing: border-box;
+  width: 85%;
+  justify-self: center;
+}
+
+.pageLoader {
+  padding: 24px;
+}
+
+.errorMessage {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin: 24px;
+}
+
+.emptyState {
+  padding: 48px 24px;
+  text-align: center;
+  color: #6b7280;
+  background: white;
+  border-radius: 12px;
+}
+
+/* Cards grid */
+.cardGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #F3E8D0;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cardTotal {
+  font-weight: 600;
+  color: #059669;
+}
+
+/* Items list */
+.itemList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.itemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px dashed #e5e7eb;
+}
+
+.itemRow:last-child {
+  border-bottom: none;
+}
+
+.itemLeft {
+  display: flex;
+  flex-direction: column;
+}
+
+.itemName {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.itemMeta {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.itemAmount {
+  font-weight: 600;
+}
+
+/* Payment summary */
+.paymentSummary {
+  margin-top: 12px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+}
+
+.paymentRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 0 0 20px 20px;
+  }
+  .nav {
+    gap: 10px;
+    border-radius: 20px;
+  }
+  .main {
+    padding: 110px 20px 20px 20px;
+    width: 100%;
+  }
+}

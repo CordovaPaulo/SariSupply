@@ -93,7 +93,9 @@ export default function InventoryPage() {
       
       const matchesCategory = selectedCategory === '' || product.category === selectedCategory;
       
-      const matchesStatus = selectedStatus === '' || product.status === selectedStatus;
+      // Use display status for filtering
+      const displayStatus = determineProductStatus(product.quantity, product.status);
+      const matchesStatus = selectedStatus === '' || displayStatus === selectedStatus;
       
       return matchesSearch && matchesCategory && matchesStatus;
     });

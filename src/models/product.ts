@@ -61,3 +61,8 @@ export interface ProductResponse {
   status: ProductStatus;
   createdAt: Date;
 }
+
+export interface CheckoutProductRequest {
+  _id: string;
+  quantity: number;
+}
