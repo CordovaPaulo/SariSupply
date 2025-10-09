@@ -34,6 +34,7 @@ export interface CreateProductRequest {
   quantity: number;
   price: number;
   status: ProductStatus;
+  productImageUrl?: string | null;
 }
 
 export interface UpdateProductRequest {
@@ -60,6 +61,7 @@ export interface ProductResponse {
   price: number;
   status: ProductStatus;
   createdAt: Date;
+  productImageUrl?: string | null;
 }
 
 export interface CheckoutProductRequest {

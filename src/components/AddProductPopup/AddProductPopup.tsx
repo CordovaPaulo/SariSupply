@@ -17,8 +17,10 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
     quantity: '',
     price: '',
     category: ProductCategory.OTHER,
-    status: ProductStatus.IN_STOCK
+    status: ProductStatus.IN_STOCK,
+    productImageUrl: ''
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -31,20 +33,27 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
     }));
   };
 
+  // Handle image file change
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    } else {
+      setImageFile(null);
+    }
+  };
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    // Validate required fields (removed owner from validation)
     if (!formData.name || !formData.description || !formData.quantity || !formData.price) {
       setError('All fields are required');
       setLoading(false);
       return;
     }
 
-    // Validate price
     const price = parseFloat(formData.price);
     if (isNaN(price) || price <= 0) {
       setError('Please enter a valid price');
@@ -52,7 +61,6 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
       return;
     }
 
-    // Validate quantity
     const quantity = parseInt(formData.quantity);
     if (isNaN(quantity) || quantity < 0) {
       setError('Please enter a valid quantity');
@@ -62,34 +70,28 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
 
     try {
       const token = localStorage.getItem('token');
-      
-      // Prepare product data (removed owner - will be set by backend from token)
-      const productData: CreateProductRequest = {
-        name: formData.name,
-        description: formData.description,
-        category: formData.category,
-        quantity: quantity,
-        price: price,
-        status: quantity > 0 ? ProductStatus.IN_STOCK : ProductStatus.OUT_OF_STOCK
-      };
+      const form = new FormData();
+      form.append('name', formData.name);
+      form.append('description', formData.description);
+      form.append('category', formData.category);
+      form.append('quantity', quantity.toString());
+      form.append('price', price.toString());
+      form.append('status', quantity > 0 ? ProductStatus.IN_STOCK : ProductStatus.OUT_OF_STOCK);
+      if (imageFile) {
+        form.append('image', imageFile);
+      }
 
       const response = await fetch('/api/main/add/product', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(productData)
+        body: form
       });
 
       if (response.ok) {
-        // Reset form
         resetForm();
-        
-        // Call the callback to refresh the product list
         onProductAdded();
-        
-        // Close the popup
         onClose();
       } else {
         const errorData = await response.json();
@@ -102,7 +104,6 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
     }
   };
 
-  // Reset form function (removed owner)
   const resetForm = () => {
     setFormData({
       name: '',
@@ -110,25 +111,24 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
       quantity: '',
       price: '',
       category: ProductCategory.OTHER,
-      status: ProductStatus.IN_STOCK
+      status: ProductStatus.IN_STOCK,
+      productImageUrl: ''
     });
+    setImageFile(null);
     setError('');
   };
 
-  // Handle close button
   const handleClose = () => {
     resetForm();
     onClose();
   };
 
-  // Handle backdrop click
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       handleClose();
     }
   };
 
-  // Format category display name
   const formatCategoryName = (category: ProductCategory): string => {
     return category.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
@@ -235,6 +235,17 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
                 {formatCategoryName(ProductCategory.OTHER)}
               </option>
             </select>
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="image">Product Image (optional)</label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
           </div>
 
           {error && <div className={styles.error}>{error}</div>}

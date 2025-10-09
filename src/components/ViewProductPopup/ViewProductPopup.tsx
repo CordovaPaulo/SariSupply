@@ -69,6 +69,34 @@ export default function ViewProductPopup({ isOpen, onClose, product }: ViewProdu
         </div>
 
         <div className={styles.content}>
+          {/* Display product image if available */}
+          {product.productImageUrl ? (
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+              <img
+                src={product.productImageUrl}
+                alt={product.name}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '220px',
+                  borderRadius: '8px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  objectFit: 'contain',
+                  background: '#f3f4f6',
+                  padding: '8px'
+                }}
+              />
+            </div>
+          ) : (
+            <div style={{
+              textAlign: 'center',
+              marginBottom: '1.5rem',
+              color: '#6b7280',
+              fontStyle: 'italic'
+            }}>
+              No product image available
+            </div>
+          )}
+
           <div className={styles.detailSection}>
             <div className={styles.detailGroup}>
               <label className={styles.detailLabel}>Product Name</label>
@@ -118,7 +146,6 @@ export default function ViewProductPopup({ isOpen, onClose, product }: ViewProdu
                 {formatCurrency(product.price * product.quantity)}
               </div>
             </div>
-
           </div>
         </div>
 

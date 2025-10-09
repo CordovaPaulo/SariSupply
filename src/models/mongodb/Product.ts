@@ -53,6 +53,10 @@ const ProductSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: [true, 'Owner ID is required']
+  },
+  productImageUrl: {
+    type: String,
+    default: null
   }
 }, {
   timestamps: true,

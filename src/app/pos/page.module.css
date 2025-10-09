@@ -3,9 +3,9 @@
     padding: 0;
     margin: 0;
     width: 100%;
-    min-height: 100vh; /* Changed from 100dvh */
-    height: auto; /* Changed from 100dvh to auto */
-    background-color: #f8f2dd;
+    min-height: 100vh;
+    height: auto;
+    background-color: var(--background);
 }
 
 .header {
@@ -37,12 +37,12 @@
     gap: 50px;
     border-radius: 60px;
     overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: var(--surface-translucent);
     padding: 10px;
     justify-content: space-around;
 }
 
-.navButton, .addButton, .logoutButton{
+.navButton, .addButton, .logoutButton {
     background: none;
     border: none;
     color: var(--text-color);
@@ -128,17 +128,16 @@
     color: var(--text-color);
     border-radius: 15px;
     border: 2px solid var(--major-action);
-
-}   
+}
 
 .main {
     padding: 120px 40px 20px 40px;
-    background: transparent; /* Changed from var(--background) to transparent */
-    min-height: calc(100vh - 120px); /* Adjusted calculation */
+    background: transparent;
+    min-height: calc(100vh - 120px);
     box-sizing: border-box;
     overflow-y: auto;
     width: 85%;
-    min-width: auto; /* Changed from 100dvh */
+    min-width: auto;
     justify-self: center;
 }
 
@@ -152,7 +151,7 @@
 .sectionHeader h2 {
   font-size: 18px;
   font-weight: 600;
-  color: #8B4513;
+  color: var(--table-header-footer-text);
   margin: 0;
   display: flex;
   align-items: center;
@@ -161,8 +160,8 @@
 
 .viewAllButton {
   background: none;
-  border: 1px solid #d1d5db;
-  color: #6b7280;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -171,19 +170,19 @@
 }
 
 .viewAllButton:hover {
-  background: #f9fafb;
+  background: var(--button-primary-hover);
 }
 
 .tableContainer {
   overflow-x: auto;
   border-radius: 12px;
-  background: #FEF7ED;
+  background: var(--surface);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  background: #FEF7ED;
+  background: var(--surface);
 }
 
 .table thead {
@@ -196,23 +195,24 @@
   font-weight: 600;
   color: var(--table-header-footer-text);
   font-size: 14px;
-  border-bottom: 1px solid #F3E8D0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .table td {
   padding: 16px 20px;
-  border-bottom: 1px solid #F3E8D0;
+  border-bottom: 1px solid var(--border-color);
   font-size: 14px;
   vertical-align: middle;
   text-align: center;
+  color: var(--text-color);
 }
 
 .table tbody tr {
-  background: white;
+  background: var(--surface);
 }
 
 .table tbody tr:hover {
-  background: #FFFBF7;
+  background: var(--background);
 }
 
 .productCell {
@@ -222,28 +222,28 @@
 }
 
 .productCell strong {
-  color: #1f2937;
+  color: var(--text-color);
   font-weight: 500;
 }
 
 .productDescription {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .categoryCell {
-  color: #6b7280;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
 .quantityCell {
   font-weight: 600;
-  color: #059669;
+  color: var(--price-positive);
 }
 
 .priceCell {
   font-weight: 600;
-  color: #059669;
+  color: var(--price-positive);
 }
 
 .statusBadge {
@@ -257,31 +257,31 @@
 }
 
 .statusBadge.in_stock {
-  background: #acff8b;
-  color: #073611;
+  background: var(--status-in-stock-bg);
+  color: var(--status-in-stock-text);
 }
 
 .statusBadge.out_of_stock,
 .statusBadge.low_stock {
-  background: #FECACA;
-  color: #991B1B;
+  background: var(--status-out-of-stock-bg);
+  color: var(--status-out-of-stock-text);
 }
 
 .statusBadge.discontinued {
-  background: #F3F4F6;
-  color: #6B7280;
+  background: var(--status-discontinued-bg);
+  color: var(--status-discontinued-text);
 }
 
 .dateCell {
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 13px;
 }
 
 .emptyState {
   padding: 48px 24px;
   text-align: center;
-  color: #6b7280;
-  background: white;
+  color: var(--text-muted);
+  background: var(--surface);
   border-radius: 12px;
 }
 
@@ -301,9 +301,9 @@
 }
 
 .errorMessage {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error-text);
   padding: 12px 16px;
   border-radius: 8px;
   font-size: 14px;
@@ -320,7 +320,7 @@
   max-width: 1200px;
   font-size: 1.1rem;
   flex-wrap: wrap;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--surface-translucent);
   border-radius: 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -333,8 +333,8 @@
   border-radius: 8px;
   min-width: 150px;
   font-size: 1.1rem;
-  color: #374151;
-  background: white;
+  color: var(--text-color);
+  background: var(--surface);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -364,34 +364,29 @@
 
 .clearFiltersButton {
   background: var(--major-action);
-  color: white;
+  color: var(--alt-text-color);
 }
 
 .clearFiltersButton:disabled {
-  background: #f9fafb;
+  background: var(--button-primary);
   color: var(--button-disabled);
-  cursor: not-allowed;
-  box-shadow: none;
 }
 
 .clearFiltersButton:hover:not(:disabled) {
   background: var(--major-action-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
 .clearFiltersButton:active:not(:disabled) {
   background: var(--major-action-active);
-  transform: translateY(0);
 }
 
 .exportButton {
-  background: #10b981;
-  color: white;
+  background: var(--action-success);
+  color: var(--alt-text-color);
 }
 
 .exportButton:hover {
-  background: #059669;
+  background: var(--action-success-hover);
   transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
@@ -401,8 +396,7 @@
 }
 
 .searchBar input::placeholder {
-  font-size: 1.1rem;
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .actionCell {
@@ -425,7 +419,7 @@
     width: 36px;
     height: 36px;
     padding: 8px;
-    color: white;
+    color: var(--alt-text-color);
 }
 
 .actionButton:hover {
@@ -434,35 +428,32 @@
 }
 
 .viewButton {
-    background-color: #3b82f6;
+    background-color: var(--button-primary);
 }
 
 .viewButton:hover {
-    background-color: #2563eb;
+    background-color: var(--button-primary-hover);
 }
 
 .editButton {
-    background-color: #f59e0b;
+    background-color: var(--action-warn);
 }
 
-.editButton:hover {
-    background-color: #d97706;
-}
-
+.editButton:hover,
 .editButton:active {
-    background-color: #b45309;
+    background-color: var(--action-warn-hover);
 }
 
 .archiveButton {
-    background-color: #ef4444;
+    background-color: var(--major-action);
 }
 
 .archiveButton:hover {
-    background-color: #dc2626;
+    background-color: var(--major-action-hover);
 }
 
 .archiveButton:active {
-    background-color: #b91c1c;
+    background-color: var(--major-action-active);
 }
 
 /* Icon sizing for action buttons */
@@ -474,8 +465,8 @@
 
 /* Low stock styling */
 .statusBadge.low_stock {
-  background-color: #fef3c7;
-  color: #d97706;
+  background-color: var(--status-low-stock-bg);
+  color: var(--status-low-stock-text);
 }
 
 .lowStockIndicator {
@@ -504,9 +495,8 @@
   padding: 12px 16px;
   border: 1px solid var(--accent-color);
   border-radius: 8px;
-  background: white;
-  font-size: 1.1rem;
-  color: #374151;
+  background: var(--surface);
+  color: var(--text-color);
   text-align: left;
   cursor: pointer;
   display: flex;
@@ -518,8 +508,8 @@
 }
 
 .selectButton:hover {
-  background: #f9fafb;
-  border-color: #9ca3af;
+  background: var(--button-primary-hover);
+  border-color: var(--border-color);
 }
 
 .selectButtonContent {
@@ -545,7 +535,7 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--accent-color);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -562,9 +552,9 @@
   align-items: center;
   gap: 12px;
   font-size: 1.1rem;
-  color: #374151;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
   transition: background-color 0.2s;
-  border-bottom: 1px solid #f3f4f6;
 }
 
 .dropdownOption:last-child {
@@ -572,44 +562,43 @@
 }
 
 .dropdownOption:hover {
-  background: #f3f4f6;
+  background: var(--button-primary-hover);
 }
 
 .dropdownOption.selected {
-  background: #e5e7eb;
-  font-weight: 500;
-  color: #1f2937;
+  background: var(--button-primary-active);
+  color: var(--text-color);
 }
 
 .categoryIcon,
 .statusIcon {
   width: 18px;
   height: 18px;
-  color: #6b7280;
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
 .dropdownOption.selected .categoryIcon,
 .dropdownOption.selected .statusIcon {
-  color: #374151;
+  color: var(--text-color);
 }
 
 /* Status-specific icon colors */
 .statusIcon.inStock {
-  color: #059669;
+  color: var(--price-positive);
 }
 
 .statusIcon.lowStock {
-  color: #f59e0b;
+  color: var(--status-low-stock-text);
 }
 
 .statusIcon.outOfStock {
-  color: #dc2626;
+  color: var(--status-out-of-stock-text);
 }
 
 .tableFooter {
   background: var(--table-header-footer);
-  border-top: 2px solid #e9ecef;
+  border-top: 2px solid var(--border-color);
   padding: 16px 20px;
   border-radius: 0 0 12px 12px;
 }
@@ -676,7 +665,7 @@
 
 @media (max-width: 768px) {
   .dashboard {
-    background-color: #f8f2dd;
+    background-color: var(--background);
     padding-bottom: 80px; /* Further reduced from 90px */
     min-height: 100vh;
     height: auto;
@@ -1084,7 +1073,7 @@
 /* Landscape mobile orientation */
 @media (max-width: 768px) and (orientation: landscape) {
   .dashboard {
-    background-color: #f8f2dd;
+    background-color: var(--background);
     padding-bottom: 65px; /* Further reduced from 75px */
     min-height: 100vh;
     height: auto;
@@ -1261,7 +1250,7 @@
   gap: 12px;
   padding: 14px 16px;
   background: var(--table-header-footer);
-  border-top: 2px solid #e9ecef;
+  border-top: 2px solid var(--border-color);
   border-radius: 0 0 12px 12px;
 }
 
@@ -1270,9 +1259,9 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
-  background: #ffffff;
+  background: var(--surface);
   color: var(--text-color);
   cursor: pointer;
   font-weight: 600;
@@ -1280,8 +1269,8 @@
 }
 
 .paginationButton:hover:not(:disabled) {
-  background: #f9fafb;
-  border-color: #d1d5db;
+  background: var(--button-primary-hover);
+  border-color: var(--border-color);
   box-shadow: 0 2px 6px rgba(0,0,0,0.06);
 }
 
@@ -1296,14 +1285,12 @@
 
 .paginationButton:focus-visible,
 .pageNumber:focus-visible {
-  outline: 2px solid #c7d2fe;
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
 .paginationIcon {
-  width: 18px;
-  height: 18px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .pageNumbers {
@@ -1314,11 +1301,10 @@
 }
 
 .pageNumber {
-  padding: 10px 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  background: #ffffff;
+  border: 1px solid var(--border-color);
+  background: var(--surface);
   color: var(--text-color);
+  padding: 10px 12px;
   cursor: pointer;
   min-width: 40px;
   font-weight: 600;
@@ -1326,8 +1312,8 @@
 }
 
 .pageNumber:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
+  background: var(--button-primary-hover);
+  border-color: var(--border-color);
   box-shadow: 0 2px 6px rgba(0,0,0,0.06);
 }
 
@@ -1336,9 +1322,9 @@
 }
 
 .activePage {
-  background: #eef2ff;
-  border-color: #c7d2fe;
-  color: #1f2937;
+  background: var(--button-primary-hover);
+  border-color: var(--accent-color);
+  color: var(--text-color);
 }
 
 .addToCartButton,
@@ -1356,15 +1342,11 @@
 }
 
 .addToCartButton {
-  background-color: #10b981; /* emerald-500 */
-  color: #ffffff;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+  background-color: var(--action-success);
+  color: var(--alt-text-color);
 }
 
-.addToCartButton:hover {
-  background-color: #059669; /* emerald-600 */
-  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
-}
+.addToCartButton:hover { background-color: var(--action-success-hover); }
 
 .addToCartButton:active {
   transform: translateY(1px);
@@ -1372,13 +1354,11 @@
 
 .checkoutButton {
   background-color: var(--button-primary);
-  color: #141313;
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.25);
+  color: var(--text-color);
 }
 
 .checkoutButton:hover:not(:disabled) {
   background-color: var(--button-primary-hover);
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
 }
 
 .checkoutButton:active:not(:disabled) {
@@ -1401,8 +1381,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #f97316; /* orange-500 */
-  color: white;
+  background-color: var(--action-warn);
+  color: var(--alt-text-color);
   border: none;
   padding: 8px 12px;
   border-radius: 8px;
@@ -1411,12 +1391,40 @@
 }
 
 .removeFromCartButton:hover:not(:disabled) {
-  background-color: #ea580c; /* orange-600 */
+  background-color: var(--action-warn-hover);
 }
 
 .removeFromCartButton:disabled {
-  background-color: #fed7aa; /* orange-200 */
-  color: #7c2d12; /* orange-900 */
-  cursor: not-allowed;
-  opacity: 0.8;
+  background-color: var(--button-disabled);
+  color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+  .dashboard { background-color: var(--background); }
+  .nav { background: var(--page-header-bg); }
+  .tableSection { background: var(--surface); }
+  .tableContainer { background: var(--surface); }
+  .tableFooter { background: var(--table-header-footer); border-top: 2px solid var(--border-color); }
+}
+
+@media (max-width: 480px) {
+  .dashboard { background-color: var(--background); }
+  .header { background: var(--page-header-bg); color: var(--alt-text-color); }
+  .nav { background: var(--page-header-bg); }
+  .dataFilters { background: var(--surface-translucent); }
+  .tableFooter { background: var(--table-header-footer); border-top: 2px solid var(--border-color); }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .dashboard { background-color: var(--background); }
+  .header { background: var(--page-header-bg); color: var(--alt-text-color); }
+  .nav { background: var(--page-header-bg); }
+  .dataFilters { background: var(--surface-translucent); }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .nav { background-color: var(--surface-translucent); }
+  .tableSection { background: var(--surface); }
+  .tableContainer { background: var(--surface); }
+  .tableFooter { background: var(--table-header-footer); border-top: 2px solid var(--border-color); }
 }

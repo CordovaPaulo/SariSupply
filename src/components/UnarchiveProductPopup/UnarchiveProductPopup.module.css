@@ -13,7 +13,7 @@
 }
 
 .popup {
-  background: white;
+  background: var(--surface);
   border-radius: 12px;
   padding: 0;
   width: 100%;
@@ -35,12 +35,12 @@
 
 .header {
   padding: 1.5rem 2rem 1rem 2rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .header h2 {
   margin: 0;
-  color: #1e293b;
+  color: var(--text-color);
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -51,19 +51,19 @@
 
 .content p {
   margin: 0 0 1rem 0;
-  color: #374151;
+  color: var(--text-color);
   line-height: 1.6;
 }
 
 .subtitle {
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error-text);
   padding: 0.75rem;
   border-radius: 6px;
   margin-top: 1rem;
@@ -75,14 +75,14 @@
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 2rem 1.5rem 2rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border-color);
 }
 
 .cancelButton {
   padding: 0.75rem 1.5rem;
-  background: #f3f4f6;
-  color: #374151;
-  border: 1px solid #d1d5db;
+  background: var(--button-primary);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -91,8 +91,8 @@
 }
 
 .cancelButton:hover:not(:disabled) {
-  background: #e5e7eb;
-  border-color: #9ca3af;
+  background: var(--button-primary-hover);
+  border-color: var(--border-color);
 }
 
 .cancelButton:disabled {
@@ -102,8 +102,8 @@
 
 .restoreButton {
   padding: 0.75rem 1.5rem;
-  background: #10b981;
-  color: white;
+  background: var(--action-success);
+  color: var(--alt-text-color);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -113,11 +113,11 @@
 }
 
 .restoreButton:hover:not(:disabled) {
-  background: #059669;
+  background: var(--action-success-hover);
 }
 
 .restoreButton:disabled {
-  background: #9ca3af;
+  background: var(--button-disabled);
   cursor: not-allowed;
 }
 

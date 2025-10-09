@@ -9,6 +9,7 @@ import { Store, Package, Warehouse, ChartColumnDecreasing, Archive, Clock, Layou
 import PageLoader from '../../components/PageLoader/PageLoader';
 import NavBar from '../../components/NavBar/NavBar';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
+import ThemeToggle from '@/components/theme/ThemeToggle';
  
 interface DashboardStats {
   totalItems: number;
@@ -247,6 +248,7 @@ export default function DashboardPage() {
         />
 
         <div className={Style.headerRight}>
+          <ThemeToggle />
           <button 
             className={Style.addButton}
             onClick={handleAddProduct}

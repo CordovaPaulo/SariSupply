@@ -5,7 +5,7 @@
     width: 100%;
     min-height: 100dvh;
     height: 100dvh;
-    background-color: #f8f2dd;
+    background-color: var(--background);
 }
 
 .header {
@@ -37,7 +37,7 @@
     gap: 50px;
     border-radius: 60px;
     overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: var(--surface-translucent);
     padding: 10px;
     justify-content: space-around;
 }
@@ -206,7 +206,7 @@
 }
 
 .recentSection {
-  background: white;
+  background: var(--foreground);
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -223,7 +223,7 @@
 .sectionHeader h2 {
   font-size: 18px;
   font-weight: 600;
-  color: #8B4513;
+  color: var(--table-header-footer-text);
   margin: 0;
   display: flex;
   align-items: center;
@@ -232,8 +232,8 @@
 
 .viewAllButton {
   background: none;
-  border: 1px solid #d1d5db;
-  color: #6b7280;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -242,19 +242,19 @@
 }
 
 .viewAllButton:hover {
-  background: #f9fafb;
+  background: var(--button-primary-hover);
 }
 
 .tableContainer {
   overflow-x: auto;
   border-radius: 12px;
-  background: #FEF7ED;
+  background: var(--surface);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  background: #FEF7ED;
+  background: var(--surface);
 }
 
 .table thead {
@@ -267,22 +267,23 @@
   font-weight: 600;
   color: var(--table-header-footer-text);
   font-size: 14px;
-  border-bottom: 1px solid #F3E8D0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .table td {
   padding: 16px 20px;
-  border-bottom: 1px solid #F3E8D0;
+  border-bottom: 1px solid var(--border-color);
   font-size: 14px;
   vertical-align: middle;
+  color: var(--text-color);
 }
 
 .table tbody tr {
-  background: white;
+  background: var(--surface);
 }
 
 .table tbody tr:hover {
-  background: #FFFBF7;
+  background: var(--background);
 }
 
 .productCell {
@@ -292,28 +293,21 @@
 }
 
 .productCell strong {
-  color: #1f2937;
-  font-weight: 500;
+  color: var(--text-color);
 }
 
 .productDescription {
-  font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
-.categoryCell {
-  color: #6b7280;
-  font-weight: 500;
-}
-
-.quantityCell {
-  font-weight: 600;
-  color: #059669;
+.categoryCell,
+.quantityCell,
+.dateCell {
+  color: var(--text-color);
 }
 
 .priceCell {
-  font-weight: 600;
-  color: #059669;
+  color: var(--price-positive);
 }
 
 .statusBadge {
@@ -327,37 +321,39 @@
 }
 
 .statusBadge.in_stock {
-  background: #acff8b;
-  color: #073611;
+  background: var(--status-in-stock-bg);
+  color: var(--status-in-stock-text);
 }
 
 .statusBadge.out_of_stock,
 .statusBadge.low_stock {
-  background: #FECACA;
-  color: #991B1B;
+  background: var(--status-out-of-stock-bg);
+  color: var(--status-out-of-stock-text);
 }
 
 .statusBadge.discontinued {
-  background: #F3F4F6;
-  color: #6B7280;
+  background: var(--status-discontinued-bg);
+  color: var(--status-discontinued-text);
 }
 
-.dateCell {
-  color: #9ca3af;
-  font-size: 13px;
+/* Error messages */
+.errorMessage {
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error-text);
 }
 
 .emptyState {
   padding: 48px 24px;
   text-align: center;
-  color: #6b7280;
-  background: white;
+  color: var(--text-muted);
+  background: var(--surface);
   border-radius: 12px;
 }
 
 .addFirstButton {
-  background: #3b82f6;
-  color: white;
+  background: var(--button-primary);
+  color: var(--text-color);
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
@@ -367,27 +363,7 @@
 }
 
 .addFirstButton:hover {
-  background: #2563eb;
-}
-
-.errorMessage {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-/* Low stock styling */
-.statusBadge.low_stock {
-  background-color: #fef3c7;
-  color: #d97706;
-}
-
-.lowStockIndicator {
-  margin-left: 0.5rem;
-  font-size: 0.9rem;
+  background: var(--button-primary-hover);
 }
 
 @keyframes lowStockPulse {
@@ -402,7 +378,7 @@
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
   .dashboard {
-    background-color: #f8f2dd;
+    background-color: var(--background);
     padding-bottom: 120px; /* Increased bottom padding further */
   }
 
@@ -798,8 +774,8 @@
   }
 
   .nav {
-    position: static; /* Reset to normal position */
-    background-color: rgba(255, 255, 255, 0.5);
+    position: static;
+    background-color: var(--surface-translucent);
     border-radius: 60px;
     box-shadow: none;
   }

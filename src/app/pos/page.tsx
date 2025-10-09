@@ -22,6 +22,7 @@ import PageLoader from '@/components/PageLoader/PageLoader';
 import NavBar from '@/components/NavBar/NavBar';
 import CheckoutPopup from '@/components/checkoutPopup/checkoutPopup';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
+import ThemeToggle from '@/components/theme/ThemeToggle';
 
 type Nullable<T> = T | null;
 
@@ -379,6 +380,7 @@ export default function POSPage() {
           />
 
           <div className={Style.headerRight}>
+            <ThemeToggle />
             <button className={Style.checkoutButton} onClick={openCheckout} disabled={cart.length === 0}>
               <ShoppingCart />
               Checkout {cartCount > 0 ? `(${cartCount})` : ''}

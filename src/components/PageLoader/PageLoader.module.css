@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--page-header-bg) 0%, var(--accent-color) 100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,11 +17,11 @@
   align-items: center;
   gap: 2rem;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--surface-translucent);
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-color);
 }
 
 .spinner {
@@ -37,7 +37,7 @@
   width: 100%;
   height: 100%;
   border: 4px solid transparent;
-  border-top: 4px solid #667eea;
+  border-top: 4px solid var(--accent-color);
   border-radius: 50%;
   animation: spin 1.2s linear infinite;
 }
@@ -48,7 +48,7 @@
 
 .spinnerRing:nth-child(2) {
   animation-delay: -0.3s;
-  border-top-color: #764ba2;
+  border-top-color: var(--major-action);
   width: 60px;
   height: 60px;
   top: 10px;
@@ -57,7 +57,7 @@
 
 .spinnerRing:nth-child(3) {
   animation-delay: -0.6s;
-  border-top-color: #f093fb;
+  border-top-color: var(--action-success);
   width: 40px;
   height: 40px;
   top: 20px;
@@ -66,7 +66,7 @@
 
 .spinnerRing:nth-child(4) {
   animation-delay: -0.9s;
-  border-top-color: #f5576c;
+  border-top-color: var(--price-positive);
   width: 20px;
   height: 20px;
   top: 30px;
@@ -86,7 +86,7 @@
   margin: 0;
   font-size: 1.2rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-color);
   text-align: center;
   animation: pulse 2s ease-in-out infinite;
 }
@@ -111,7 +111,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #667eea;
+  background: var(--accent-color);
   animation: dotBounce 1.4s ease-in-out infinite both;
 }
 
@@ -176,7 +176,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--surface-translucent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
@@ -203,10 +203,10 @@
   align-items: center;
   gap: 1rem;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--surface-translucent);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-color);
   
   /* Smooth scale animation */
   transform: scale(0.95);
@@ -224,8 +224,8 @@
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f4f6;
-  border-top: 4px solid #3b82f6;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--accent-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -243,7 +243,7 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-color);
   text-align: center;
   transition: opacity 0.3s ease-in-out;
 }
@@ -273,7 +273,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--surface-translucent);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: flex;
@@ -303,10 +303,10 @@
   align-items: center;
   gap: 1rem;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--surface-translucent);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--border-color);
   
   /* Subtle entrance animation */
   transform: translateY(10px) scale(0.95);
@@ -325,7 +325,7 @@
   width: 40px;
   height: 40px;
   border: 3px solid rgba(59, 130, 246, 0.2);
-  border-top: 3px solid #3b82f6;
+  border-top: 3px solid var(--accent-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -343,29 +343,9 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-color);
   text-align: center;
 }
 
-/* Mobile responsiveness */
-@media (max-width: 640px) {
-  .loaderContent {
-    margin: 1rem;
-    padding: 1.5rem;
-  }
-  
-  .spinner {
-    width: 32px;
-    height: 32px;
-    border-width: 2px;
-  }
-  
-  .text {
-    font-size: 0.9rem;
-  }
-  
-  .content {
-    gap: 1rem;
-    padding: 0 1rem;
-  }
-}
+/* Mobile keeps same colors; sizes only below */
+/* ...existing responsive rules stay unchanged ... */

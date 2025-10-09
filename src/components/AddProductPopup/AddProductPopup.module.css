@@ -13,7 +13,7 @@
 }
 
 .popup {
-  background: white;
+  background: var(--surface);
   border-radius: 12px;
   padding: 0;
   width: 100%;
@@ -40,14 +40,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 2rem;
-  border-bottom: 1px solid #e2e8f0;
-  background: #f8fafc;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--surface);
   border-radius: 12px 12px 0 0;
 }
 
 .header h2 {
   margin: 0;
-  color: #1e293b;
+  color: var(--text-color);
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -57,7 +57,7 @@
   border: none;
   font-size: 2rem;
   cursor: pointer;
-  color: #64748b;
+  color: var(--text-muted);
   padding: 0;
   width: 30px;
   height: 30px;
@@ -69,8 +69,8 @@
 }
 
 .closeButton:hover {
-  background: #e2e8f0;
-  color: #1e293b;
+  background: var(--button-primary-hover);
+  color: var(--text-color);
 }
 
 .form {
@@ -91,7 +91,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-color);
   font-size: 0.875rem;
 }
 
@@ -100,7 +100,9 @@
 .inputGroup select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-color);
+  background: var(--surface);
+  color: var(--text-color);
   border-radius: 6px;
   font-size: 1rem;
   box-sizing: border-box;
@@ -110,9 +112,8 @@
 .inputGroup input:focus,
 .inputGroup textarea:focus,
 .inputGroup select:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: 2px solid var(--accent-color);
+  box-shadow: none;
 }
 
 .inputGroup textarea {
@@ -126,20 +127,15 @@
 }
 
 .error {
-  color: #dc2626;
-  font-size: 0.875rem;
-  margin-bottom: 1.5rem;
-  padding: 0.75rem;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  color: var(--error-text);
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
   border-radius: 6px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.error::before {
-  content: '⚠️';
+  padding: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
 .actions {
@@ -148,14 +144,14 @@
   justify-content: flex-end;
   margin-top: 2rem;
   padding-top: 1rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border-color);
 }
 
 .cancelButton {
   padding: 0.75rem 1.5rem;
-  background: white;
-  color: #374151;
-  border: 1px solid #d1d5db;
+  background: var(--button-primary);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
@@ -164,8 +160,8 @@
 }
 
 .cancelButton:hover {
-  background: #f9fafb;
-  border-color: #9ca3af;
+  background: var(--button-primary-hover);
+  border-color: var(--border-color);
 }
 
 .cancelButton:disabled {
@@ -175,8 +171,8 @@
 
 .submitButton {
   padding: 0.75rem 1.5rem;
-  background: #3b82f6;
-  color: white;
+  background: var(--action-success);
+  color: var(--alt-text-color);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -186,12 +182,12 @@
 }
 
 .submitButton:hover {
-  background: #2563eb;
+  background: var(--action-success-hover);
 }
 
 .submitButton:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
+  background: var(--button-disabled);
+  color: var(--alt-text-color);
 }
 
 /* Responsive Design */

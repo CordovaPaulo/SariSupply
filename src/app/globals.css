@@ -20,12 +20,119 @@
     --table-header-footer: #ffcf76;
     --table-header-footer-text: #8b4513;
     --page-header-bg: #f1b23d;
+
+  /* Neutral surfaces and borders */
+  --surface: var(--foreground);
+  --surface-soft: var(--foreground);
+  --surface-translucent: rgba(255, 255, 255, 0.5);
+  --border-color: #e5e7eb;
+  --text-muted: #6b7280;
+
+  /* Status and semantic colors */
+  --price-positive: #059669;
+  --status-in-stock-bg: #dcfce7;
+  --status-in-stock-text: #166534;
+
+  --status-low-stock-bg: #fef3c7;
+  --status-low-stock-text: #d97706;
+
+  --status-out-of-stock-bg: #fecaca;
+  --status-out-of-stock-text: #991b1b;
+
+  --status-discontinued-bg: #f3f4f6;
+  --status-discontinued-text: #374151;
+
+  --error-bg: #fef2f2;
+  --error-border: #fecaca;
+  --error-text: #dc2626;
+
+  /* Actions */
+  --action-success: #10b981;
+  --action-success-hover: #059669;
+
+  --action-warn: #f97316;
+  --action-warn-hover: #ea580c;
+
+  --inv-Arc-Act-Btn-1: #4a77da;
+  --inv-Arc-Act-Btn-2: #ff5b53;
+  --inv-Arc-Act-Btn-3: hsl(39, 100%, 65%);
+
+  --inv-Arc-Act-Btn-1-hover: #1d47a1;
+  --inv-Arc-Act-Btn-2-hover: #a12b25;
+  --inv-Arc-Act-Btn-3-hover: hsl(42, 78%, 53%);
+
+  --inv-Arc-Act-Btn-1-active: #334c81;
+  --inv-Arc-Act-Btn-2-active: #853c38;
+  --inv-Arc-Act-Btn-3-active: hsl(51, 54%, 56%);
+}
+
+/* Dark theme overrides */
+:root[data-theme="dark"] {
+  --background: #181d29;               
+  --foreground: #111621;               
+  --primary-color: #334155;            
+  --secondary-color: #1f2937;         
+  --accent-color: #f59e0b;             
+  --button-primary: #374151;           
+  --button-primary-hover: #4b5563;    
+  --button-primary-active: #6b7280;    
+  --button-secondary: #f59e0b;        
+  --button-secondary-hover: #d97706;  
+  --button-secondary-active: #b45309;  
+  --button-disabled: #6b7280;         
+  --text-color: #f9fafb;               
+  --alt-text-color: #f9fafb;        
+  --major-action: #f87171;             
+  --major-action-hover: #ef4444;       
+  --major-action-active: #b91c1c;     
+  --table-header-footer: #374151;      
+  --table-header-footer-text: #f9fafb; 
+  --page-header-bg: #1f2937;           
+
+  --surface: #111621;
+  --surface-soft: #0b101a;
+  --surface-translucent: rgba(31, 41, 55, 0.5);
+  --border-color: #374151;
+  --text-muted: #9ca3af;
+
+  --price-positive: #34d399;
+
+  --status-in-stock-bg: #064e3b;
+  --status-in-stock-text: #bbf7d0;
+
+  --status-low-stock-bg: #78350f;
+  --status-low-stock-text: #fde68a;
+
+  --status-out-of-stock-bg: #7f1d1d;
+  --status-out-of-stock-text: #fecaca;
+
+  --status-discontinued-bg: #1f2937;
+  --status-discontinued-text: #e5e7eb;
+
+  --error-bg: #2b1d1d;
+  --error-border: #7f1d1d;
+  --error-text: #fca5a5;
+
+  --action-success: #059669;
+  --action-success-hover: #047857;
+
+  --action-warn: #ea580c;
+  --action-warn-hover: #c2410c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+  }
 }
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  background-color: var(--background);
+  color: var(--text-color);
 }
 
 body {

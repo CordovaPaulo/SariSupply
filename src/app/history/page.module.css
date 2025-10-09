@@ -5,7 +5,7 @@
     width: 100%;
     min-height: 100dvh;
     height: 100dvh;
-    background-color: #f8f2dd;
+    background-color: var(--background);
 }
 
 .header {
@@ -37,7 +37,7 @@
     gap: 50px;
     border-radius: 60px;
     overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: var(--surface-translucent);
     padding: 10px;
     justify-content: space-around;
 }
@@ -131,14 +131,16 @@
 }   
 
 .main {
-    padding: 150px 40px 20px 40px;
-    background: var(--background);
-    min-height: calc(100vh - 100px);
-    box-sizing: border-box;
-    overflow-y: auto;
-    width: 85%;
-    min-width: 100dvh;
-    justify-self: center;
+  padding: 150px 24px 24px 24px;
+  background: var(--background);
+  min-height: calc(100vh - 100px);
+  box-sizing: border-box;
+  overflow-y: auto;
+
+  /* responsive container */
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .pageLoader {
@@ -146,9 +148,9 @@
 }
 
 .errorMessage {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error-text);
   padding: 12px 16px;
   border-radius: 8px;
   font-size: 14px;
@@ -158,8 +160,8 @@
 .emptyState {
   padding: 48px 24px;
   text-align: center;
-  color: #6b7280;
-  background: white;
+  color: var(--text-muted);
+  background: var(--surface);
   border-radius: 12px;
 }
 
@@ -171,8 +173,8 @@
 }
 
 .card {
-  background: #fff;
-  border: 1px solid #F3E8D0;
+  background: var(--surface);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 12px;
 }
@@ -185,7 +187,7 @@
 
 .cardTotal {
   font-weight: 600;
-  color: #059669;
+  color: var(--price-positive);
 }
 
 /* Items list */
@@ -200,7 +202,7 @@
   justify-content: space-between;
   align-items: baseline;
   padding: 8px 0;
-  border-bottom: 1px dashed #e5e7eb;
+  border-bottom: 1px dashed var(--border-color);
 }
 
 .itemRow:last-child {
@@ -214,12 +216,12 @@
 
 .itemName {
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-color);
 }
 
 .itemMeta {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .itemAmount {
@@ -229,7 +231,7 @@
 /* Payment summary */
 .paymentSummary {
   margin-top: 12px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-color);
   padding-top: 12px;
 }
 
@@ -323,8 +325,20 @@
   }
 
   .main {
-    padding: 140px 20px 60px 20px; /* extra bottom space for bottom nav */
+    padding: 140px 16px 60px 16px; /* bottom space for bottom nav */
     width: 100%;
+    max-width: 100%;
+    margin: 0;
+    min-width: 0; /* prevent overflow from any min-width */
+  }
+
+  .cardGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    padding: 10px;
   }
 }
 
@@ -369,12 +383,11 @@
   }
 
   .main {
-    padding: 120px 15px 50px 15px;
+    padding: 120px 12px 50px 12px;
   }
 
-  .addButton, .logoutButton {
-    padding: 6px 12px;
-    font-size: 0.85rem;
+  .cardGrid {
+    gap: 10px;
   }
 }
 
@@ -422,14 +435,20 @@
 
   .nav {
     position: static;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: var(--surface-translucent);
     border-radius: 60px;
     box-shadow: none;
     gap: 30px;
   }
 
   .main {
-    padding: 120px 30px 20px 30px;
-    width: 90%;
+    padding: 120px 24px 24px 24px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .cardGrid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   }
 }

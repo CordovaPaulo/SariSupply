@@ -7,6 +7,8 @@ import styles from './page.module.css';
 import PageLoader from '@/components/PageLoader/PageLoader';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 import { useRouter } from 'next/navigation';
+import ThemeToggle from '@/components/theme/ThemeToggle';
+import AddProductPopup from '../../components/AddProductPopup/AddProductPopup';
 
 type Line = { name: string; unitPrice: number; quantity: number; subtotal: number };
 type HistoryDoc = {
@@ -24,6 +26,14 @@ export default function HistoryPage() {
   const [error, setError] = useState('');
   const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
   const router = useRouter();
+  const [showAddPopup, setShowAddPopup] = useState(false);
+
+  const handleAddProduct = () => setShowAddPopup(true);
+  const handleClosePopup = () => setShowAddPopup(false);
+  const handleProductAdded = () => {
+    setShowAddPopup(false);
+    // Optionally refresh history data here if needed
+  }
 
   const handleCancelLogout = () => {
     setShowLogoutConfirmation(false);
@@ -85,8 +95,19 @@ export default function HistoryPage() {
           classes={{ nav: styles.nav, navButton: styles.navButton, navIcon: styles.navIcon, active: styles.active }}
         />
         <div className={styles.headerRight}>
-          <button className={styles.addButton}>+ Add Product</button>
-          <button className={styles.logoutButton} onClick={() => setShowLogoutConfirmation(true)}>Logout</button>
+          <ThemeToggle />
+          <button 
+            className={styles.addButton}
+            onClick={handleAddProduct}
+          >
+            + Add Product
+          </button>
+          <button 
+            className={styles.logoutButton}
+            onClick={() => setShowLogoutConfirmation(true)}
+          >
+            Logout
+          </button>
         </div>
       </header>
 
@@ -136,6 +157,11 @@ export default function HistoryPage() {
         )}
       </main>
 
+      <AddProductPopup
+        isOpen={showAddPopup}
+        onClose={handleClosePopup}
+        onProductAdded={handleProductAdded}
+      />
       <LogoutConfirmation
         isOpen={showLogoutConfirmation}
         onCancel={handleCancelLogout}

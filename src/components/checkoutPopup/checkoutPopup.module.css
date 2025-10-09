@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(17, 24, 39, 0.45);
+  background: rgba(0, 0, 0, 0.45);
   display: grid;
   place-items: center;
   z-index: 2000;
@@ -11,7 +11,7 @@
 .modal {
   width: 100%;
   max-width: 720px;
-  background: #fff;
+  background: var(--surface);
   border-radius: 14px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   overflow: hidden;
@@ -24,8 +24,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  border-bottom: 1px solid #f3f4f6;
-  background: #fafafa;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--surface);
 }
 
 .titleArea {
@@ -37,14 +37,14 @@
 .titleIcon {
   width: 20px;
   height: 20px;
-  color: #2563eb;
+  color: var(--accent-color);
 }
 
 .title {
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-color);
 }
 
 .closeButton {
@@ -53,12 +53,12 @@
   cursor: pointer;
   padding: 6px;
   border-radius: 8px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .closeButton:hover {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--button-primary-hover);
+  color: var(--text-color);
 }
 
 .body {
@@ -68,9 +68,9 @@
 }
 
 .error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #991b1b;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error-text);
   padding: 8px 10px;
   border-radius: 8px;
   font-size: 13px;
@@ -78,7 +78,7 @@
 }
 
 .empty {
-  color: #6b7280;
+  color: var(--text-muted);
   text-align: center;
   padding: 24px 0;
 }
@@ -97,9 +97,9 @@
   justify-content: space-between;
   gap: 12px;
   padding: 10px 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
-  background: #ffffff;
+  background: var(--surface);
 }
 
 .itemInfo {
@@ -110,12 +110,12 @@
 
 .itemName {
   font-weight: 600;
-  color: #111827;
+  color: var(--text-color);
 }
 
 .itemMeta {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .itemRight {
@@ -128,8 +128,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: var(--surface-soft);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 4px 6px;
 }
@@ -142,19 +142,19 @@
   height: 30px;
   border: none;
   border-radius: 8px;
-  background: white;
-  color: #374151;
+  background: var(--button-primary);
+  color: var(--text-color);
   cursor: pointer;
 }
 
 .qtyButton:hover:not(:disabled) {
-  background: #eef2ff;
-  color: #111827;
+  background: var(--button-primary-hover);
+  color: var(--text-color);
 }
 
 .qtyButton:disabled {
-  background: #f3f4f6;
-  color: #9ca3af;
+  background: var(--button-primary-hover);
+  color: var(--button-disabled);
   cursor: not-allowed;
 }
 
@@ -162,13 +162,13 @@
   min-width: 24px;
   text-align: center;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-color);
 }
 
 .footer {
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--border-color);
   padding: 12px 16px;
-  background: #fafafa;
+  background: var(--surface);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -182,12 +182,12 @@
 
 .totalLabel {
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .totalValue {
   font-weight: 800;
-  color: #111827;
+  color: var(--text-color);
 }
 
 .actions {
@@ -197,9 +197,9 @@
 }
 
 .secondaryButton {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  color: #374151;
+  background: var(--button-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
   padding: 10px 14px;
   border-radius: 10px;
   font-weight: 600;
@@ -207,15 +207,15 @@
 }
 
 .secondaryButton:hover {
-  background: #f9fafb;
+  background: var(--button-primary-hover);
 }
 
 .primaryButton {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #3b82f6;
-  color: #ffffff;
+  background: var(--action-success);
+  color: var(--alt-text-color);
   border: none;
   padding: 10px 14px;
   border-radius: 10px;
@@ -226,13 +226,15 @@
 }
 
 .primaryButton:hover {
-  background: #2563eb;
+  background: var(--action-success-hover);
 }
 
 .spinner {
   width: 18px;
   height: 18px;
   animation: spin 0.9s linear infinite;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--accent-color);
 }
 
 .removeButton {
@@ -241,7 +243,7 @@
   cursor: pointer;
   padding: 6px;
   border-radius: 8px;
-  color: #ef4444;
+  color: var(--major-action);
 }
 
 @keyframes spin {
