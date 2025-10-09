@@ -10,6 +10,7 @@ import Style from './page.module.css';
 import ExcelJS from 'exceljs';
 import PageLoader from '../../components/PageLoader/PageLoader';
 import NavBar from '../../components/NavBar/NavBar';
+import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 
 interface InventoryStats {
     totalItems: number;
@@ -33,6 +34,7 @@ export default function ArchivePage() { // Changed function name to ArchivePage
     archivedProducts: 0,
   });
 
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
   // Filter states
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -602,10 +604,17 @@ export default function ArchivePage() { // Changed function name to ArchivePage
   };
   
   const handleLogout = () => {
+    setShowLogoutConfirmation(true);
+  };
+
+  const handleConfirmLogout = () => {
     localStorage.removeItem('token');
+    setShowLogoutConfirmation(false);
     router.push('/');
   };
-  
+
+  const handleCancelLogout = () => setShowLogoutConfirmation(false);
+
   // Restore product handlers
   const handleRestoreClick = (product: any) => {
     console.log('Restore clicked for product:', product);
@@ -720,7 +729,7 @@ export default function ArchivePage() { // Changed function name to ArchivePage
         {/* Replace inline nav with component */}
         <NavBar
           active="archive"
-          archivedCount={stats.archivedProducts}
+// archivedCount={stats.archivedProducts}
           classes={{ nav: Style.nav, navButton: Style.navButton, navIcon: Style.navIcon, active: Style.active }}
         />
 
@@ -964,7 +973,11 @@ export default function ArchivePage() { // Changed function name to ArchivePage
         product={selectedProduct}
         onProductRestored={handleProductRestored}
       />
-
+      <LogoutConfirmation
+        isOpen={showLogoutConfirmation}
+        onCancel={handleCancelLogout}
+        onConfirm={handleConfirmLogout}
+      />
     </div>
   );
 }

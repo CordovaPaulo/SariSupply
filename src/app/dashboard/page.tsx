@@ -8,6 +8,7 @@ import Style from './page.module.css';
 import { Store, Package, Warehouse, ChartColumnDecreasing, Archive, Clock, LayoutDashboard, PackageOpen } from 'lucide-react';
 import PageLoader from '../../components/PageLoader/PageLoader';
 import NavBar from '../../components/NavBar/NavBar';
+import LogoutConfirmation from '@/components/logoutConfirmation/logout';
  
 interface DashboardStats {
   totalItems: number;
@@ -31,6 +32,8 @@ export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
+
 
   useEffect(() => {
     checkAuthentication();
@@ -190,9 +193,16 @@ export default function DashboardPage() {
   };
 
   const handleLogout = () => {
+    setShowLogoutConfirmation(true);
+  };
+
+  const handleConfirmLogout = () => {
     localStorage.removeItem('token');
+    setShowLogoutConfirmation(false);
     router.push('/');
   };
+
+  const handleCancelLogout = () => setShowLogoutConfirmation(false);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -232,7 +242,7 @@ export default function DashboardPage() {
         {/* Replace inline nav with component */}
         <NavBar
           active="dashboard"
-          archivedCount={stats.archivedProducts}
+          // archivedCount={stats.archivedProducts}
           classes={{ nav: Style.nav, navButton: Style.navButton, navIcon: Style.navIcon, active: Style.active }}
         />
 
@@ -384,6 +394,11 @@ export default function DashboardPage() {
         isOpen={showAddPopup}
         onClose={handleClosePopup}
         onProductAdded={handleProductAdded}
+      />
+      <LogoutConfirmation
+        isOpen={showLogoutConfirmation}
+        onCancel={handleCancelLogout}
+        onConfirm={handleConfirmLogout}
       />
     </div>
   );

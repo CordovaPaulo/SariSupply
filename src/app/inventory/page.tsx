@@ -12,6 +12,7 @@ import Style from './page.module.css';
 import ExcelJS from 'exceljs';
 import PageLoader from '../../components/PageLoader/PageLoader';
 import NavBar from '../../components/NavBar/NavBar';
+import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 
 interface InventoryStats {
     totalItems: number;
@@ -63,6 +64,8 @@ export default function InventoryPage() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentProducts = filteredProducts.slice(startIndex, endIndex);
+
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
 
   useEffect(() => {
     checkAuthentication();
@@ -565,10 +568,17 @@ export default function InventoryPage() {
   };
   
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    router.push('/');
+    setShowLogoutConfirmation(true);
   };
   
+  const handleConfirmLogout = () => {
+    localStorage.removeItem('token');
+    setShowLogoutConfirmation(false);
+    router.push('/');
+  };
+
+  const handleCancelLogout = () => setShowLogoutConfirmation(false);
+
   // Archive product handlers
   const handleArchiveClick = (product: any) => { // Changed to any since it has _id instead of id
     console.log('Archive clicked for product:', product);
@@ -770,7 +780,7 @@ export default function InventoryPage() {
         {/* Replace inline nav with component */}
         <NavBar
           active="inventory"
-          archivedCount={stats.archivedProducts}
+// archivedCount={stats.archivedProducts}
           classes={{ nav: Style.nav, navButton: Style.navButton, navIcon: Style.navIcon, active: Style.active }}
         />
 
@@ -1169,8 +1179,11 @@ export default function InventoryPage() {
         onClose={handleCloseViewPopup}
         product={selectedProductForView}
       />
-
-
+      <LogoutConfirmation
+        isOpen={showLogoutConfirmation}
+        onCancel={handleCancelLogout}
+        onConfirm={handleConfirmLogout}
+      />
     </div>
   );
 }

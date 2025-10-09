@@ -21,6 +21,7 @@ import Style from './page.module.css';
 import PageLoader from '@/components/PageLoader/PageLoader';
 import NavBar from '@/components/NavBar/NavBar';
 import CheckoutPopup from '@/components/checkoutPopup/checkoutPopup';
+import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 
 type Nullable<T> = T | null;
 
@@ -83,6 +84,7 @@ export default function POSPage() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentProducts = filteredProducts.slice(startIndex, endIndex);
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -238,9 +240,16 @@ export default function POSPage() {
   const handlePageClick = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const handleLogout = () => {
+    setShowLogoutConfirmation(true);
+  };
+
+  const handleConfirmLogout = () => {
     localStorage.removeItem('token');
+    setShowLogoutConfirmation(false);
     router.push('/');
   };
+
+  const handleCancelLogout = () => setShowLogoutConfirmation(false);
 
   // Add to cart with max limit check (NaN-safe)
   const addToCart = (product: ProductCart, qty = 1) => {
@@ -579,6 +588,11 @@ export default function POSPage() {
           onDecrementItem={decrementCartItem}
           onIncrementItem={incrementCartItem}
           onClearCart={clearCart}
+        />
+        <LogoutConfirmation
+          isOpen={showLogoutConfirmation}
+          onCancel={handleCancelLogout}
+          onConfirm={handleConfirmLogout}
         />
       </div>
     </>

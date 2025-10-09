@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { Store } from 'lucide-react';
 import NavBar from '@/components/NavBar/NavBar';
 import styles from './page.module.css';
+import PageLoader from '@/components/PageLoader/PageLoader';
+import LogoutConfirmation from '@/components/logoutConfirmation/logout';
+import { useRouter } from 'next/navigation';
 
 type Line = { name: string; unitPrice: number; quantity: number; subtotal: number };
 type HistoryDoc = {
@@ -19,37 +22,52 @@ export default function HistoryPage() {
   const [data, setData] = useState<HistoryDoc[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
+  const router = useRouter();
+
+  const handleCancelLogout = () => {
+    setShowLogoutConfirmation(false);
+  };
+
+  const handleConfirmLogout = () => {
+    localStorage.removeItem('token');
+    setShowLogoutConfirmation(false);
+    router.push('/');
+  };
 
   const formatCurrency = (n: number) =>
     new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', maximumFractionDigits: 2 }).format(n);
 
   useEffect(() => {
     const run = async () => {
-      try {
-        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-        if (!token) {
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      if (!token) {
           window.location.href = '/';
-          return;
-        }
-        const res = await fetch('/api/main/history', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!res.ok) {
-          const t = await res.text();
-          throw new Error(t || 'Failed to load history');
-        }
-        const json = await res.json();
-        setData(Array.isArray(json.data) ? json.data : []);
-      } catch (e: any) {
-        setError(e?.message || 'Failed to load history');
-      } finally {
-        setLoading(false);
+        return;
       }
-    };
+      const res = await fetch('/api/main/history', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(t || 'Failed to load history');
+      }
+      const json = await res.json();
+      setData(Array.isArray(json.data) ? json.data : []);
+    } catch (e: any) {
+      setError(e?.message || 'Failed to load history');
+    } finally {
+      setLoading(false);
+    }
+  };
     run();
   }, []);
 
-  if (loading) return <div className={styles.pageLoader}>Loading history...</div>;
+   if (loading) {
+      return <PageLoader message="Loading dashboard..." />;
+    }
+  
   if (error) return <div className={styles.errorMessage}>{error}</div>;
 
   return (
@@ -62,12 +80,14 @@ export default function HistoryPage() {
             <p>Recent transactions</p>
           </div>
         </div>
-
         <NavBar
           active="history"
           classes={{ nav: styles.nav, navButton: styles.navButton, navIcon: styles.navIcon, active: styles.active }}
         />
-        <div className={styles.headerRight} />
+        <div className={styles.headerRight}>
+          <button className={styles.addButton}>+ Add Product</button>
+          <button className={styles.logoutButton} onClick={() => setShowLogoutConfirmation(true)}>Logout</button>
+        </div>
       </header>
 
       <main className={styles.main}>
@@ -115,6 +135,12 @@ export default function HistoryPage() {
           </div>
         )}
       </main>
+
+      <LogoutConfirmation
+        isOpen={showLogoutConfirmation}
+        onCancel={handleCancelLogout}
+        onConfirm={handleConfirmLogout}
+      />
     </div>
   );
 }
