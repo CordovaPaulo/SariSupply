@@ -210,6 +210,13 @@ export default function CheckoutPopup({
                   value={amountPaid}
                   onChange={(e) => setAmountPaid(e.target.value)}
                   placeholder="0.00"
+                  onWheel={(e) => {
+                    e.preventDefault();
+                    (e.currentTarget as HTMLInputElement).blur(); // prevent scroll increment
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') e.preventDefault(); // prevent arrow inc/dec
+                  }}
                 />
                 <div style={{ marginTop: 6 }}>
                   Change: <strong>{formatCurrency(changePreview)}</strong>
@@ -264,37 +271,39 @@ export default function CheckoutPopup({
             </header>
 
             <section className={styles.body}>
-              <div style={{ marginBottom: 8 }}>
-                <div><strong>Transaction ID:</strong> {receipt.transactionId}</div>
-                {receipt.createdAt && (
-                  <div><strong>Date:</strong> {new Date(receipt.createdAt).toLocaleString()}</div>
-                )}
+              <div className={styles.receiptSection}>
+                <div className={styles.receiptInfo}>
+                  <div><strong>Transaction ID:</strong> {receipt.transactionId}</div>
+                  {receipt.createdAt && (
+                    <div><strong>Date:</strong> {new Date(receipt.createdAt).toLocaleString()}</div>
+                  )}
+                </div>
+
+                <ul className={styles.receiptList} role="list">
+                  {receipt.items.map((l, idx) => (
+                    <li key={idx} className={styles.receiptItemRow}>
+                      <div className={styles.receiptItemInfo}>
+                        <div className={styles.receiptItemName}>{l.name}</div>
+                        <div className={styles.receiptItemMeta}>
+                          {l.quantity} x {formatCurrency(l.unitPrice)}
+                        </div>
+                      </div>
+                      <div className={styles.receiptItemTotal}>{formatCurrency(l.subtotal)}</div>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <ul className={styles.list} role="list">
-                {receipt.items.map((l, idx) => (
-                  <li key={idx} className={styles.itemRow}>
-                    <div className={styles.itemInfo}>
-                      <div className={styles.itemName}>{l.name}</div>
-                      <div className={styles.itemMeta}>
-                        {l.quantity} x {formatCurrency(l.unitPrice)}
-                      </div>
-                    </div>
-                    <div className={styles.itemTotal}>{formatCurrency(l.subtotal)}</div>
-                  </li>
-                ))}
-              </ul>
-
-              <div style={{ marginTop: 12, borderTop: '1px solid #e5e7eb', paddingTop: 12 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className={styles.receiptTotals}>
+                <div className={styles.receiptTotalsRow}>
                   <span>Total</span>
                   <strong>{formatCurrency(receipt.totals.amount)}</strong>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div className={styles.receiptTotalsRow}>
                   <span>Amount Paid</span>
                   <span>{formatCurrency(receipt.payment.amountPaid)}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div className={styles.receiptTotalsRow}>
                   <span>Change</span>
                   <span>{formatCurrency(receipt.payment.change)}</span>
                 </div>
