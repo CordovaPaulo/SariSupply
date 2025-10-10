@@ -77,7 +77,7 @@
     border: 1px solid #e0e0e0;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    background-color: white;
+    background: var(--foreground);
     text-align: center;
     position: relative;
     z-index: 2; /* Above the wave */
