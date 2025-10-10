@@ -91,17 +91,14 @@ export default function POSPage() {
 
   useEffect(() => {
     checkAuthentication();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
       loadData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
-  // Close category dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
@@ -116,12 +113,10 @@ export default function POSPage() {
     }
   }, [showCategoryDropdown]);
 
-  // Reset pagination when filtered list size changes
   useEffect(() => {
     setCurrentPage(1);
   }, [filteredProducts.length]);
 
-  // Filtering (search + category only; no status filtering)
   useEffect(() => {
     const filtered = products.filter(product => {
       const matchesSearch =
@@ -172,7 +167,6 @@ export default function POSPage() {
     return Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0;
   };
 
-  // derive stock from multiple possible backend fields
   const deriveStock = (p: BackendProduct): number => {
     const candidates = [
       (p as any).stock,

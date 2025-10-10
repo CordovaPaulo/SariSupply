@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { Store } from 'lucide-react';
 import NavBar from '@/components/NavBar/NavBar';
 import styles from './page.module.css';
@@ -20,6 +20,23 @@ type HistoryDoc = {
   type?: string;
 };
 
+// Helper to extract a display name from JWT token
+function getNameFromToken(token: string): string {
+  try {
+    const base64 = token.split('.')[1];
+    const json = JSON.parse(atob(base64.replace(/-/g, '+').replace(/_/g, '/')));
+    return (
+      json?.name ||
+      json?.username ||
+      json?.preferred_username ||
+      json?.given_name ||
+      'User'
+    );
+  } catch {
+    return 'User';
+  }
+}
+
 export default function HistoryPage() {
   const [data, setData] = useState<HistoryDoc[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,6 +44,7 @@ export default function HistoryPage() {
   const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
   const router = useRouter();
   const [showAddPopup, setShowAddPopup] = useState(false);
+  const [userName, setUserName] = useState('User'); // added
 
   const handleAddProduct = () => setShowAddPopup(true);
   const handleClosePopup = () => setShowAddPopup(false);
@@ -50,27 +68,30 @@ export default function HistoryPage() {
 
   useEffect(() => {
     const run = async () => {
-    try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      if (!token) {
+      try {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        if (!token) {
           window.location.href = '/';
-        return;
+          return;
+        }
+        // set header name from token
+        setUserName(getNameFromToken(token)); // added
+
+        const res = await fetch('/api/main/history', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) {
+          const t = await res.text();
+          throw new Error(t || 'Failed to load history');
+        }
+        const json = await res.json();
+        setData(Array.isArray(json.data) ? json.data : []);
+      } catch (e: any) {
+        setError(e?.message || 'Failed to load history');
+      } finally {
+        setLoading(false);
       }
-      const res = await fetch('/api/main/history', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) {
-        const t = await res.text();
-        throw new Error(t || 'Failed to load history');
-      }
-      const json = await res.json();
-      setData(Array.isArray(json.data) ? json.data : []);
-    } catch (e: any) {
-      setError(e?.message || 'Failed to load history');
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
     run();
   }, []);
 
@@ -86,7 +107,8 @@ export default function HistoryPage() {
         <div className={styles.headerLeft}>
           <Store className={styles.storeIcon} />
           <div className={styles.headerName}>
-            <h1>Purchase History</h1>
+            {/* use decoded username */}
+            <h1>{userName}</h1>
             <p>Recent transactions</p>
           </div>
         </div>

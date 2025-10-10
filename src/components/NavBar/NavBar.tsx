@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Clock, LayoutDashboard, PackageOpen, Archive, ShoppingCart } from 'lucide-react';
+import { Clock, LayoutDashboard, PackageOpen, Archive, ShoppingCart, SquareLibrary } from 'lucide-react';
 
-type NavItem = 'dashboard' | 'inventory' | 'archive' | 'pos' | 'history';
+type NavItem = 'dashboard' | 'inventory' | 'archive' | 'pos' | 'history' | 'records';
 
 interface NavBarClasses {
   nav: string;
@@ -62,6 +62,14 @@ export default function NavBar({ active, archivedCount, classes }: NavBarProps) 
       >
         <Clock className={classes.navIcon} />
         History
+      </button>
+
+      <button
+        className={`${classes.navButton} ${activeClass('records')}`}
+        onClick={() => router.push('/records')}
+      >
+        <SquareLibrary className={classes.navIcon} />
+        Records
       </button>
     </nav>
   );

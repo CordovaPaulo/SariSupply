@@ -32,12 +32,9 @@ export async function POST(request: NextRequest) {
     const description = formData.get('description') as string;
     const image = formData.get('image') as File | null;
 
-    if (!image) {
-        return NextResponse.json(
-        {
-          success: false,
-          message: 'Missing required fields.'
-        },
+    if (!title || !description || !image) {
+      return NextResponse.json(
+        { success: false, message: 'Missing required fields.' },
         { status: 400 }
       );
     }
@@ -81,26 +78,19 @@ export async function POST(request: NextRequest) {
             updatedAt: new Date()
         }
 
-        const result = await db.collection('products').insertOne(recordData);
+        const result = await db.collection('records').insertOne(recordData); // was 'products'
 
         if (!result.acknowledged) {
-        return NextResponse.json(
-            {
-            success: false,
-            message: 'Failed to add product'
-            },
+          return NextResponse.json(
+            { success: false, message: 'Failed to add record' },
             { status: 500 }
-        );
+          );
         }
 
         return NextResponse.json({
-        success: true,
-        message: 'Record added successfully',
-        record: {
-            id: result.insertedId.toString(),
-            ...recordData,
-            _id: undefined
-        }
+          success: true,
+          message: 'Record added successfully',
+          record: { id: result.insertedId.toString(), ...recordData, _id: undefined }
         });
   } catch (error) {
     console.error('Error in /api/main/record/upload:', error);
@@ -112,4 +102,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

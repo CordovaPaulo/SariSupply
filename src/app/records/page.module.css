@@ -1,0 +1,445 @@
+.dashboard {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  background-color: var(--background);
+}
+
+/* --- HEADER (match dashboard) --- */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  background: var(--page-header-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--alt-text-color);
+  box-sizing: border-box;
+  border-radius: 0 0 20px 20px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.storeIcon {
+  width: 50px;
+  height: 50px;
+  color: var(--alt-text-color);
+}
+
+/* Optional to keep your title/subtitle consistent */
+.headerName {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.headerName h1,
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--alt-text-color);
+}
+.headerName p {
+  font-size: 1rem;
+  color: var(--alt-text-color);
+  margin: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Nav container (sizes same as dashboard) */
+.nav {
+  display: flex;
+  gap: 50px;
+  border-radius: 60px;
+  overflow: hidden;
+  background-color: var(--surface-translucent);
+  padding: 10px;
+  justify-content: space-around;
+}
+
+/* Shared header button baseline (dashboard) */
+.navButton, .addButton, .logoutButton {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Nav buttons (dashboard) */
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 8px;
+  border-radius: 50px;
+}
+.navButton:hover {
+  background-color: var(--button-primary-hover);
+  color: var(--text-color);
+  border-radius: 50px;
+}
+.navButton:active {
+  background-color: var(--button-primary-active);
+  color: var(--text-color);
+  border-radius: 50px;
+}
+.active {
+  background-color: var(--button-primary);
+  color: var(--text-color);
+  border-radius: 50px;
+}
+.navIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-color);
+}
+
+/* Add button (dashboard sizes) */
+.addButton {
+  background-color: var(--button-primary);
+  color: var(--text-color);
+  border-radius: 15px;
+}
+.addButton:hover {
+  background-color: var(--button-primary-hover);
+  color: var(--text-color);
+  border-radius: 15px;
+}
+.addButton:active {
+  background-color: var(--button-primary-active);
+  color: var(--text-color);
+  border-radius: 15px;
+}
+
+/* Logout button (dashboard sizes) */
+.logoutButton {
+  border: 2px solid var(--major-action);
+  color: var(--major-action);
+  border-radius: 15px;
+  font-weight: 600;
+}
+.logoutButton:hover {
+  background-color: var(--major-action);
+  color: var(--text-color);
+  border-radius: 15px;
+}
+.logoutButton:active {
+  background-color: var(--major-action);
+  color: var(--text-color);
+  border-radius: 15px;
+  border: 2px solid var(--major-action);
+}
+
+/* --- RESPONSIVE HEADER (match dashboard) --- */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    padding: 15px 20px;
+    gap: 15px;
+    position: fixed;
+    border-radius: 0 0 20px 20px;
+    bottom: auto;
+  }
+  .headerLeft {
+    justify-content: center;
+    width: 100%;
+  }
+  .storeIcon {
+    width: 40px;
+    height: 40px;
+  }
+  .headerName h1 { font-size: 1.3rem; }
+  .headerName p { font-size: 1rem; }
+
+  /* Bottom nav bar (dashboard) */
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 15px 20px 25px 20px;
+    gap: 0;
+    justify-content: space-around;
+    background: var(--page-header-bg);
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    border-radius: 20px 20px 0 0;
+    z-index: 1000;
+    min-height: 80px;
+  }
+  .navButton {
+    flex-direction: column;
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+    border-radius: 12px;
+    background: none;
+  }
+  .navButton:hover { background-color: var(--button-primary-hover); border-radius: 12px; }
+  .navButton.active { background-color: var(--button-primary); border-radius: 12px; }
+  .navIcon { width: 20px; height: 20px; }
+
+  .headerRight {
+    width: 100%;
+    justify-content: space-between;
+    order: 3;
+  }
+  .addButton, .logoutButton {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 12px 15px;
+    gap: 12px;
+  }
+  .headerLeft { gap: 8px; }
+  .storeIcon { width: 35px; height: 35px; }
+  .headerName h1 { font-size: 1.2rem; }
+  .headerName p { font-size: 0.9rem; }
+
+  .nav {
+    padding: 12px 15px 22px 15px;
+    border-radius: 15px 15px 0 0;
+    min-height: 75px;
+    background: var(--page-header-bg);
+  }
+  .navButton {
+    padding: 6px 8px;
+    font-size: 0.7rem;
+    border-radius: 10px;
+  }
+  .navIcon { width: 18px; height: 18px; }
+
+  .addButton, .logoutButton {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .header {
+    flex-direction: row;
+    padding: 8px 20px;
+    gap: 12px;
+  }
+  .headerLeft { flex: 0 0 auto; width: auto; }
+  .nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    flex: unset; order: unset; max-width: unset; margin: 0;
+    padding: 8px 20px 15px 20px;
+    border-radius: 15px 15px 0 0;
+    min-height: 65px;
+  }
+  .headerRight { flex: 0 0 auto; width: auto; order: 0; }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .header { padding: 15px 30px; }
+  .nav {
+    position: static;
+    background-color: var(--surface-translucent);
+    border-radius: 60px;
+    box-shadow: none;
+    gap: 30px;
+  }
+}
+
+/* --- MAIN CONTENT --- */
+.main {
+  padding: 150px 40px 20px 40px;
+  background: var(--background);
+  min-height: calc(100vh - 100px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  width: 85%;
+  justify-self: center;
+  margin: 0 auto;
+}
+
+.recentSection {
+  background: var(--foreground);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-top: 32px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.sectionHeader h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--table-header-footer-text);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.viewAllButton {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: auto;
+}
+.viewAllButton:hover { background: var(--button-primary-hover); }
+
+.tableContainer {
+  overflow-x: auto;
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+}
+
+.table thead { background: var(--table-header-footer); }
+
+.table th {
+  padding: 16px 20px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--table-header-footer-text);
+  font-size: 14px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+  vertical-align: middle;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.table tbody tr { background: var(--surface); }
+.table tbody tr:hover { background: var(--background); }
+
+.productCell { display: flex; flex-direction: column; gap: 2px; text-align: center; }
+.productCell strong { color: var(--text-color); }
+
+.productDescription { color: var(--text-muted); }
+.descriptionCell { max-width: 520px; text-align: center; }
+
+.recordImage {
+  max-height: 40px;
+  max-width: 80px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--surface);
+}
+
+.dateCell { color: var(--text-muted); text-align: center; }
+
+.errorMessage {
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error-text);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.emptyState {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-radius: 12px;
+}
+
+.addFirstButton {
+  background: var(--button-primary);
+  color: var(--text-color);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 16px;
+  font-weight: 500;
+}
+.addFirstButton:hover { background: var(--button-primary-hover); }
+
+.actionsHeader { text-align: right; }
+.actionsCell { text-align: center; white-space: nowrap; }
+
+.viewButton {
+  background: var(--inv-Arc-Act-Btn-1);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.viewButton:hover { background: var(--inv-Arc-Act-Btn-1-hover); }
+
+/* Responsive colors kept consistent with other pages */
+@media (max-width: 768px) {
+  .dashboard { background-color: var(--background); padding-bottom: 120px; }
+  .header { flex-direction: column; padding: 15px 20px; gap: 15px; position: fixed; border-radius: 0 0 20px 20px; bottom: auto; }
+  .nav { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; padding: 15px 20px 25px 20px; gap: 0; justify-content: space-around; background: var(--page-header-bg); box-shadow: 0 -2px 10px rgba(0,0,0,0.1); border-radius: 20px 20px 0 0; z-index: 1000; min-height: 80px; }
+  .navButton:hover { background-color: var(--button-primary-hover); border-radius: 12px; }
+  .navButton.active { background-color: var(--button-primary); border-radius: 12px; }
+  .main { padding: 140px 20px 60px 20px; width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .dashboard { background-color: var(--background); padding-bottom: 110px; }
+  .header { padding: 12px 15px; gap: 12px; background: var(--page-header-bg); color: var(--alt-text-color); }
+  .nav { padding: 12px 15px 22px 15px; border-radius: 15px 15px 0 0; min-height: 75px; background: var(--page-header-bg); }
+  .main { padding: 120px 15px 50px 15px; background: var(--background); }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .dashboard { background-color: var(--background); padding-bottom: 80px; }
+  .header { flex-direction: row; padding: 8px 20px; background: var(--page-header-bg); color: var(--alt-text-color); }
+  .nav { position: fixed; bottom: 0; left: 0; right: 0; padding: 8px 20px 15px 20px; border-radius: 15px 15px 0 0; min-height: 65px; background: var(--page-header-bg); }
+  .main { padding: 60px 20px 25px 20px; }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .header { padding: 15px 30px; }
+  .nav { position: static; background-color: var(--surface-translucent); border-radius: 60px; box-shadow: none; }
+  .main { padding: 120px 30px 20px 30px; width: 90%; }
+}

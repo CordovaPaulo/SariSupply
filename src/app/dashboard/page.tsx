@@ -236,7 +236,7 @@ export default function DashboardPage() {
           <Store className={Style.storeIcon} />
           <div className={Style.headerName}>
             <h1 className={Style.logo}>{user?.username || user?.email || 'Loading...'}</h1> 
-            <p>Inventory Manager</p>
+            <p>Dashboard</p>
           </div>
         </div>
 
