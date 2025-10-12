@@ -136,7 +136,11 @@ export default function RecordsPage() {
             <button className={styles.addButton} onClick={() => setShowAdd(true)}>
                 + Add Record
             </button>
-            <button className={styles.logoutButton} onClick={handleLogout}>
+            <button
+              className={styles.logoutButton}
+              type="button"
+              onClick={handleLogout}
+            >
               Logout
             </button>
             </div>
@@ -237,6 +241,15 @@ export default function RecordsPage() {
             record={viewing}
             onClose={() => setViewing(null)}
         />
+
+        {/* Add this block to render the LogoutConfirmation dialog */}
+        {showLogoutConfirmation && (
+          <LogoutConfirmation
+            isOpen={showLogoutConfirmation}
+            onConfirm={handleConfirmLogout}
+            onCancel={handleCancelLogout}
+          />
+        )}
         </div>
     );
 }
