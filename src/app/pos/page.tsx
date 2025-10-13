@@ -23,6 +23,7 @@ import NavBar from '@/components/NavBar/NavBar';
 import CheckoutPopup from '@/components/checkoutPopup/checkoutPopup';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 import ThemeToggle from '@/components/theme/ThemeToggle';
+import { toast } from 'react-toastify';
 
 type Nullable<T> = T | null;
 
@@ -136,7 +137,7 @@ export default function POSPage() {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (!token) {
       setLoading(false);
-      router.push('/');
+      router.replace('/');
       return;
     }
 
@@ -152,13 +153,13 @@ export default function POSPage() {
       } else {
         localStorage.removeItem('token');
         setLoading(false);
-        router.push('/');
+        router.replace('/');
       }
     } catch (err) {
       console.error('Auth check failed:', err);
       localStorage.removeItem('token');
       setLoading(false);
-      router.push('/');
+      router.replace('/');
     }
   };
 
@@ -195,7 +196,7 @@ export default function POSPage() {
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       if (!token) {
-        router.push('/');
+        router.replace('/');
         return;
       }
 
@@ -241,7 +242,7 @@ export default function POSPage() {
   const handleConfirmLogout = () => {
     localStorage.removeItem('token');
     setShowLogoutConfirmation(false);
-    router.push('/');
+    router.replace('/');
   };
 
   const handleCancelLogout = () => setShowLogoutConfirmation(false);

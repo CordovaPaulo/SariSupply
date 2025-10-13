@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 import styles from './ArchiveProductPopup.module.css';
 
@@ -18,10 +19,9 @@ export default function ArchiveProductPopup({ isOpen, onClose, product, onProduc
     const handleArchive = async () => {
         if (!product) {
             setError('No product selected');
+            toast.error('No product selected');
             return;
         }
-        
-        console.log('Archiving product:', product); // Debug log
         
         setLoading(true);
         setError('');
@@ -45,17 +45,20 @@ export default function ArchiveProductPopup({ isOpen, onClose, product, onProduc
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to archive product');
+                setError(errorData.error || 'Failed to archive product');
+                toast.error(errorData.error || 'Failed to archive product');
+                return;
             }
 
             const result = await response.json();
             console.log('Archive result:', result); // Debug log
 
             onProductArchived();
+            toast.success('Product archived successfully!');
             onClose();
         } catch (err) {
-            console.error('Archive error:', err);
             setError(err instanceof Error ? err.message : 'Failed to archive product. Please try again.');
+            toast.error(err instanceof Error ? err.message : 'Failed to archive product. Please try again.');
         } finally {
             setLoading(false);
         }

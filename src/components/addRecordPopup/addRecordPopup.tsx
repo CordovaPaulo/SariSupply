@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import styles from './addRecordPopup.module.css';
 
 interface AddRecordPopupProps {
@@ -69,6 +70,7 @@ export default function AddRecordPopup({ isOpen, onClose, onRecordAdded }: AddRe
 
     if (!formData.title || !formData.description || !formData.image) {
       setError('All fields are required.');
+      toast.error('All fields are required.');
       setLoading(false);
       return;
     }
@@ -92,17 +94,20 @@ export default function AddRecordPopup({ isOpen, onClose, onRecordAdded }: AddRe
         body: form,
       });
 
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        resetForm();
-        onRecordAdded?.();
-        onClose();
-      } else {
+      if (!response.ok) {
+        const result = await response.json();
         setError(result.message || 'Failed to add record');
+        toast.error(result.message || 'Failed to add record');
+        return;
       }
-    } catch {
-      setError('Network error. Please try again.');
+
+      resetForm();
+      if (onRecordAdded) onRecordAdded();
+      toast.success('Record added successfully!');
+      handleClose();
+    } catch (error) {
+      setError('Failed to add record');
+      toast.error('Failed to add record');
     } finally {
       setLoading(false);
     }

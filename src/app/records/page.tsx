@@ -10,6 +10,7 @@ import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 import { useRouter } from 'next/navigation';  
 import ViewRecordPopup from '../../components/viewRecordPopup/viewRecordPopup';
 import PageLoader from '../../components/PageLoader/PageLoader';
+import { toast } from 'react-toastify';
 
 type RecordItem = {
   _id?: string;
@@ -66,11 +67,14 @@ export default function RecordsPage() {
           return bd - ad;
         });
         setRecords(list);
+        toast.success('Records loaded successfully.');
       } else {
         setError(json?.message || 'Failed to load records');
+        toast.error('Failed to load records');
       }
     } catch {
       setError('Network error occurred');
+      toast.error('Network error occurred');
     } finally {
       setLoading(false);
     }
@@ -104,7 +108,7 @@ export default function RecordsPage() {
     const handleConfirmLogout = () => {
         localStorage.removeItem('token');
         setShowLogoutConfirmation(false);
-        router.push('/');
+        router.replace('/');
     };
 
     const handleCancelLogout = () => setShowLogoutConfirmation(false);

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { CreateProductRequest, ProductStatus, ProductCategory } from '../../models/product';
 import styles from './AddProductPopup.module.css';
+import { toast } from 'react-toastify';
 
 interface AddProductPopupProps {
   isOpen: boolean;
@@ -49,21 +50,24 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
     setError('');
 
     if (!formData.name || !formData.description || !formData.quantity || !formData.price) {
-      setError('All fields are required');
+      setError('All fields are required.');
+      toast.error('All fields are required.');
       setLoading(false);
       return;
     }
 
     const price = parseFloat(formData.price);
     if (isNaN(price) || price <= 0) {
-      setError('Please enter a valid price');
+      setError('Invalid price.');
+      toast.error('Invalid price.');
       setLoading(false);
       return;
     }
 
     const quantity = parseInt(formData.quantity);
     if (isNaN(quantity) || quantity < 0) {
-      setError('Please enter a valid quantity');
+      setError('Invalid quantity.');
+      toast.error('Invalid quantity.');
       setLoading(false);
       return;
     }
@@ -89,16 +93,20 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
         body: form
       });
 
-      if (response.ok) {
-        resetForm();
-        onProductAdded();
-        onClose();
-      } else {
+      if (!response.ok) {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to add product');
+        toast.error(errorData.message || 'Failed to add product');
+        return;
       }
+
+      resetForm();
+      onProductAdded();
+      toast.success('Product added successfully!');
+      handleClose();
     } catch (error) {
-      setError('Network error. Please try again.');
+      setError('Failed to add product');
+      toast.error('Failed to add product');
     } finally {
       setLoading(false);
     }

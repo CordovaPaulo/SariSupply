@@ -51,7 +51,7 @@ export default function LoginPage() {
         // Store token in localStorage or cookies
         localStorage.setItem('token', data.token);
         // Navigate to main page
-        router.push('/dashboard');
+        router.replace('/dashboard');
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Login failed');
@@ -65,7 +65,7 @@ export default function LoginPage() {
 
   // Handle forgot password click
   const handleForgotPasswordClick = () => {
-    router.push('/forgot-password');
+    router.replace('/forgot-password');
   };
 
   return (

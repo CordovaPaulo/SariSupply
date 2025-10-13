@@ -14,6 +14,7 @@ import PageLoader from '../../components/PageLoader/PageLoader';
 import NavBar from '../../components/NavBar/NavBar';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 import ThemeToggle from '@/components/theme/ThemeToggle';
+import { toast } from 'react-toastify';
 
 interface InventoryStats {
     totalItems: number;
@@ -111,7 +112,8 @@ export default function InventoryPage() {
     const token = localStorage.getItem('token');
     if (!token) {
       setLoading(false);
-      router.push('/');
+      toast.error('You must be logged in to access this page.');
+      router.replace('/');
       return;
     }
 
@@ -131,13 +133,13 @@ export default function InventoryPage() {
       } else {
         localStorage.removeItem('token');
         setLoading(false);
-        router.push('/');
+        router.replace('/');
       }
     } catch (error) {
       console.error('Auth check failed:', error);
       localStorage.removeItem('token');
       setLoading(false);
-      router.push('/');
+      router.replace('/');
     }
   };
 
@@ -145,7 +147,7 @@ export default function InventoryPage() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        router.push('/');
+        router.replace('/');
         return;
       }
 
@@ -553,7 +555,7 @@ export default function InventoryPage() {
   };
 
   const handleNavigation = (path: string) => {
-    router.push(path);
+    router.replace(path);
   };
   
   const handleAddProduct = () => {
@@ -575,7 +577,7 @@ export default function InventoryPage() {
   const handleConfirmLogout = () => {
     localStorage.removeItem('token');
     setShowLogoutConfirmation(false);
-    router.push('/');
+    router.replace('/');
   };
 
   const handleCancelLogout = () => setShowLogoutConfirmation(false);

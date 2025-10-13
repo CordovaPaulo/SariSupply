@@ -10,6 +10,7 @@ import PageLoader from '../../components/PageLoader/PageLoader';
 import NavBar from '../../components/NavBar/NavBar';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 import ThemeToggle from '@/components/theme/ThemeToggle';
+import { toast } from 'react-toastify';
  
 interface DashboardStats {
   totalItems: number;
@@ -50,7 +51,8 @@ export default function DashboardPage() {
     const token = localStorage.getItem('token');
     if (!token) {
       setLoading(false);
-      router.push('/');
+      toast.error('You need to log in first');
+      router.replace('/');
       return;
     }
 
@@ -67,16 +69,19 @@ export default function DashboardPage() {
         
         setUser(responseData.user);
         setIsAuthenticated(true);
+        // toast.success('Welcome back!');
       } else {
         localStorage.removeItem('token');
+        toast.error('Session expired. Please log in again.');
         setLoading(false);
-        router.push('/');
+        router.replace('/');
       }
     } catch (error) {
       console.error('Auth check failed:', error);
       localStorage.removeItem('token');
       setLoading(false);
-      router.push('/');
+      router.replace('/');
+      toast.error('Network error. Please log in again.');
     }
   };
 
@@ -84,7 +89,7 @@ export default function DashboardPage() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        router.push('/');
+        router.replace('/');
         return;
       }
 
@@ -102,6 +107,7 @@ export default function DashboardPage() {
         
         setProducts(productsArray);
         calculateStats(productsArray);
+        toast.success('Products loaded successfully');
         
         const activeProducts = productsArray.filter((product: ProductResponse) => 
           product.status !== ProductStatus.DISCONTINUED
@@ -178,7 +184,7 @@ export default function DashboardPage() {
   };
 
   const handleNavigation = (path: string) => {
-    router.push(path);
+    router.replace(path);
   };
 
   const handleAddProduct = () => {
@@ -200,7 +206,7 @@ export default function DashboardPage() {
   const handleConfirmLogout = () => {
     localStorage.removeItem('token');
     setShowLogoutConfirmation(false);
-    router.push('/');
+    router.replace('/');
   };
 
   const handleCancelLogout = () => setShowLogoutConfirmation(false);

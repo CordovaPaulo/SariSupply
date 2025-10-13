@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react';
+import { toast } from 'react-toastify'; // <-- Import Toastify
 import styles from './UnarchiveProductPopup.module.css';
 
 interface RestoreProductPopupProps {
@@ -17,10 +18,9 @@ export default function UnarchiveProductPopup({ isOpen, onClose, product, onProd
     const handleRestore = async () => {
         if (!product) {
             setError('No product selected');
+            toast.error('No product selected'); // <-- Toast error
             return;
         }
-        
-        console.log('Restoring product:', product); // Debug log
         
         setLoading(true);
         setError('');
@@ -30,6 +30,7 @@ export default function UnarchiveProductPopup({ isOpen, onClose, product, onProd
             
             if (!token) {
                 setError('Authentication token not found');
+                toast.error('Authentication token not found'); // <-- Toast error
                 setLoading(false);
                 return;
             }
@@ -44,17 +45,18 @@ export default function UnarchiveProductPopup({ isOpen, onClose, product, onProd
 
             if (!response.ok) {
                 const errorData = await response.json();
+                toast.error(errorData.error || 'Failed to restore product'); // <-- Toast error
                 throw new Error(errorData.error || 'Failed to restore product');
             }
 
             const result = await response.json();
-            console.log('Restore result:', result); // Debug log
 
             onProductRestored();
             onClose();
+            toast.success('Product restored successfully!'); // <-- Toast success
         } catch (err) {
-            console.error('Restore error:', err);
             setError(err instanceof Error ? err.message : 'Failed to restore product. Please try again.');
+            toast.error(err instanceof Error ? err.message : 'Failed to restore product. Please try again.'); // <-- Toast error
         } finally {
             setLoading(false);
         }

@@ -11,6 +11,7 @@
     "register-many": "node scripts/register-many.js"
   },
   "dependencies": {
+    "@zxing/browser": "^0.1.5",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.7.0",
     "dotenv": "^17.2.2",
@@ -20,8 +21,10 @@
     "lucide-react": "^0.544.0",
     "mongoose": "^8.18.2",
     "next": "15.5.3",
+    "nodemailer": "^7.0.9",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

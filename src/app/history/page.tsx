@@ -9,6 +9,7 @@ import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 import { useRouter } from 'next/navigation';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 import AddProductPopup from '../../components/AddProductPopup/AddProductPopup';
+import { toast } from 'react-toastify';
 
 type Line = { name: string; unitPrice: number; quantity: number; subtotal: number };
 type HistoryDoc = {
@@ -60,7 +61,7 @@ export default function HistoryPage() {
   const handleConfirmLogout = () => {
     localStorage.removeItem('token');
     setShowLogoutConfirmation(false);
-    router.push('/');
+    router.replace('/');
   };
 
   const formatCurrency = (n: number) =>

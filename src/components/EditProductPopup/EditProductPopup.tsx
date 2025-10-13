@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { CreateProductRequest, ProductStatus, ProductCategory, ProductResponse } from '../../models/product';
 import styles from './EditProductPopup.module.css';
+import { toast } from 'react-toastify';
 
 interface EditProductPopupProps {
   isOpen: boolean;
@@ -50,34 +51,35 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!product) {
-      setError('No product selected for editing');
+      setError('No product selected');
+      toast.error('No product selected');
       return;
     }
 
     setLoading(true);
     setError('');
 
-    // Validate required fields
     if (!formData.name || !formData.description || !formData.quantity || !formData.price) {
-      setError('All fields are required');
+      setError('All fields are required.');
+      toast.error('All fields are required.');
       setLoading(false);
       return;
     }
 
-    // Validate price
     const price = parseFloat(formData.price);
     if (isNaN(price) || price <= 0) {
-      setError('Please enter a valid price');
+      setError('Invalid price.');
+      toast.error('Invalid price.');
       setLoading(false);
       return;
     }
 
-    // Validate quantity
     const quantity = parseInt(formData.quantity);
     if (isNaN(quantity) || quantity < 0) {
-      setError('Please enter a valid quantity');
+      setError('Invalid quantity.');
+      toast.error('Invalid quantity.');
       setLoading(false);
       return;
     }
@@ -108,7 +110,8 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
       const productId = product._id || (product as any).id;
       const response = await fetch(`/api/main/edit/${productId}`, {
         method: 'PUT',
-        headers: {
+        headers:
+         {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
@@ -123,17 +126,18 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
         
         // Call the callback to refresh the product list
         onProductUpdated();
-        
-        // Close the popup
-        onClose();
+        toast.success('Product updated successfully!');
+        handleClose();
       } else {
         const errorData = await response.json();
         console.error('Update error:', errorData);
         setError(errorData.error || errorData.message || 'Failed to update product');
+        toast.error(errorData.error || errorData.message || 'Failed to update product');
       }
     } catch (error) {
       console.error('Network error:', error);
       setError('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setLoading(false);
     }

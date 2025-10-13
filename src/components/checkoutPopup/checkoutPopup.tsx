@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { X, Trash2, ShoppingCart, Loader2, Minus, Plus } from 'lucide-react';
+import { toast } from 'react-toastify';
 import styles from './checkoutPopup.module.css';
 
 interface CartItem {
@@ -67,7 +68,10 @@ export default function CheckoutPopup({
   if (!isOpen) return null;
 
   const checkoutCart = async () => {
-    if (cart.length === 0) return;
+    if (cart.length === 0) {
+      toast.error('Cart is empty!');
+      return;
+    }
 
     setLoading(true);
     setError('');
@@ -76,7 +80,7 @@ export default function CheckoutPopup({
       const token =
         typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-      const res = await fetch('/api/main/checkout', {
+      const response = await fetch('/api/main/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,18 +92,21 @@ export default function CheckoutPopup({
         }),
       });
 
-      if (!res.ok) {
-        const msg = await safeErrorMessage(res);
-        throw new Error(msg || 'Checkout failed');
+      if (!response.ok) {
+        const errorData = await safeErrorMessage(response);
+        setError(errorData || 'Checkout failed');
+        toast.error(errorData || 'Checkout failed');
+        return;
       }
 
-      const data = await res.json();
+      const data = await response.json();
       const receiptData = data?.data;
-      onClearCart?.();
-      setReceipt(receiptData || null); // show receipt
-      // do not close immediately; let user view receipt
-    } catch (e: any) {
-      setError(e?.message || 'Network error');
+      toast.success('Checkout successful!');
+      setReceipt(receiptData);
+      if (onClearCart) onClearCart();
+    } catch (e) {
+      setError('Network error');
+      toast.error('Network error');
     } finally {
       setLoading(false);
     }

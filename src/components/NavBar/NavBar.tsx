@@ -26,7 +26,7 @@ export default function NavBar({ active, archivedCount, classes }: NavBarProps) 
     <nav className={classes.nav}>
       <button
         className={`${classes.navButton} ${activeClass('dashboard')}`}
-        onClick={() => router.push('/dashboard')}
+        onClick={() => router.replace('/dashboard')}
       >
         <LayoutDashboard className={classes.navIcon} />
         Dashboard
@@ -34,7 +34,7 @@ export default function NavBar({ active, archivedCount, classes }: NavBarProps) 
 
       <button
         className={`${classes.navButton} ${activeClass('pos')}`}
-        onClick={() => router.push('/pos')}
+        onClick={() => router.replace('/pos')}
       >
         <ShoppingCart className={classes.navIcon} />
         POS
@@ -42,7 +42,7 @@ export default function NavBar({ active, archivedCount, classes }: NavBarProps) 
 
       <button
         className={`${classes.navButton} ${activeClass('inventory')}`}
-        onClick={() => router.push('/inventory')}
+        onClick={() => router.replace('/inventory')}
       >
         <PackageOpen className={classes.navIcon} />
         Inventory
@@ -50,7 +50,7 @@ export default function NavBar({ active, archivedCount, classes }: NavBarProps) 
 
       <button
         className={`${classes.navButton} ${activeClass('archive')}`}
-        onClick={() => router.push('/archive')}
+        onClick={() => router.replace('/archive')}
       >
         <Archive className={classes.navIcon} />
         {typeof archivedCount === 'number' ? `Archive (${archivedCount})` : 'Archive'}
@@ -58,7 +58,7 @@ export default function NavBar({ active, archivedCount, classes }: NavBarProps) 
 
       <button
         className={`${classes.navButton} ${activeClass('history')}`}
-        onClick={() => router.push('/history')}
+        onClick={() => router.replace('/history')}
       >
         <Clock className={classes.navIcon} />
         History
@@ -66,7 +66,7 @@ export default function NavBar({ active, archivedCount, classes }: NavBarProps) 
 
       <button
         className={`${classes.navButton} ${activeClass('records')}`}
-        onClick={() => router.push('/records')}
+        onClick={() => router.replace('/records')}
       >
         <SquareLibrary className={classes.navIcon} />
         Records

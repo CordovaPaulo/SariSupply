@@ -12,6 +12,7 @@ import PageLoader from '../../components/PageLoader/PageLoader';
 import NavBar from '../../components/NavBar/NavBar';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 import ThemeToggle from '@/components/theme/ThemeToggle';
+import { toast } from 'react-toastify';
 
 interface InventoryStats {
     totalItems: number;
@@ -103,7 +104,7 @@ export default function ArchivePage() { // Changed function name to ArchivePage
     const token = localStorage.getItem('token');
     if (!token) {
       setLoading(false);
-      router.push('/');
+      router.replace('/');
       return;
     }
 
@@ -123,13 +124,13 @@ export default function ArchivePage() { // Changed function name to ArchivePage
       } else {
         localStorage.removeItem('token');
         setLoading(false);
-        router.push('/');
+        router.replace('/');
       }
     } catch (error) {
       console.error('Auth check failed:', error);
       localStorage.removeItem('token');
       setLoading(false);
-      router.push('/');
+      router.replace('/');
     }
   };
 
@@ -137,7 +138,7 @@ export default function ArchivePage() { // Changed function name to ArchivePage
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        router.push('/');
+        router.replace('/');
         return;
       }
 
@@ -601,7 +602,7 @@ export default function ArchivePage() { // Changed function name to ArchivePage
   };
 
   const handleNavigation = (path: string) => {
-    router.push(path);
+    router.replace(path);
   };
   
   const handleLogout = () => {
@@ -611,7 +612,7 @@ export default function ArchivePage() { // Changed function name to ArchivePage
   const handleConfirmLogout = () => {
     localStorage.removeItem('token');
     setShowLogoutConfirmation(false);
-    router.push('/');
+    router.replace('/');
   };
 
   const handleCancelLogout = () => setShowLogoutConfirmation(false);

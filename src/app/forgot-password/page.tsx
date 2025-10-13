@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import Style from './page.module.css';
+import { toast } from 'react-toastify';
 
 interface ForgotPasswordRequest {
   email: string;
@@ -136,13 +137,16 @@ export default function ForgotPasswordPage() {
       if (response.ok) {
         setSuccess('Password reset successfully. You can now log in with your new password.');
         setTimeout(() => {
-          router.push('/');
+          router.replace('/');
         }, 3000);
+        toast.success('Password reset successfully. Redirecting to login...');
       } else {
         setError('Failed to reset password. Please try again.');
+        toast.error('Failed to reset password. Please try again.');
       }
     } catch (error) {
       setError('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -150,7 +154,7 @@ export default function ForgotPasswordPage() {
 
   // Handle back to login
   const handleBackToLogin = () => {
-    router.push('/');
+    router.replace('/');
   };
 
   // Handle back to verification
