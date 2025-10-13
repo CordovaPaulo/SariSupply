@@ -11,6 +11,7 @@ import NavBar from '../../components/NavBar/NavBar';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 import { toast } from 'react-toastify';
+import ScrollLock from '@/components/ScrollLock/ScrollLock';
  
 interface DashboardStats {
   totalItems: number;
@@ -219,12 +220,15 @@ export default function DashboardPage() {
     return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
+  const anyModalOpen = Boolean(showAddPopup || showLogoutConfirmation);
+
   if (loading) {
     return <PageLoader message="Loading dashboard..." />;
   }
 
   return (
     <div className={Style.dashboard}>
+      <ScrollLock active={anyModalOpen} />
       <header className={Style.header}>
         <div className={Style.headerLeft}>
           <Store className={Style.storeIcon} />

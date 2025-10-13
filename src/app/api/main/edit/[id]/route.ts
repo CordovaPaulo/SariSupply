@@ -68,11 +68,11 @@ export async function PUT(
     }
 
     // Validate required fields
-    const { name, description, category, quantity, price, status } = requestData;
+    const { name, description, category, quantity, price } = requestData;
 
-    if (!name || !description || category === undefined || quantity === undefined || price === undefined || status === undefined) {
+    if (!name || !description || category === undefined || quantity === undefined || price === undefined) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, description, category, quantity, price, status' },
+        { error: 'Missing required fields: name, description, category, quantity, price' },
         { status: 400 }
       );
     }
@@ -95,13 +95,6 @@ export async function PUT(
     if (!Object.values(ProductCategory).includes(category)) {
       return NextResponse.json(
         { error: 'Invalid product category' },
-        { status: 400 }
-      );
-    }
-
-    if (!Object.values(ProductStatus).includes(status)) {
-      return NextResponse.json(
-        { error: 'Invalid product status' },
         { status: 400 }
       );
     }
@@ -133,15 +126,15 @@ export async function PUT(
       );
     }
 
-    // Auto-adjust status based on quantity if status is not explicitly discontinued
-    let finalStatus = status;
-    if (status !== ProductStatus.DISCONTINUED) {
-      if (quantity === 0) {
-        finalStatus = ProductStatus.OUT_OF_STOCK;
-      } else if (quantity > 0 && status === ProductStatus.OUT_OF_STOCK) {
-        finalStatus = ProductStatus.IN_STOCK;
-      }
-    }
+    // // Auto-adjust status based on quantity if status is not explicitly discontinued
+    // let finalStatus = status;
+    // if (status !== ProductStatus.DISCONTINUED) {
+    //   if (quantity === 0) {
+    //     finalStatus = ProductStatus.OUT_OF_STOCK;
+    //   } else if (quantity > 0 && status === ProductStatus.OUT_OF_STOCK) {
+    //     finalStatus = ProductStatus.IN_STOCK;
+    //   }
+    // }
 
     // Update the product
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -152,7 +145,7 @@ export async function PUT(
         category,
         quantity,
         price,
-        status: finalStatus,
+        // status: finalStatus,
         owner: userId,
         ownerId: userId,
         updatedAt: new Date()
@@ -177,7 +170,7 @@ export async function PUT(
         category: updatedProduct.category,
         quantity: updatedProduct.quantity,
         price: updatedProduct.price,
-        status: updatedProduct.status,
+        // status: updatedProduct.status,
         owner: updatedProduct.owner,
         updatedBy: decoded.name || decoded.email,
         updatedAt: updatedProduct.updatedAt

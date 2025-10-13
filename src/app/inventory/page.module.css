@@ -131,7 +131,7 @@
 }
 
 .main {
-    padding: 120px 40px 20px 40px;
+    padding: 90px 40px 20px 40px;
     background: transparent;
     min-height: calc(100vh - 120px);
     box-sizing: border-box;
@@ -183,6 +183,7 @@
     width: 100%;
     border-collapse: collapse;
     background: var(--surface);
+    table-layout: fixed;
 }
 
 .table thead {
@@ -196,6 +197,10 @@
     color: var(--table-header-footer-text);
     font-size: 14px;
     border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--table-header-footer);
 }
 
 .table td {
@@ -310,14 +315,12 @@
 }
 
 .dataFilters {
-  /* colors only */
   background: var(--surface-translucent);
-  /* ...existing layout... */
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
-  margin: 30px auto;
+  margin: 30px auto 10px;
   padding: 20px;
   width: 90%;
   max-width: 1200px;
@@ -585,10 +588,14 @@
 .statusIcon.outOfStock { color: var(--status-out-of-stock-text); }
 
 .tableFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: var(--table-header-footer);
   border-top: 2px solid var(--border-color);
   padding: 16px 20px;
   border-radius: 0 0 12px 12px;
+  gap: 24px; /* add spacing between totals and pagination */
 }
 
 .statisticsSummary {
@@ -1240,13 +1247,13 @@
 /* Pagination: base styles (copied from POS to match look & behavior) */
 .paginationContainer {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
-  background: var(--table-header-footer);
-  border-top: 2px solid var(--border-color);
-  border-radius: 0 0 12px 12px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  margin: 0;
 }
 
 .paginationButton {
@@ -1320,4 +1327,14 @@
   background: var(--button-primary-hover);
   border-color: var(--accent-color);
   color: var(--text-color);
+}
+
+.tableScroll {
+  max-height: 60vh;
+  overflow-y: auto;
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+}
+.tableScroll::-webkit-scrollbar {
+  display: none;                /* Chrome/Safari */
 }

@@ -48,6 +48,11 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
     }));
   };
 
+  // prevent mouse wheel from changing number inputs (blurs the input)
+  const handleWheelNumber = (e: React.WheelEvent<HTMLInputElement>) => {
+    e.currentTarget.blur();
+  };
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -227,6 +232,7 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
                 name="quantity"
                 value={formData.quantity}
                 onChange={handleInputChange}
+                onWheel={handleWheelNumber}
                 placeholder="0"
                 min="0"
                 required
@@ -240,17 +246,17 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
                 id="price"
                 name="price"
                 step="0.01"
-                min="0.01"
+                min="0"
                 value={formData.price}
                 onChange={handleInputChange}
+                onWheel={handleWheelNumber}
                 placeholder="0.00"
                 required
               />
             </div>
-          </div>
 
-          <div className={styles.inputRow}>
-            <div className={styles.inputGroup}>
+            {/* category: span full width like AddProductPopup */}
+            <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
               <label htmlFor="category">Category *</label>
               <select
                 id="category"
@@ -277,21 +283,6 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
                 <option value={ProductCategory.OTHER}>
                   {formatCategoryName(ProductCategory.OTHER)}
                 </option>
-              </select>
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label htmlFor="status">Status *</label>
-              <select
-                id="status"
-                name="status"
-                value={formData.status}
-                onChange={handleInputChange}
-                required
-              >
-                <option value={ProductStatus.IN_STOCK}>In Stock</option>
-                <option value={ProductStatus.OUT_OF_STOCK}>Out of Stock</option>
-                {/* <option value={ProductStatus.DISCONTINUED}>Discontinued</option> */}
               </select>
             </div>
           </div>

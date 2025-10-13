@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import ViewRecordPopup from '../../components/viewRecordPopup/viewRecordPopup';
 import PageLoader from '../../components/PageLoader/PageLoader';
 import { toast } from 'react-toastify';
+import ScrollLock from '@/components/ScrollLock/ScrollLock';
 
 type RecordItem = {
   _id?: string;
@@ -126,8 +127,12 @@ export default function RecordsPage() {
 
     const handleCancelLogout = () => setShowLogoutConfirmation(false);
 
+    // state: showAdd, viewing (record or null), showLogoutConfirmation
+    const anyModalOpen = Boolean(showAdd || viewing || showLogoutConfirmation);
+
     return (
         <div className={styles.dashboard}>
+          <ScrollLock active={anyModalOpen} />
         <header className={styles.header}>
             <div className={styles.headerLeft}>
             <Store className={styles.storeIcon} />
@@ -194,55 +199,53 @@ export default function RecordsPage() {
                     </button>
                 </div>
                 ) : (
-                <table className={styles.table}>
+                <div className={styles.tableScroll}>
+                  <table className={styles.table}>
                     <thead>
-                    <tr>
+                      <tr>
                         <th>Title</th>
                         <th>Description</th>
                         <th>Image</th>
                         <th>Date Added</th>
                         <th className={styles.actionsHeader}>Actions</th>
-                    </tr>
+                      </tr>
                     </thead>
                     <tbody>
-                    {records.map((r, idx) => (
+                      {records.map((r, idx) => (
                         <tr key={r._id ?? idx}>
-                        <td>
+                          <td>
                             <div className={styles.productCell}>
-                            <strong>{r.title}</strong>
+                              <strong>{r.title}</strong>
                             </div>
-                        </td>
-                        <td className={styles.descriptionCell}>
+                          </td>
+                          <td className={styles.descriptionCell}>
                             <span className={styles.productDescription}>{r.description}</span>
-                        </td>
-                        <td>
+                          </td>
+                          <td>
                             {r.imageUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                                src={r.imageUrl}
-                                alt={r.title}
-                                className={styles.recordImage}
-                            />
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={r.imageUrl} alt={r.title} className={styles.recordImage} />
                             ) : (
-                            <span className={styles.productDescription}>No image</span>
+                              <span className={styles.productDescription}>No image</span>
                             )}
-                        </td>
-                        <td className={styles.dateCell}>{formatDate(r.createdAt)}</td>
-                        <td className={styles.actionsCell}>
+                          </td>
+                          <td className={styles.dateCell}>{formatDate(r.createdAt)}</td>
+                          <td className={styles.actionsCell}>
                             <button
-                            type="button"
-                            className={styles.viewButton}
-                            onClick={() => setViewing(r)}
-                            aria-label={`View ${r.title}`}
+                              type="button"
+                              className={styles.viewButton}
+                              onClick={() => setViewing(r)}
+                              aria-label={`View ${r.title}`}
                             >
-                            <Eye />
+                              <Eye />
                             </button>
-                        </td>
+                          </td>
                         </tr>
-                    ))}
+                      ))}
                     </tbody>
-                </table>
-                )}
+                  </table>
+                </div>
+                 )}
             </div>
             </section>
         </main>

@@ -34,6 +34,11 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
     }));
   };
 
+  // prevent mouse wheel from changing number inputs (blurs the input)
+  const handleWheelNumber = (e: React.WheelEvent<HTMLInputElement>) => {
+    e.currentTarget.blur();
+  };
+
   // Handle image file change
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -190,6 +195,7 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
                 name="quantity"
                 value={formData.quantity}
                 onChange={handleInputChange}
+                onWheel={handleWheelNumber}
                 placeholder="0"
                 min="0"
                 required
@@ -206,6 +212,7 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
                 min="0"
                 value={formData.price}
                 onChange={handleInputChange}
+                onWheel={handleWheelNumber}
                 placeholder="0.00"
                 required
               />

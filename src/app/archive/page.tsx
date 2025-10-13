@@ -13,6 +13,7 @@ import NavBar from '../../components/NavBar/NavBar';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 import { toast } from 'react-toastify';
+import ScrollLock from '@/components/ScrollLock/ScrollLock';
 
 interface InventoryStats {
     totalItems: number;
@@ -698,8 +699,11 @@ export default function ArchivePage() { // Changed function name to ArchivePage
     return <PageLoader message="Loading archived products..." />;
   }
 
+  const anyModalOpen = Boolean(showRestorePopup || showViewPopup || showAddPopup || showLogoutConfirmation);
+
   return (
     <div className={Style.dashboard}>
+      <ScrollLock active={anyModalOpen} />
       <header className={Style.header}>
         <div className={Style.headerLeft}>
           <Store className={Style.storeIcon} />
@@ -823,54 +827,56 @@ export default function ArchivePage() { // Changed function name to ArchivePage
           {/* Wrap table and footer in a section */}
           <div className={Style.tableSection}>
             <div className={Style.tableContainer}>
-              <table className={Style.table}>
-                <thead>
-                  <tr>
-                    <th>Product Name</th>
-                    <th>Description</th>
-                    <th>Category</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total Value</th>
-                    <th>Archived Date</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentProducts.map((product) => (
-                    <tr key={product._id}>
-                      <td>
-                        <div className={Style.productCell}>
-                          <strong>{product.name}</strong>
-                        </div>
-                      </td>
-                      <td>
-                        <div className={Style.descriptionCell}>
-                          {product.description}
-                        </div>
-                      </td>
-                      <td>{formatCategoryName(product.category)}</td>
-                      <td>{product.quantity}</td>
-                      <td className={Style.totalPriceCell}>
-                        {formatCurrency(product.price)}
-                      </td>
-                      <td className={Style.priceCell}>
-                        {formatCurrency(product.price * product.quantity)}
-                      </td>
-                      <td>{formatDate(product.createdAt)}</td>
-                      <td className={Style.actionCell}>
-                        <button 
-                          className={`${Style.viewButton} ${Style.actionButton}`}
-                          onClick={() => handleRestoreClick(product)}
-                          title={`Restore ${product.name}`}
-                        >
-                          <ArchiveRestore/>
-                        </button>
-                      </td>
+              <div className={Style.tableScroll}>
+                <table className={Style.table}>
+                  <thead>
+                    <tr>
+                      <th>Product Name</th>
+                      <th>Description</th>
+                      <th>Category</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
+                      <th>Total Value</th>
+                      <th>Archived Date</th>
+                      <th>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {currentProducts.map((product) => (
+                      <tr key={product._id}>
+                        <td>
+                          <div className={Style.productCell}>
+                            <strong>{product.name}</strong>
+                          </div>
+                        </td>
+                        <td>
+                          <div className={Style.descriptionCell}>
+                            {product.description}
+                          </div>
+                        </td>
+                        <td>{formatCategoryName(product.category)}</td>
+                        <td>{product.quantity}</td>
+                        <td className={Style.totalPriceCell}>
+                          {formatCurrency(product.price)}
+                        </td>
+                        <td className={Style.priceCell}>
+                          {formatCurrency(product.price * product.quantity)}
+                        </td>
+                        <td>{formatDate(product.createdAt)}</td>
+                        <td className={Style.actionCell}>
+                          <button 
+                            className={`${Style.viewButton} ${Style.actionButton}`}
+                            onClick={() => handleRestoreClick(product)}
+                            title={`Restore ${product.name}`}
+                          >
+                            <ArchiveRestore/>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
             
             {/* Footer outside of scrollable container */}

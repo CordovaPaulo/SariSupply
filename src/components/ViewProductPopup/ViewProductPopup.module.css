@@ -13,36 +13,26 @@
 }
 
 .popup {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: min(720px, 95%);
+  max-width: 720px;
+  max-height: calc(100vh - 96px); /* keep some breathing room */
+  overflow: hidden; /* content area will scroll */
+  border-radius: 10px;
   background: var(--surface);
-  border-radius: 12px;
-  padding: 0;
-  width: 100%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  animation: popupSlideIn 0.3s ease-out;
-}
-
-@keyframes popupSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .header {
+  flex: 0 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 2rem;
   border-bottom: 1px solid var(--border-color);
-  background: var(--surface);
-  border-radius: 12px 12px 0 0;
+  background: inherit;
+  z-index: 2;
 }
 
 .header h2 {
@@ -74,7 +64,9 @@
 }
 
 .content {
-  padding: 2rem;
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 1rem 1.25rem;
 }
 
 .detailSection {
@@ -151,12 +143,14 @@
 }
 
 .actions {
+  flex: 0 0 auto;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--border-color);
+  background: inherit;
   display: flex;
   justify-content: flex-end;
-  padding: 1.5rem 2rem;
-  border-top: 1px solid var(--border-color);
-  background: var(--surface);
-  border-radius: 0 0 12px 12px;
+  gap: 0.5rem;
+  z-index: 2;
 }
 
 .closeActionButton {
@@ -169,6 +163,12 @@
   font-size: 1rem;
   font-weight: 500;
   transition: background 0.2s;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 .closeActionButton:hover {

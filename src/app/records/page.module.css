@@ -327,13 +327,25 @@
   background: var(--surface);
 }
 
+.tableScroll {
+  max-height: 60vh;            /* adjust as needed */
+  overflow-y: auto;
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+}
+.tableScroll::-webkit-scrollbar {
+  display: none;                /* Chrome/Safari */
+}
 .table {
   width: 100%;
-  border-collapse: collapse;
-  background: var(--surface);
+  table-layout: fixed;         /* keeps header/body columns aligned */
 }
-
-.table thead { background: var(--table-header-footer); }
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--table-header-footer-text);
+}
 
 .table th {
   padding: 16px 20px;

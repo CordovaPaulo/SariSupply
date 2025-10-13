@@ -15,6 +15,7 @@ import NavBar from '../../components/NavBar/NavBar';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 import { toast } from 'react-toastify';
+import ScrollLock from '@/components/ScrollLock/ScrollLock';
 
 interface InventoryStats {
     totalItems: number;
@@ -738,6 +739,10 @@ export default function InventoryPage() {
     }
   }, [showCategoryDropdown, showStatusDropdown]);
 
+  const anyModalOpen = Boolean(
+    showAddPopup || showEditPopup || showViewPopup || showArchivePopup || showLogoutConfirmation
+  );
+
   if (loading) {
     return <PageLoader message="Loading inventory..." />;
   }
@@ -758,6 +763,9 @@ export default function InventoryPage() {
 
   return (
     <div className={Style.dashboard}>
+      {/* lock body scroll while any modal is open */}
+      <ScrollLock active={anyModalOpen} />
+
       <header className={Style.header}>
         <div className={Style.headerLeft}>
           <Store className={Style.storeIcon} />
@@ -987,92 +995,73 @@ export default function InventoryPage() {
               {/* Wrap table and footer in a section */}
               <div className={Style.tableSection}>
                 <div className={Style.tableContainer}>
-                  <table className={Style.table}>
-                    <thead>
-                      <tr>
-                        <th>Product Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Total Value</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {currentProducts.map((product) => {
-                        // Determine the actual status to display
-                        const displayStatus = determineProductStatus(product.quantity, product.status);
-                        const isLowStock = displayStatus === ProductStatus.LOW_STOCK;
-                        
-                        return (
-                          <tr key={product._id} className={isLowStock ? Style.lowStockRow : ''}>
-                            <td>
-                              <div className={Style.productCell}>
-                                <strong>{product.name}</strong>
-                                <p className={Style.productDescription}>
-                                  {product.description}
-                                </p>
-                              </div>
-                            </td>
-                            <td>{formatCategoryName(product.category)}</td>
-                            <td className={isLowStock ? Style.lowStockQuantity : ''}>
-                              {product.quantity}
-                              {product.quantity <= 5 && product.quantity > 0 && (
-                                <span className={Style.criticalStock}> (Critical!)</span>
-                              )}
-                            </td>
-                            <td className={Style.totalPriceCell}>
-                              {formatCurrency(product.price)}
-                            </td>
-                            <td className={Style.priceCell}>
-                              {formatCurrency(product.price * product.quantity)}
-                            </td>
-                            <td>
-                              <span className={`${Style.statusBadge} ${Style[displayStatus.toLowerCase()]}`}>
-                                {formatStatusName(displayStatus)}
-                              </span>
-                            </td>
-                            <td className={Style.actionCell}>
-                              <button className={`${Style.viewButton} ${Style.actionButton}`}
-                                onClick={() => {
-                                  console.log('View button clicked, product:', product);
-                                  handleViewClick(product);
-                                }}
-                              >
-
-                                <Eye/>
-                              </button>
-                              <button 
-                                className={`${Style.editButton} ${Style.actionButton}`}
-                                onClick={() => {
-                                  console.log('Edit button clicked, product:', product);
-                                  handleEditClick(product);
-                                }}
-                                title={`Edit ${product.name}`}
-                              >
-                                <Pencil/>
-                              </button>
-                              <button 
-                                className={`${Style.archiveButton} ${Style.actionButton}`}
-                                onClick={() => {
-                                  console.log('Button clicked, product:', product); // Debug log
-                                  handleArchiveClick(product);
-                                }}
-                                title={`Archive ${product.name}`}
-                              >
-                                <Archive/>
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-                
-                {/* Footer outside of scrollable container */}
-                <div className={Style.tableFooter}>
+                  <div className={Style.tableScroll}>
+                    <table className={Style.table}>
+                      <thead>
+                        <tr>
+                          <th>Product Name</th>
+                          <th>Category</th>
+                          <th>Quantity</th>
+                          <th>Price</th>
+                          <th>Total Value</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {currentProducts.map((product) => {
+                          const displayStatus = determineProductStatus(product.quantity, product.status);
+                          const isLowStock = displayStatus === ProductStatus.LOW_STOCK;
+                          
+                          return (
+                            <tr key={product._id} className={isLowStock ? Style.lowStockRow : ''}>
+                              <td>
+                                <div className={Style.productCell}>
+                                  <strong>{product.name}</strong>
+                                  <p className={Style.productDescription}>
+                                    {product.description}
+                                  </p>
+                                </div>
+                              </td>
+                              <td>{formatCategoryName(product.category)}</td>
+                              <td className={isLowStock ? Style.lowStockQuantity : ''}>
+                                {product.quantity}
+                                {product.quantity <= 5 && product.quantity > 0 && (
+                                  <span className={Style.criticalStock}> (Critical!)</span>
+                                )}
+                              </td>
+                              <td className={Style.totalPriceCell}>
+                                {formatCurrency(product.price)}
+                              </td>
+                              <td className={Style.priceCell}>
+                                {formatCurrency(product.price * product.quantity)}
+                              </td>
+                              <td>
+                                <span className={`${Style.statusBadge} ${Style[displayStatus.toLowerCase()]}`}>
+                                  {formatStatusName(displayStatus)}
+                                </span>
+                              </td>
+                              <td className={Style.actionCell}>
+                                <button className={`${Style.viewButton} ${Style.actionButton}`} onClick={() => handleViewClick(product)}>
+                                  <Eye/>
+                                </button>
+                                <button className={`${Style.editButton} ${Style.actionButton}`} onClick={() => handleEditClick(product)} title={`Edit ${product.name}`}>
+                                  <Pencil/>
+                                </button>
+                                <button className={`${Style.archiveButton} ${Style.actionButton}`} onClick={() => handleArchiveClick(product)} title={`Archive ${product.name}`}>
+                                  <Archive/>
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                 </div>
+                 
+                 {/* Footer outside of scrollable container */}
+                 <div className={Style.tableFooter}>
                   <div className={Style.statisticsSummary}>
                     <div className={Style.statItem}>
                       <span className={Style.statLabel}>Total Products:</span>

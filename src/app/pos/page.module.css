@@ -131,7 +131,7 @@
 }
 
 .main {
-    padding: 120px 40px 20px 40px;
+    padding: 90px 40px 20px 40px;
     background: transparent;
     min-height: calc(100vh - 120px);
     box-sizing: border-box;
@@ -183,6 +183,7 @@
   width: 100%;
   border-collapse: collapse;
   background: var(--surface);
+  table-layout: fixed;
 }
 
 .table thead {
@@ -196,6 +197,10 @@
   color: var(--table-header-footer-text);
   font-size: 14px;
   border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--table-header-footer);
 }
 
 .table td {
@@ -597,10 +602,24 @@
 }
 
 .tableFooter {
+  display: flex;
+  justify-content: end;
+  /* align-items: center; */
   background: var(--table-header-footer);
   border-top: 2px solid var(--border-color);
-  padding: 16px 20px;
+  padding: 0 10px;
   border-radius: 0 0 12px 12px;
+  /* gap: 24px; */
+}
+
+.paginationContainer {
+  display: flex;
+  align-items: center;
+  /* gap: 12px; */
+  background: none;
+  border: none;
+  border-radius: 0;
+  margin: 0;
 }
 
 .statisticsSummary {
@@ -1399,32 +1418,12 @@
   color: var(--text-color);
 }
 
-@media (max-width: 768px) {
-  .dashboard { background-color: var(--background); }
-  .nav { background: var(--page-header-bg); }
-  .tableSection { background: var(--surface); }
-  .tableContainer { background: var(--surface); }
-  .tableFooter { background: var(--table-header-footer); border-top: 2px solid var(--border-color); }
+.tableScroll {
+  max-height: 60vh;
+  overflow-y: auto;
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
 }
-
-@media (max-width: 480px) {
-  .dashboard { background-color: var(--background); }
-  .header { background: var(--page-header-bg); color: var(--alt-text-color); }
-  .nav { background: var(--page-header-bg); }
-  .dataFilters { background: var(--surface-translucent); }
-  .tableFooter { background: var(--table-header-footer); border-top: 2px solid var(--border-color); }
-}
-
-@media (max-width: 768px) and (orientation: landscape) {
-  .dashboard { background-color: var(--background); }
-  .header { background: var(--page-header-bg); color: var(--alt-text-color); }
-  .nav { background: var(--page-header-bg); }
-  .dataFilters { background: var(--surface-translucent); }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .nav { background-color: var(--surface-translucent); }
-  .tableSection { background: var(--surface); }
-  .tableContainer { background: var(--surface); }
-  .tableFooter { background: var(--table-header-footer); border-top: 2px solid var(--border-color); }
+.tableScroll::-webkit-scrollbar {
+  display: none;                /* Chrome/Safari */
 }

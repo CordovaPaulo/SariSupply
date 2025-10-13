@@ -24,6 +24,7 @@ import CheckoutPopup from '@/components/checkoutPopup/checkoutPopup';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 import { toast } from 'react-toastify';
+import ScrollLock from '@/components/ScrollLock/ScrollLock';
 
 type Nullable<T> = T | null;
 
@@ -350,9 +351,11 @@ export default function POSPage() {
     );
   }
 
+  const anyModalOpen = Boolean(showCheckoutPopup || showLogoutConfirmation);
   return (
     <>
       <div className={Style.dashboard}>
+        <ScrollLock active={anyModalOpen} />
         <header className={Style.header}>
           <div className={Style.headerLeft}>
             <Store className={Style.storeIcon} />
@@ -451,122 +454,128 @@ export default function POSPage() {
 
           <section className={Style.tableSection}>
             <div className={Style.tableContainer}>
-              <table className={Style.table}>
-                <thead>
-                  <tr>
-                    <th>Product Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th style={{ width: 220 }}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentProducts.length === 0 ? (
+              <div className={Style.tableScroll}>
+                <table className={Style.table}>
+                  <thead>
                     <tr>
-                      <td colSpan={4} className={Style.emptyCell}>
-                        No products found
-                      </td>
+                      <th>Product Name</th>
+                      <th>Category</th>
+                      <th>Price</th>
+                      <th style={{ width: 220 }}>Action</th>
                     </tr>
-                  ) : (
-                    currentProducts.map(product => {
-                      const qtyInCart = cart.find(i => i.productId === product._id)?.quantity ?? 0;
-                      return (
-                        <tr key={product._id}>
-                          <td>
-                            <div className={Style.productCell}>
-                              <strong>{product.name}</strong>
-                              {product.description && (
-                                <p className={Style.productDescription}>{product.description}</p>
-                              )}
-                            </div>
-                          </td>
-                          <td>{formatCategoryName(product.category)}</td>
-                          <td>{formatCurrency(product.price)}</td>
-                          <td className={Style.actionCell}>
-                            {(() => {
-                              const inCart = cart.find(i => i.productId === product._id);
-                              const qtyInCart = safeInt(inCart?.quantity ?? 0);
-                              const maxQty = safeInt(inCart?.maxQuantity ?? product.stock);
-                              const atMax = qtyInCart >= maxQty || maxQty <= 0;
+                  </thead>
+                  <tbody>
+                    {currentProducts.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className={Style.emptyCell}>
+                          No products found
+                        </td>
+                      </tr>
+                    ) : (
+                      currentProducts.map(product => {
+                        const qtyInCart = cart.find(i => i.productId === product._id)?.quantity ?? 0;
+                        return (
+                          <tr key={product._id}>
+                            <td>
+                              <div className={Style.productCell}>
+                                <strong>{product.name}</strong>
+                                {product.description && (
+                                  <p className={Style.productDescription}>{product.description}</p>
+                                )}
+                              </div>
+                            </td>
+                            <td>{formatCategoryName(product.category)}</td>
+                            <td>{formatCurrency(product.price)}</td>
+                            <td className={Style.actionCell}>
+                              {(() => {
+                                const inCart = cart.find(i => i.productId === product._id);
+                                const qtyInCart = safeInt(inCart?.quantity ?? 0);
+                                const maxQty = safeInt(inCart?.maxQuantity ?? product.stock);
+                                const atMax = qtyInCart >= maxQty || maxQty <= 0;
 
-                              return (
-                                <>
-                                  <button
-                                    className={Style.removeFromCartButton}
-                                    onClick={() => decrementCartItem(product._id)}
-                                    disabled={qtyInCart === 0}
-                                    title={qtyInCart === 0 ? 'Not in cart' : `Remove 1 ${product.name}`}
-                                  >
-                                    <Minus />
-                                    Remove 1
-                                  </button>
-                                  <button
-                                    className={Style.addToCartButton}
-                                    onClick={() => addToCart(product, 1)}
-                                    disabled={atMax}
-                                    title={atMax ? 'Max quantity reached' : `Add ${product.name} to cart`}
-                                  >
-                                    <ShoppingCart />
-                                    Add to Cart
-                                  </button>
-                                </>
-                              );
-                            })()}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
+                                return (
+                                  <>
+                                    <button
+                                      className={Style.removeFromCartButton}
+                                      onClick={() => decrementCartItem(product._id)}
+                                      disabled={qtyInCart === 0}
+                                      title={qtyInCart === 0 ? 'Not in cart' : `Remove 1 ${product.name}`}
+                                    >
+                                      <Minus />
+                                      Remove 1
+                                    </button>
+                                    <button
+                                      className={Style.addToCartButton}
+                                      onClick={() => addToCart(product, 1)}
+                                      disabled={atMax}
+                                      title={atMax ? 'Max quantity reached' : `Add ${product.name} to cart`}
+                                    >
+                                      <ShoppingCart />
+                                      Add to Cart
+                                    </button>
+                                  </>
+                                );
+                              })()}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
-            {totalPages > 1 && (
+            <div className={Style.tableFooter}>
               <div className={Style.paginationContainer}>
-                <button
-                  className={Style.paginationButton}
-                  onClick={handlePreviousPage}
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className={Style.paginationIcon} />
-                  Previous
-                </button>
+                {totalPages > 1 && (
+                  <div className={Style.paginationContainer}>
+                    <button
+                      className={Style.paginationButton}
+                      onClick={handlePreviousPage}
+                      disabled={currentPage === 1}
+                    >
+                      <ChevronLeft className={Style.paginationIcon} />
+                      Previous
+                    </button>
 
-                <div className={Style.pageNumbers}>
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    let pageNumber;
-                    if (totalPages <= 5) {
-                      pageNumber = i + 1;
-                    } else if (currentPage <= 3) {
-                      pageNumber = i + 1;
-                    } else if (currentPage >= totalPages - 2) {
-                      pageNumber = totalPages - 4 + i;
-                    } else {
-                      pageNumber = currentPage - 2 + i;
-                    }
+                    <div className={Style.pageNumbers}>
+                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                        let pageNumber;
+                        if (totalPages <= 5) {
+                          pageNumber = i + 1;
+                        } else if (currentPage <= 3) {
+                          pageNumber = i + 1;
+                        } else if (currentPage >= totalPages - 2) {
+                          pageNumber = totalPages - 4 + i;
+                        } else {
+                          pageNumber = currentPage - 2 + i;
+                        }
 
-                    return (
-                      <button
-                        key={pageNumber}
-                        className={`${Style.pageNumber} ${currentPage === pageNumber ? Style.activePage : ''}`}
-                        onClick={() => handlePageClick(pageNumber)}
-                      >
-                        {pageNumber}
-                      </button>
-                    );
-                  })}
-                </div>
+                        return (
+                          <button
+                            key={pageNumber}
+                            className={`${Style.pageNumber} ${currentPage === pageNumber ? Style.activePage : ''}`}
+                            onClick={() => handlePageClick(pageNumber)}
+                          >
+                            {pageNumber}
+                          </button>
+                        );
+                      })}
+                    </div>
 
-                <button
-                  className={Style.paginationButton}
-                  onClick={handleNextPage}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                  <ChevronRight className={Style.paginationIcon} />
-                </button>
+                    <button
+                      className={Style.paginationButton}
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                      <ChevronRight className={Style.paginationIcon} />
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </section>
         </main>
 

@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 import AddProductPopup from '../../components/AddProductPopup/AddProductPopup';
 import { toast } from 'react-toastify';
+import ScrollLock from '@/components/ScrollLock/ScrollLock';
 
 type Line = { name: string; unitPrice: number; quantity: number; subtotal: number };
 type HistoryDoc = {
@@ -109,8 +110,11 @@ export default function HistoryPage() {
   
   if (error) return <div className={styles.errorMessage}>{error}</div>;
 
+  const anyModalOpen = Boolean(showAddPopup || showLogoutConfirmation);
+
   return (
     <div className={styles.dashboard}>
+      <ScrollLock active={anyModalOpen} />
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <Store className={styles.storeIcon} />
