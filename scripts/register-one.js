@@ -72,6 +72,7 @@ async function registerUser(email, username) {
       username,
       email,
       password: hashedPassword,
+      role: 'user', // default role
       createdAt: new Date(),
       updatedAt: new Date()
     };

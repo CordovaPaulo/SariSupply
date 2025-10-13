@@ -31,7 +31,7 @@ async function handleCheckout(request: NextRequest) {
       );
     }
 
-    const user: any = verifyToken(token);
+    const user: any = verifyToken(token, 'user');
     if (!user) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized - Invalid Token' },

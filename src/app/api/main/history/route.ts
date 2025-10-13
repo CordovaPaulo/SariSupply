@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     if (!token) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
-    const user: any = verifyToken(token);
+    const user: any = verifyToken(token, 'user');
     const rawId = user?.id || user?._id;
     if (!rawId || !mongoose.Types.ObjectId.isValid(rawId)) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });

@@ -1,0 +1,317 @@
+/* Combined admin dashboard + users styles */
+
+.dashboard {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--text-color);
+  position: relative; /* Ensure sticky works */
+  width: 100vw;       /* Ensure header stretches full width */
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.header {
+  background: var(--page-header-bg);
+  color: var(--table-header-footer-text);
+  border: 1px solid var(--border-color);
+  border-radius: 0 0 12px 12px;
+  padding: 12px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  position: sticky;
+  width: 100vw;
+  z-index: 100;
+  margin: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.addButton {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--button-primary);
+  color: var(--text-color);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 120ms ease, transform 80ms ease, box-shadow 120ms ease;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+}
+
+.addButton:hover {
+  background: var(--button-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.addButton:active {
+  background: var(--button-primary-active);
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.logoutButton {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--major-action);
+  background: transparent;
+  color: var(--major-action);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 120ms ease, color 120ms ease, transform 80ms ease;
+}
+
+.main {
+    padding: 24px 6px 24px 16px;
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+.logoutButton:hover {
+  background: var(--major-action);
+  color: var(--text-color);
+  transform: translateY(-1px);
+}
+
+.logoutButton:active {
+  transform: translateY(0);
+}
+
+/* top area */
+.topRow {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+  height: 50%;
+}
+
+.statsGrid {
+  display: grid;
+  gap: 12px;
+  grid-auto-rows: minmax(80px, auto);
+  height: 100%;
+}
+
+.statCard {
+  background: var(--surface);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  min-height: 80px;
+  height: 230px;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  gap: 6px;
+}
+
+.statCard .statTitle {
+  font-size: 1.2rem;
+  color: black;
+  /* font-weight: 600; */
+}
+.statCard .statValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: black;
+}
+
+.recentSection {
+  background: transparent;
+}
+
+.sectionHeader h2 {
+  margin: 0 0 8px 0;
+}
+
+.list {
+  display: grid;
+  gap: 8px;
+}
+
+.row {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* page / table area */
+.pageSection {
+  margin-top: 8px;
+}
+
+.headerActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  padding: 8px 10px;
+  width: 280px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-color);
+}
+
+.tableWrapper {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--surface);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  display: table;
+  table-layout: fixed;
+  background: transparent;
+}
+
+.table thead th {
+  background: var(--table-header-footer);
+  color: var(--table-header-footer-text);
+  text-align: left;
+  padding: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table tbody td {
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table tbody tr:hover {
+  background: var(--surface-translucent);
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.headerActions button,
+.actions button,
+.pageSection > div button,
+.recentSection > div button {
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--surface);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background 120ms ease, transform 80ms ease;
+}
+
+.headerActions button:hover,
+.actions button:hover,
+.pageSection > div button:hover,
+.recentSection > div button:hover {
+  background: var(--button-primary-hover);
+}
+
+.headerActions button:disabled,
+.actions button:disabled,
+.pageSection > div button:disabled,
+.recentSection > div button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.paginationControls,
+.paginationContainer {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.paginationControls button,
+.paginationButton {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--surface);
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.paginationControls button[disabled],
+.paginationButton[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* small page number pill */
+.pageNumber {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--surface);
+  color: var(--text-color);
+}
+
+/* utility: primary ghost variant */
+.buttonGhost {
+  background: transparent;
+  border-color: var(--border-color);
+}
+
+@media (max-width: 960px) {
+  .topRow {
+    grid-template-columns: 1fr;
+  }
+  .searchInput {
+    width: 100%;
+  }
+}
+
+.totalUsersCard {
+    /* height: 100px; */
+    background: var(--inv-Arc-Act-Btn-2);
+    color: var(--text-color);
+    /* min-height: 80px; */
+}
+
+.recentActivitiesCard {
+    /* height: 100px; */
+    background: var(--inv-Arc-Act-Btn-1);
+    color: var(--text-color);
+    /* min-height: 80px; */
+}

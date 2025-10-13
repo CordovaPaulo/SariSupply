@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Clock, LayoutDashboard, PackageOpen, Archive, ShoppingCart, SquareLibrary } from 'lucide-react';
 
-type NavItem = 'dashboard' | 'inventory' | 'archive' | 'pos' | 'history' | 'records';
+type NavItem = 'dashboard' | 'inventory' | 'archive' | 'pos' | 'history' | 'records' | 'users';
 
 interface NavBarClasses {
   nav: string;

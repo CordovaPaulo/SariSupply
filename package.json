@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "register-one": "node scripts/register-one.js",
-    "register-many": "node scripts/register-many.js"
+    "register-many": "node scripts/register-many.js",
+    "backfill": "node scripts/backfill-roles.js"
   },
   "dependencies": {
     "@zxing/browser": "^0.1.5",
@@ -32,6 +33,7 @@
     "@types/exceljs": "^1.3.2",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
+    "@types/nodemailer": "^7.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/xlsx": "^0.0.36",

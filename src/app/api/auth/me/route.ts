@@ -3,7 +3,7 @@ import { extractTokenFromHeader, verifyToken } from "../../../../lib/jwt";
 import { connectDB } from "../../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest, requiredRole: string) {
   try {
     // Extract token from Authorization header
     const authHeader = request.headers.get('authorization');
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify and decode the JWT token
-    const payload = verifyToken(token);
+    const payload = verifyToken(token, 'user');
     
     if (!payload) {
       return NextResponse.json(

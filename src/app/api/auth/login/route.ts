@@ -59,7 +59,8 @@ export async function POST(request: NextRequest) {
       { 
         id: user._id.toString(),
         email: user.email,
-        name: user.username 
+        name: user.username,
+        role: user.role
       },
     );
 
@@ -70,6 +71,7 @@ export async function POST(request: NextRequest) {
         id: user._id,
         email: user.email,
         username: user.username,
+        role: user.role,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
       }

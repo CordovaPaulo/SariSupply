@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
                 {status: 401}
             );
         }
-        const user = verifyToken(token);
+        const user = verifyToken(token, 'user');
         if(!user){
             return NextResponse.json(
                 {

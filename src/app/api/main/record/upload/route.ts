@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = verifyToken(token);
+    const user = verifyToken(token, 'user');
     if (!user) {
         return NextResponse.json(
         {

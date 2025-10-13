@@ -102,6 +102,7 @@ async function registerBatchUsers(filePath) {
           username,
           email,
           password: hashedPassword,
+          role: 'user', // default role
           createdAt: new Date(),
           updatedAt: new Date()
         };

@@ -48,10 +48,12 @@ export default function LoginPage() {
 
       if (response.ok) {
         const data = await response.json();
-        // Store token in localStorage or cookies
         localStorage.setItem('token', data.token);
-        // Navigate to main page
-        router.replace('/dashboard');
+        if (data.user.role === 'admin') {
+          router.replace('/admin/dashboard');
+        } else {
+          router.replace('/dashboard');
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Login failed');

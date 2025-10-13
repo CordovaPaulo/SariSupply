@@ -28,7 +28,7 @@ export async function PUT(
     }
 
     // Verify the JWT token
-    const decoded = verifyToken(token);
+    const decoded = verifyToken(token, 'user');
     
     if (!decoded) {
       return NextResponse.json(

@@ -1,0 +1,130 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  background: var(--surface);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  padding: 16px;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.iconButton {
+  border: 1px solid var(--border-color);
+  background: var(--button-primary);
+  color: var(--text-color);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.iconButton:hover { background: var(--button-primary-hover); }
+.iconButton:active { background: var(--button-primary-active); }
+
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.input {
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-color);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.primary, .secondary {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+}
+
+.primary {
+  background: var(--button-primary);
+  color: var(--text-color);
+}
+.primary:hover { background: var(--button-primary-hover); }
+.primary:active { background: var(--button-primary-active); }
+.primary:disabled { background: var(--button-disabled); cursor: not-allowed; }
+
+.secondary {
+  background: var(--surface-soft);
+  color: var(--text-color);
+}
+.secondary:hover { background: var(--surface-translucent); }
+
+.error {
+  background: var(--error-bg);
+  color: var(--error-text);
+  border: 1px solid var(--error-border);
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.divider {
+  display: grid;
+  place-items: center;
+  margin: 12px 0;
+  position: relative;
+  text-align: center;
+  color: var(--text-muted);
+}
+.divider::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 1px;
+  background: var(--border-color);
+}
+.divider > span {
+  position: relative;
+  padding: 0 8px;
+  background: var(--surface);
+}
+
+.uploader {
+  display: grid;
+  gap: 8px;
+  border: 1px dashed var(--border-color);
+  border-radius: 10px;
+  padding: 12px;
+  background: var(--surface-soft);
+}
+.uploaderLabel {
+  font-weight: 600;
+  color: var(--text-color);
+}
+.hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
