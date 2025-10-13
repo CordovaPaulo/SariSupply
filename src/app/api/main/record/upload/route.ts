@@ -5,7 +5,8 @@ import cloudinary from '@/utils/cloudinary';
 
 export async function POST(request: NextRequest) {
   try {
-    const token = request.headers.get('authorization')?.split(' ')[1];
+    const token = request.cookies.get('authToken')?.value || null;
+
     if (!token) {
       return NextResponse.json(
         {

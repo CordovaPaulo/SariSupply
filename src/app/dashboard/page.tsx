@@ -48,24 +48,20 @@ export default function DashboardPage() {
   }, [isAuthenticated]);
 
   const checkAuthentication = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setLoading(false);
-      toast.error('You need to log in first');
-      router.replace('/');
-      return;
-    }
-
+    // No client-side token read. Cookie will be sent automatically.
     try {
       const response = await fetch('/api/auth/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include', // send authToken cookie
       });
       
       if (response.ok) {
         const responseData = await response.json();
         console.log('API Response:', responseData);
+
+        if (responseData.user?.mustChangePassword) {
+          router.replace(`/account/change-password?returnTo=${encodeURIComponent('/dashboard')}`);
+          return;
+        }
         
         setUser(responseData.user);
         setIsAuthenticated(true);
@@ -78,7 +74,6 @@ export default function DashboardPage() {
       }
     } catch (error) {
       console.error('Auth check failed:', error);
-      localStorage.removeItem('token');
       setLoading(false);
       router.replace('/');
       toast.error('Network error. Please log in again.');
@@ -87,16 +82,9 @@ export default function DashboardPage() {
 
   const loadData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.replace('/');
-        return;
-      }
-
+      // No client-side token read. Cookie will be sent automatically.
       const response = await fetch('/api/main/view/', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include', // send authToken cookie
       });
       
       if (response.ok) {
@@ -107,7 +95,7 @@ export default function DashboardPage() {
         
         setProducts(productsArray);
         calculateStats(productsArray);
-        toast.success('Products loaded successfully');
+        // toast.success('Products loaded successfully');
         
         const activeProducts = productsArray.filter((product: ProductResponse) => 
           product.status !== ProductStatus.DISCONTINUED
@@ -204,7 +192,7 @@ export default function DashboardPage() {
   };
 
   const handleConfirmLogout = () => {
-    localStorage.removeItem('token');
+    // localStorage.removeItem('token');
     setShowLogoutConfirmation(false);
     router.replace('/');
   };

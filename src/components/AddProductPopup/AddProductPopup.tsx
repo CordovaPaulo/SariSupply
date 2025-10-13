@@ -73,7 +73,6 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
     }
 
     try {
-      const token = localStorage.getItem('token');
       const form = new FormData();
       form.append('name', formData.name);
       form.append('description', formData.description);
@@ -87,9 +86,7 @@ export default function AddProductPopup({ isOpen, onClose, onProductAdded }: Add
 
       const response = await fetch('/api/main/add/product', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
+        credentials: 'include',
         body: form
       });
 

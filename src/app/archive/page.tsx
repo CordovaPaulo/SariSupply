@@ -101,18 +101,9 @@ export default function ArchivePage() { // Changed function name to ArchivePage
   }, [products, searchTerm, selectedCategory]);
 
   const checkAuthentication = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setLoading(false);
-      router.replace('/');
-      return;
-    }
-
     try {
       const response = await fetch('/api/auth/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include'
       });
       
       if (response.ok) {
@@ -122,13 +113,11 @@ export default function ArchivePage() { // Changed function name to ArchivePage
         setUser(responseData.user);
         setIsAuthenticated(true);
       } else {
-        localStorage.removeItem('token');
         setLoading(false);
         router.replace('/');
       }
     } catch (error) {
       console.error('Auth check failed:', error);
-      localStorage.removeItem('token');
       setLoading(false);
       router.replace('/');
     }
@@ -136,16 +125,9 @@ export default function ArchivePage() { // Changed function name to ArchivePage
 
   const loadData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.replace('/');
-        return;
-      }
 
       const response = await fetch('/api/main/view/', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include'
       });
       
       if (response.ok) {
@@ -610,7 +592,6 @@ export default function ArchivePage() { // Changed function name to ArchivePage
   };
 
   const handleConfirmLogout = () => {
-    localStorage.removeItem('token');
     setShowLogoutConfirmation(false);
     router.replace('/');
   };
@@ -728,10 +709,8 @@ export default function ArchivePage() { // Changed function name to ArchivePage
           </div>
         </div>
 
-        {/* Replace inline nav with component */}
         <NavBar
           active="archive"
-// archivedCount={stats.archivedProducts}
           classes={{ nav: Style.nav, navButton: Style.navButton, navIcon: Style.navIcon, active: Style.active }}
         />
 

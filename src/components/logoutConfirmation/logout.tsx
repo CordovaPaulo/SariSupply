@@ -17,11 +17,12 @@ const LogoutConfirmation: React.FC<LogoutConfirmationProps> = ({
 
   const handleLogout = async () => {
     try {
-      // ...your logout logic...
-      toast.success("Logged out successfully!");
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      localStorage.removeItem('token');
+      toast.success('Logged out successfully!');
       onConfirm();
     } catch (error) {
-      toast.error("Logout failed!");
+      toast.error('Logout failed!');
       onCancel();
     }
   };

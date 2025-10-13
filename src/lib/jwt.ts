@@ -8,6 +8,7 @@ export interface JwtPayload {
   email: string;
   name: string;
   role: string;
+  mustChangePassword?: boolean;
   iat: number;
   exp: number;
 }
@@ -23,13 +24,15 @@ export function generateToken(payload: Omit<JwtPayload, 'iat' | 'exp'>): string 
   return jwt.sign(payload, secKey, { expiresIn: exp });
 }
 
-export function verifyToken(token: string, requiredRole: string): JwtPayload | null {
+export function verifyToken(token: string, requiredRole?: string): JwtPayload | null {
   try {
     if (!secKey) {
       throw new Error('JWT_SECRET environment variable is not set');
     }
     
-    const decoded = jwt.verify(token, secKey) as JwtPayload;
+    const cleanedToken = token.startsWith('Bearer ') ? token.slice(7) : token;
+
+    const decoded = jwt.verify(cleanedToken, secKey) as JwtPayload;
 
     if (decoded.role !== requiredRole) {
       throw new Error('Unauthorized');

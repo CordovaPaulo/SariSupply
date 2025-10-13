@@ -21,23 +21,6 @@ type HistoryDoc = {
   type?: string;
 };
 
-// Helper to extract a display name from JWT token
-function getNameFromToken(token: string): string {
-  try {
-    const base64 = token.split('.')[1];
-    const json = JSON.parse(atob(base64.replace(/-/g, '+').replace(/_/g, '/')));
-    return (
-      json?.name ||
-      json?.username ||
-      json?.preferred_username ||
-      json?.given_name ||
-      'User'
-    );
-  } catch {
-    return 'User';
-  }
-}
-
 export default function HistoryPage() {
   const [data, setData] = useState<HistoryDoc[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,9 +32,10 @@ export default function HistoryPage() {
 
   const handleAddProduct = () => setShowAddPopup(true);
   const handleClosePopup = () => setShowAddPopup(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<{ id: string; email: string; username: string } | null>(null);
   const handleProductAdded = () => {
     setShowAddPopup(false);
-    // Optionally refresh history data here if needed
   }
 
   const handleCancelLogout = () => {
@@ -59,9 +43,39 @@ export default function HistoryPage() {
   };
 
   const handleConfirmLogout = () => {
-    localStorage.removeItem('token');
     setShowLogoutConfirmation(false);
     router.replace('/');
+  };
+
+  const checkAuthentication = async () => {
+    try {
+      const response = await fetch('/api/auth/me', {
+        credentials: 'include', // send authToken cookie
+      });
+      
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('API Response:', responseData);
+
+        if (responseData.user?.mustChangePassword) {
+          router.replace(`/account/change-password?returnTo=${encodeURIComponent('/history')}`);
+          return;
+        }
+        
+        setUser(responseData.user);
+        setIsAuthenticated(true);
+        // ...existing code...
+      } else {
+        // ...existing code...
+        setLoading(false);
+        router.replace('/');
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      setLoading(false);
+      router.replace('/');
+      // ...existing code...
+    }
   };
 
   const formatCurrency = (n: number) =>
@@ -70,16 +84,8 @@ export default function HistoryPage() {
   useEffect(() => {
     const run = async () => {
       try {
-        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-        if (!token) {
-          window.location.href = '/';
-          return;
-        }
-        // set header name from token
-        setUserName(getNameFromToken(token)); // added
-
         const res = await fetch('/api/main/history', {
-          headers: { Authorization: `Bearer ${token}` },
+          credentials: 'include'
         });
         if (!res.ok) {
           const t = await res.text();
@@ -94,6 +100,7 @@ export default function HistoryPage() {
       }
     };
     run();
+    checkAuthentication();
   }, []);
 
    if (loading) {
@@ -109,7 +116,7 @@ export default function HistoryPage() {
           <Store className={styles.storeIcon} />
           <div className={styles.headerName}>
             {/* use decoded username */}
-            <h1>{userName}</h1>
+            <h1>{user?.username}</h1>
             <p>Recent transactions</p>
           </div>
         </div>

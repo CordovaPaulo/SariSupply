@@ -20,23 +20,6 @@ type RecordItem = {
   createdAt?: string | Date;
 };
 
-// Helper to extract a display name from JWT token
-function getNameFromToken(token: string): string {
-  try {
-    const base64 = token.split('.')[1];
-    const json = JSON.parse(atob(base64.replace(/-/g, '+').replace(/_/g, '/')));
-    return (
-      json?.name ||
-      json?.username ||
-      json?.preferred_username ||
-      json?.given_name ||
-      'User'
-    );
-  } catch {
-    return 'User';
-  }
-}
-
 export default function RecordsPage() {
   const [records, setRecords] = useState<RecordItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,16 +29,45 @@ export default function RecordsPage() {
   const [viewing, setViewing] = useState<RecordItem | null>(null);
   const router = useRouter();
   const [userName, setUserName] = useState('User'); // added
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<{ id: string; email: string; username: string } | null>(null);
 
+  const checkAuthentication = async () => {
+      try {
+        const response = await fetch('/api/auth/me', {
+          credentials: 'include', 
+        });
+        
+        if (response.ok) {
+          const responseData = await response.json();
+          console.log('API Response:', responseData);
+
+          if (responseData.user?.mustChangePassword) {
+            router.replace(`/account/change-password?returnTo=${encodeURIComponent('/records')}`);
+            return;
+          }
+          
+          setUser(responseData.user);
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem('token');
+          setLoading(false);
+          router.replace('/');
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        localStorage.removeItem('token');
+        setLoading(false);
+        router.replace('/');
+      }
+    };
   const loadRecords = async () => {
     try {
       setLoading(true);
       setError('');
-      const token = localStorage.getItem('token');
-      if (token) setUserName(getNameFromToken(token));
 
-      const res = await fetch('/api/main/record/fetch', { // was /list
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await fetch('/api/main/record/fetch', {
+        credentials: 'include',
       });
       const json = await res.json();
 
@@ -67,7 +79,7 @@ export default function RecordsPage() {
           return bd - ad;
         });
         setRecords(list);
-        toast.success('Records loaded successfully.');
+        // toast.success('Records loaded successfully.');
       } else {
         setError(json?.message || 'Failed to load records');
         toast.error('Failed to load records');
@@ -82,6 +94,7 @@ export default function RecordsPage() {
 
   useEffect(() => {
     loadRecords();
+    checkAuthentication();
   }, []);
 
   const handleRecordAdded = () => {
@@ -120,7 +133,7 @@ export default function RecordsPage() {
             <Store className={styles.storeIcon} />
             <div className={styles.headerName}>
                 {/* use decoded username */}
-                <h1 className={styles.logo}>{userName}</h1>
+                <h1 className={styles.logo}>{user?.username}</h1>
                 <p>Uploaded receipts and notes</p>
             </div>
             </div>

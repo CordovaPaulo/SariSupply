@@ -85,13 +85,13 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
     }
 
     try {
-      const token = localStorage.getItem('token');
+      // const token = localStorage.getItem('token');
       
-      if (!token) {
-        setError('Authentication token not found');
-        setLoading(false);
-        return;
-      }
+      // if (!token) {
+      //   setError('Authentication token not found');
+      //   setLoading(false);
+      //   return;
+      // }
 
       // Prepare product data for update
       const productData: CreateProductRequest = {
@@ -113,8 +113,9 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
         headers:
          {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          
         },
+        credentials: 'include',
         body: JSON.stringify(productData)
       });
 

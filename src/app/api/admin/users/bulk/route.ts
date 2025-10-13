@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import bcrypt from 'bcryptjs';
+import { sendUserCreatedEmail } from '@/lib/mailer';
 
 type IncomingUser = { email?: string; username?: string; role?: string };
 
@@ -51,9 +52,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Derive base URL for login link
+    const baseUrl =
+      req.headers.get('origin') ||
+      `${req.headers.get('x-forwarded-proto') || 'http'}://${req.headers.get('x-forwarded-host') || req.headers.get('host') || 'localhost:3000'}` ||
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      'http://localhost:3000';
+    const loginUrl = `${baseUrl}/`;
+
     let created = 0;
     let skipped = 0;
     let errors = 0;
+    let emailed = 0;
     const results: Array<{
       index: number;
       email: string;
@@ -61,6 +71,7 @@ export async function POST(req: NextRequest) {
       status: 'created' | 'skipped' | 'error';
       message?: string;
       defaultPassword?: string;
+      emailSent?: boolean;
     }> = [];
 
     for (let i = 0; i < users.length; i++) {
@@ -109,9 +120,24 @@ export async function POST(req: NextRequest) {
           role,
           createdAt: now,
           updatedAt: now,
+          mustChangePassword: true,
         };
 
         await db.collection('users').insertOne(newUser);
+
+        let emailSent = false;
+        try {
+          await sendUserCreatedEmail({
+            to: email,
+            username,
+            tempPassword: defaultPassword,
+            loginUrl,
+          });
+          emailSent = true;
+          emailed++;
+        } catch (mailErr: any) {
+          console.error(`sendUserCreatedEmail failed (index ${i}, ${email}):`, mailErr);
+        }
 
         results.push({
           index: i,
@@ -119,6 +145,7 @@ export async function POST(req: NextRequest) {
           username,
           status: 'created',
           defaultPassword,
+          emailSent,
         });
         created++;
       } catch (err: any) {
@@ -139,6 +166,7 @@ export async function POST(req: NextRequest) {
         created,
         skipped,
         errors,
+        emailed,
         total: users.length,
       },
       results,

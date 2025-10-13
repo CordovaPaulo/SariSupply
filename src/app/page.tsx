@@ -44,15 +44,18 @@ export default function LoginPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+        credentials: 'include'
       });
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('token', data.token);
-        if (data.user.role === 'admin') {
-          router.replace('/admin/dashboard');
+        // localStorage.setItem('token', data.token);
+        const nextPath = data.user.role === 'admin' ? '/admin' : '/dashboard';
+
+        if (data.user.mustChangePassword) {
+          router.replace(`/account/change-password?returnTo=${encodeURIComponent(nextPath)}`);
         } else {
-          router.replace('/dashboard');
+          router.replace(nextPath);
         }
       } else {
         const errorData = await response.json();

@@ -1,16 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 
-function getToken(request: NextRequest): string | null {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
-  return authHeader.substring(7);
-}
-
 export async function GET(request: NextRequest) {
   try {
     // TODO: Add real admin authorization
-    const token = getToken(request);
+    const token = request.cookies.get('authToken')?.value || null;
+
     if (!token) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 
     const { db } = await connectDB();

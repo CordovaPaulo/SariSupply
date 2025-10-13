@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken, extractTokenFromHeader } from '@/lib/jwt';
+import { verifyToken } from '@/lib/jwt';
 import { ProductStatus } from '../../../../../models/product';
 import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/mongodb/Product';
@@ -16,9 +16,10 @@ export async function POST(
     // Await params before accessing properties (Next.js 15 requirement)
     const { id: productId } = await params;
 
-    // Get the authorization header
-    const authHeader = request.headers.get('authorization');
-    const token = extractTokenFromHeader(authHeader);
+    // Read token from cookie first, fallback to Authorization header.
+    // Support cookie value potentially prefixed with "Bearer ".
+    let token = request.cookies.get('authToken')?.value || request.headers.get('authorization') || null;
+    if (token?.startsWith('Bearer ')) token = token.slice(7);
     
     if (!token) {
       return NextResponse.json(

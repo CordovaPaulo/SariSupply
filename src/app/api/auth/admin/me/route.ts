@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "../../../../lib/jwt";
-import { connectDB } from "../../../../lib/mongodb";
+import { verifyToken } from "../../../../../lib/jwt";
+import { connectDB } from "../../../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 
 export async function GET(request: NextRequest, requiredRole: string) {
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, requiredRole: string) {
     }
 
     // Verify and decode the JWT token
-    const payload = verifyToken(token, 'user');
+    const payload = verifyToken(token, 'admin');
     
     if (!payload) {
       return NextResponse.json(
@@ -38,20 +38,24 @@ export async function GET(request: NextRequest, requiredRole: string) {
     // Find user in database using the ID from token
     const user = await db.collection('users').findOne(
       { _id: new ObjectId(payload.id) },
-      {
-        projection: {
-          password: 0
-        }
+      { 
+        projection: { 
+          password: 0 // Exclude password from response
+        } 
       }
     );
 
     if (!user) {
       return NextResponse.json(
-        { success: false, message: 'User not found. Account may have been deleted.' },
+        { 
+          success: false, 
+          message: 'User not found. Account may have been deleted.' 
+        },
         { status: 404 }
       );
     }
 
+    // Return user data
     return NextResponse.json({
       success: true,
       message: 'Authentication successful',

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import bcrypt from 'bcryptjs';
+import { sendUserCreatedEmail } from '@/lib/mailer';
 
 // Helper: validate email
 function isValidEmail(email: string) {
@@ -17,7 +18,7 @@ function getToken(request: NextRequest): string | null {
 export async function GET(request: NextRequest) {
   try {
     // TODO: Add real admin authorization
-    const token = getToken(request);
+    const token = request.cookies.get('authToken')?.value || null;
     if (!token) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
@@ -61,7 +62,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // TODO: Add real admin authorization
-    const token = getToken(request);
+    const token = request.cookies.get('authToken')?.value || null;
     if (!token) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
@@ -94,17 +95,39 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(defaultPassword, 12);
 
     const now = new Date();
-    const doc = { email, username, password: hashedPassword, role: 'user', createdAt: now, updatedAt: now };
+    const doc = { email, username, password: hashedPassword, role: 'user', createdAt: now, updatedAt: now, mustChangePassword: true };
     const result = await db.collection('users').insertOne(doc);
 
     if (!result.acknowledged) {
       return NextResponse.json({ success: false, message: 'Insert failed' }, { status: 500 });
     }
 
+    // Derive base URL for login link
+    const baseUrl =
+      request.headers.get('origin') ||
+      `${request.headers.get('x-forwarded-proto') || 'http'}://${request.headers.get('x-forwarded-host') || request.headers.get('host') || 'localhost:3000'}` ||
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      'http://localhost:3000';
+    const loginUrl = `${baseUrl}/`;
+
+    let emailSent = false;
+    try {
+      await sendUserCreatedEmail({
+        to: email,
+        username,
+        tempPassword: defaultPassword,
+        loginUrl,
+      });
+      emailSent = true;
+    } catch (mailErr) {
+      console.error('sendUserCreatedEmail failed:', mailErr);
+    }
+
     return NextResponse.json({
       success: true,
       data: { id: result.insertedId.toString(), email, username, role: 'user', createdAt: now, updatedAt: now },
       defaultPassword, // Note: For admin visibility; consider sending via email instead
+      emailSent,
     });
   } catch (e: any) {
     console.error('POST /api/admin/users error:', e);

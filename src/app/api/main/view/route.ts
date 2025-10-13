@@ -4,26 +4,17 @@ import { verifyToken } from '@/lib/jwt';
 
 export async function GET(request: NextRequest) {
     try{
-        const token = request.headers.get('authorization')?.split(' ')[1];
-        if(!token){
-            return NextResponse.json(
-                {
-                    success: false,
-                    message: 'Unauthorized'
-                },
-                {status: 401}
-            );
+        // Read token from cookie and verify
+        const token = request.cookies.get('authToken')?.value || null;
+        if (!token) {
+            return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
         }
+
         const user = verifyToken(token, 'user');
-        if(!user){
-            return NextResponse.json(
-                {
-                    success: false,
-                    message: 'Unauthorized - Invalid token'
-                },
-                {status: 401}
-            );
+        if (!user) {
+            return NextResponse.json({ success: false, message: 'Invalid or expired token' }, { status: 401 });
         }
+
         const { db } = await connectDB();
         if(!db){
             return NextResponse.json(

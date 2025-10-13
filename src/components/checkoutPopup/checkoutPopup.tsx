@@ -77,15 +77,15 @@ export default function CheckoutPopup({
     setError('');
 
     try {
-      const token =
-        typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      // const token =
+      //   typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
       const response = await fetch('/api/main/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
+        credentials: 'include',
         body: JSON.stringify({
           items: cart.map(i => ({ productId: i.productId, quantity: toInt(i.quantity) })),
           amountPaid: toMoney(amountPaid),

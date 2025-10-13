@@ -27,20 +27,20 @@ export default function ArchiveProductPopup({ isOpen, onClose, product, onProduc
         setError('');
 
         try {
-            const token = localStorage.getItem('token');
+            // const token = localStorage.getItem('token');
             
-            if (!token) {
-                setError('Authentication token not found');
-                setLoading(false);
-                return;
-            }
+            // if (!token) {
+            //     setError('Authentication token not found');
+            //     setLoading(false);
+            //     return;
+            // }
 
             const response = await fetch(`/api/main/archive/${product.id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
                 },
+                credentials: 'include'
             });
 
             if (!response.ok) {

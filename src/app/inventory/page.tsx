@@ -109,24 +109,19 @@ export default function InventoryPage() {
   }, [products, searchTerm, selectedCategory, selectedStatus]);
 
   const checkAuthentication = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setLoading(false);
-      toast.error('You must be logged in to access this page.');
-      router.replace('/');
-      return;
-    }
-
     try {
       const response = await fetch('/api/auth/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include', 
       });
       
       if (response.ok) {
         const responseData = await response.json();
         console.log('API Response:', responseData);
+
+        if (responseData.user?.mustChangePassword) {
+          router.replace(`/account/change-password?returnTo=${encodeURIComponent('/inventory')}`);
+          return;
+        }
         
         setUser(responseData.user);
         setIsAuthenticated(true);
@@ -145,16 +140,8 @@ export default function InventoryPage() {
 
   const loadData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.replace('/');
-        return;
-      }
-
       const response = await fetch('/api/main/view/', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include'
       });
       
       if (response.ok) {
@@ -1101,56 +1088,56 @@ export default function InventoryPage() {
                       </div>
                     )}
                   </div>
+
+                  {/* Moved Pagination into the table footer so it sits with totals */}
+                  {totalPages > 1 && (
+                    <div className={Style.paginationContainer}>
+                      <button 
+                        className={Style.paginationButton}
+                        onClick={handlePreviousPage}
+                        disabled={currentPage === 1}
+                      >
+                        <ChevronLeft className={Style.paginationIcon} />
+                        Previous
+                      </button>
+
+                      <div className={Style.pageNumbers}>
+                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                          let pageNumber;
+                          if (totalPages <= 5) {
+                            pageNumber = i + 1;
+                          } else if (currentPage <= 3) {
+                            pageNumber = i + 1;
+                          } else if (currentPage >= totalPages - 2) {
+                            pageNumber = totalPages - 4 + i;
+                          } else {
+                            pageNumber = currentPage - 2 + i;
+                          }
+
+                          return (
+                            <button
+                              key={pageNumber}
+                              className={`${Style.pageNumber} ${currentPage === pageNumber ? Style.activePage : ''}`}
+                              onClick={() => handlePageClick(pageNumber)}
+                            >
+                              {pageNumber}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <button 
+                        className={Style.paginationButton}
+                        onClick={handleNextPage}
+                        disabled={currentPage === totalPages}
+                      >
+                        Next
+                        <ChevronRight className={Style.paginationIcon} />
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
-
-              {/* Pagination Controls */}
-              {totalPages > 1 && (
-                <div className={Style.paginationContainer}>
-                  <button 
-                    className={Style.paginationButton}
-                    onClick={handlePreviousPage}
-                    disabled={currentPage === 1}
-                  >
-                    <ChevronLeft className={Style.paginationIcon} />
-                    Previous
-                  </button>
-
-                  <div className={Style.pageNumbers}>
-                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                      let pageNumber;
-                      if (totalPages <= 5) {
-                        pageNumber = i + 1;
-                      } else if (currentPage <= 3) {
-                        pageNumber = i + 1;
-                      } else if (currentPage >= totalPages - 2) {
-                        pageNumber = totalPages - 4 + i;
-                      } else {
-                        pageNumber = currentPage - 2 + i;
-                      }
-
-                      return (
-                        <button
-                          key={pageNumber}
-                          className={`${Style.pageNumber} ${currentPage === pageNumber ? Style.activePage : ''}`}
-                          onClick={() => handlePageClick(pageNumber)}
-                        >
-                          {pageNumber}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <button 
-                    className={Style.paginationButton}
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                    <ChevronRight className={Style.paginationIcon} />
-                  </button>
-                </div>
-              )}
             </>
           )}
         </section>

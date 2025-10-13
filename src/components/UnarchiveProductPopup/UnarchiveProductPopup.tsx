@@ -26,21 +26,21 @@ export default function UnarchiveProductPopup({ isOpen, onClose, product, onProd
         setError('');
 
         try {
-            const token = localStorage.getItem('token');
+            // const token = localStorage.getItem('token');
             
-            if (!token) {
-                setError('Authentication token not found');
-                toast.error('Authentication token not found'); // <-- Toast error
-                setLoading(false);
-                return;
-            }
+            // if (!token) {
+            //     setError('Authentication token not found');
+            //     toast.error('Authentication token not found'); // <-- Toast error
+            //     setLoading(false);
+            //     return;
+            // }
 
             const response = await fetch(`/api/main/archive/restore/${product.id}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Content-Type': 'application/json'
                 },
+                credentials: 'include'
             });
 
             if (!response.ok) {

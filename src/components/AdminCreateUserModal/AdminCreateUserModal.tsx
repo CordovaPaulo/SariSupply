@@ -23,13 +23,12 @@ export default function AdminCreateUserModal({ open, onClose, onCreated }: Props
     try {
       setLoading(true);
       setError('');
-      const token = localStorage.getItem('token');
       const res = await fetch('/api/admin/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
+        credentials: 'include',
         body: JSON.stringify({ email, username }),
       });
       const json = await res.json();
@@ -58,13 +57,9 @@ export default function AdminCreateUserModal({ open, onClose, onCreated }: Props
       const formData = new FormData();
       formData.append('file', file, file.name);
 
-      const token = localStorage.getItem('token');
       const res = await fetch('/api/admin/users/bulk', {
         method: 'POST',
-        headers: {
-          // Do not set Content-Type; the browser will set the multipart boundary.
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        } as any,
+        credentials: 'include',
         body: formData,
       });
 

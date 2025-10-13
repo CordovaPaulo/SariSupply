@@ -6,6 +6,7 @@ import ThemeToggle from '@/components/theme/ThemeToggle';
 import PageLoader from '@/components/PageLoader/PageLoader';
 import AdminCreateUserModal from '@/components/AdminCreateUserModal/AdminCreateUserModal';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 import LogoutConfirmation from '@/components/logoutConfirmation/logout';
 
 type UserRow = {
@@ -34,11 +35,15 @@ export default function AdminCombinedPage() {
   const [usersPage, setUsersPage] = useState(0);
   const [activitiesPage, setActivitiesPage] = useState(0);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<{ id: string; email: string; username: string } | null>(null);
+  const router = useRouter();
 
   // Initial load (full page loader)
   useEffect(() => {
     (async () => {
       setLoading(true);
+      await checkAuthentication();
       await loadAll('');
       setLoading(false);
     })();
@@ -49,6 +54,10 @@ export default function AdminCombinedPage() {
     if (loading) return; // skip if initial load
     setTableLoading(true);
     const timeout = setTimeout(async () => {
+      if (!checkAuthentication()) { // redirect if unauthenticated
+        setTableLoading(false);
+        return;
+      }
       await loadAll(q, true);
       setTableLoading(false);
     }, 400);
@@ -56,17 +65,43 @@ export default function AdminCombinedPage() {
     // eslint-disable-next-line
   }, [q]);
 
+ const checkAuthentication = async () => {
+    // No client-side token read. Cookie will be sent automatically.
+    try {
+      const response = await fetch('/api/auth/admin/me', {
+        credentials: 'include', // send authToken cookie
+      });
+      
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('API Response:', responseData);
+        
+        setUser(responseData.user);
+        setIsAuthenticated(true);
+        // ...existing code...
+      } else {
+        // ...existing code...
+        setLoading(false);
+        router.replace('/');
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      setLoading(false);
+      router.replace('/');
+      // ...existing code...
+    }
+  };
+  
+
   // Modified loadAll to support table-only loading
   const loadAll = async (query = '', isSearch = false) => {
     try {
       if (!isSearch) setError('');
-      const token = localStorage.getItem('token');
-      const headers: any = token ? { Authorization: `Bearer ${token}` } : {};
 
       const usersUrl = `/api/admin/users?limit=100${query ? `&q=${encodeURIComponent(query)}` : ''}`;
       const [actRes, usersRes] = await Promise.all([
-        fetch('/api/admin/activities', { headers }),
-        fetch(usersUrl, { headers }),
+        fetch('/api/admin/activities', { credentials: 'include' }),
+        fetch(usersUrl, { credentials: 'include' }),
       ]);
 
       const actJson = await actRes.json().catch(() => ({}));
@@ -260,7 +295,7 @@ export default function AdminCombinedPage() {
         onConfirm={() => {
           localStorage.removeItem('token');
           setShowLogoutConfirm(false);
-          window.location.reload();
+          router.replace('/');
         }}
       />
     </div>

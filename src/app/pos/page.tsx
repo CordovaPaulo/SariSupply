@@ -134,20 +134,19 @@ export default function POSPage() {
   }, [products, searchTerm, selectedCategory]);
 
   const checkAuthentication = async () => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    if (!token) {
-      setLoading(false);
-      router.replace('/');
-      return;
-    }
-
     try {
       const response = await fetch('/api/auth/me', {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include',
       });
 
       if (response.ok) {
         const responseData = await response.json();
+
+        if (responseData.user?.mustChangePassword) {
+          router.replace(`/account/change-password?returnTo=${encodeURIComponent('/pos')}`);
+          return;
+        }
+
         setUser(responseData.user ?? null);
         setIsAuthenticated(true);
       } else {
@@ -194,14 +193,8 @@ export default function POSPage() {
 
   const loadData = async () => {
     try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      if (!token) {
-        router.replace('/');
-        return;
-      }
-
       const response = await fetch('/api/main/view/', {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include',
       });
 
       if (response.ok) {

@@ -76,13 +76,6 @@ export default function AddRecordPopup({ isOpen, onClose, onRecordAdded }: AddRe
     }
 
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('Unauthorized. Please log in again.');
-        setLoading(false);
-        return;
-      }
-
       const form = new FormData();
       form.append('title', formData.title);
       form.append('description', formData.description);
@@ -90,8 +83,9 @@ export default function AddRecordPopup({ isOpen, onClose, onRecordAdded }: AddRe
 
       const response = await fetch('/api/main/record/upload', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
+        headers: { Accept: 'application/json' },
         body: form,
+        credentials: 'include',
       });
 
       if (!response.ok) {

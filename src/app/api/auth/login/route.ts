@@ -55,27 +55,38 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate JWT token
-    const token = generateToken(
-      { 
-        id: user._id.toString(),
-        email: user.email,
-        name: user.username,
-        role: user.role
-      },
-    );
+    const payload = { 
+      id: user._id.toString(),
+      email: user.email,
+      name: user.username,
+      role: user.role,
+      mustChangePassword: user.mustChangePassword, // optional but useful for middleware
+    };
+    const token = await generateToken(payload); // if generateToken is async
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       success: true,
-      token: token,
       user: {
         id: user._id,
         email: user.email,
         username: user.username,
         role: user.role,
+        mustChangePassword: user.mustChangePassword,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
       }
     });
+
+    // Set auth cookie
+    res.cookies.set('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24
+    });
+
+    return res;
 
   } catch (error) {
     console.error('Login error:', error);
