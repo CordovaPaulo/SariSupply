@@ -3,7 +3,7 @@ import { verifyToken } from "../../../../lib/jwt";
 import { connectDB } from "../../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 
-export async function GET(request: NextRequest, requiredRole: string) {
+export async function GET(request: NextRequest) {
   try {
     // Read token from cookie instead of Authorization header
     const token = request.cookies.get('authToken')?.value || null;
