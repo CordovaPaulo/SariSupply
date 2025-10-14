@@ -1130,83 +1130,114 @@
   }
 }
 
-/* Tablet styles - Keep nav in header */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .dashboard {
-    padding-bottom: 0;
-    min-height: 100vh;
-    height: auto;
-  }
-
+/* --- Laptop screens (large tablets and small desktops) --- */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  /* allow header children to wrap instead of overflowing */
   .header {
-    padding: 15px 30px;
-  }
-
-  .nav {
-    position: static;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 60px;
-    box-shadow: none;
-  }
-
-  .main {
-    padding: 120px 30px 20px 30px;
-    width: 90%;
-    min-height: calc(100vh - 140px);
-  }
-
-  .dataFilters {
-    flex-direction: row;
+    padding: 16px 24px;
+    display: flex;
     flex-wrap: wrap;
-    gap: 15px;
-    width: 95%;
-    max-width: 1000px;
-  }
-
-  .searchBar {
-    flex: 2;
-  }
-
-  .categoryFilters,
-  .statusFilters {
-    flex: 1;
-  }
-
-  .nav {
-    gap: 30px;
-  }
-
-  .table th,
-  .table td {
-    padding: 14px 16px;
-  }
-
-  .tableFooter {
-    padding: 14px 18px;
-  }
-
-  .statisticsSummary {
-    flex-direction: row;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .statItem {
-    flex-direction: row;
     align-items: center;
     gap: 8px;
   }
 
-  .paginationContainer {
-    flex-direction: row;
-    justify-content: center;
+  /* make nav allowed to shrink/grow so it won't be cut off */
+  .nav {
+    flex: 1 1 auto;
+    min-width: 0;               /* allow children to shrink inside flex */
     gap: 20px;
+    padding: 8px 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 75%;             /* prevent nav pushing headerRight off-screen */
+    overflow: visible;
   }
 
-  .paginationButton {
-    width: auto;
-    max-width: none;
+  .headerLeft,
+  .headerRight {
+    flex: 0 0 auto;             /* keep brand and actions at their intrinsic size */
   }
+
+  .navButton {
+    min-width: 72px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+  }
+
+  .storeIcon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .headerRight {
+    gap: 10px;
+  }
+
+  .main {
+    padding: 110px 24px 24px 24px;
+    width: 92%;
+    margin: 0 auto;
+  }
+}
+
+/* --- Tablet styles (keep nav in header and avoid overflow) --- */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .header {
+    padding: 14px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* keep nav visible inside header, allow wrapping */
+  .nav {
+    position: static;
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 16px;
+    padding: 8px 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .navButton {
+    min-width: 68px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+  }
+
+  .storeIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .main {
+    padding: 110px 20px 130px 20px; /* extra bottom space if you later fix nav to bottom */
+    width: 94%;
+    margin: 0 auto;
+  }
+
+  /* if you prefer the bottom-nav behavior for tablets, uncomment below and remove position: static above
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 12px 18px 20px;
+    gap: 0;
+    justify-content: space-around;
+    background: var(--page-header-bg);
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
+    border-radius: 16px 16px 0 0;
+    z-index: 1000;
+    min-height: 72px;
+  }
+  .main { padding-bottom: 110px; }
+  */
 }
 
 /* Medium tablet size adjustment */
@@ -1337,4 +1368,65 @@
 }
 .tableScroll::-webkit-scrollbar {
   display: none;                /* Chrome/Safari */
+}
+
+/* Tablet: keep nav fixed at bottom */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .nav {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 18px;
+    width: auto;
+    max-width: calc(100% - 40px);
+    padding: 12px 18px;
+    gap: 8px;
+    justify-content: space-around;
+    background: var(--page-header-bg);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    border-radius: 14px;
+    z-index: 1200;
+    flex-wrap: nowrap;
+  }
+
+  .main {
+    padding: 120px 20px 120px 20px; /* avoid content hidden behind nav */
+  }
+
+  .header {
+    padding-right: 20px;
+  }
+}
+
+/* Laptop: keep nav fixed at bottom as well (1025 - 1440) */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .nav {
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    max-width: none;
+    padding: 10px;
+    gap: 20px;
+    justify-content: center;
+    background: var(--surface-translucent);
+    box-shadow: none;
+    border-radius: 60px;
+    z-index: 1;
+    flex-wrap: wrap;
+    overflow: visible;
+    min-width: 0; /* allow flex children to shrink */
+  }
+
+  .main {
+    padding: 110px 24px 24px 24px;
+    width: 92%;
+    margin: 0 auto;
+  }
+
+  .navButton {
+    min-width: 72px;
+    padding: 8px 10px;
+  }
 }

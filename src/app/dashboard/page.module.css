@@ -137,7 +137,7 @@
     box-sizing: border-box;
     overflow-y: auto;
     width: 85%;
-    min-width: 100dvh;
+    min-width: auto;
     justify-self: center;
 }
 
@@ -763,38 +763,126 @@
   }
 }
 
-/* Tablet styles - Keep nav in header */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .dashboard {
-    padding-bottom: 0; /* Remove bottom padding for tablets */
+/* Laptop screens (large tablets and small desktops) */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .main {
+    padding: 130px 16px 20px 16px;
+    width: 98%;
+    min-width: unset;
   }
 
   .header {
-    padding: 15px 30px;
+    padding: 18px 16px;
   }
 
   .nav {
-    position: static;
-    background-color: var(--surface-translucent);
-    border-radius: 60px;
-    box-shadow: none;
+    gap: 24px;
+    padding: 8px;
+    flex-wrap: wrap;
+    min-width: 0;
+    width: auto;
+    justify-content: flex-start;
+  }
+
+  .navButton {
+    min-width: 80px;
+    font-size: 0.95rem;
+    padding: 8px 10px;
+  }
+}
+
+/* Tablet only: pin nav to bottom (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard {
+    padding-bottom: 0;
+  }
+
+  .header {
+    padding: 15px 24px;
+  }
+
+  .nav {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 18px;
+    width: auto;
+    max-width: calc(100% - 40px);
+    padding: 12px 16px;
+    gap: 8px;
+    justify-content: space-around;
+    background: var(--page-header-bg);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    border-radius: 14px;
+    z-index: 1200;
+    flex-wrap: nowrap;
+    min-height: 72px;
+  }
+
+  .navButton {
+    flex-direction: column;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+    gap: 6px;
+    min-width: 0;
+    flex: 1 1 auto;
   }
 
   .main {
-    padding: 120px 30px 20px 30px;
-    width: 90%;
+    padding: 120px 24px 120px 24px; /* leave space for fixed nav */
+    width: 92%;
+    margin: 0 auto;
+  }
+}
+
+/* Laptop: 1025px - 1449px — keep nav IN header, prevent cut-off by allowing wrap/shrink */
+@media (min-width: 1025px) and (max-width: 1449px) {
+  /* allow header children to wrap instead of overflowing */
+  .header {
+    padding: 16px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
   }
 
-  .statsGrid {
-    gap: 15px;
+  /* keep brand and action areas intrinsic, let nav take remaining space */
+  .headerLeft,
+  .headerRight {
+    flex: 0 0 auto;
+    min-width: 0;
   }
 
-  .statCard {
-    min-width: 200px;
-    max-width: 250px;
-  }
-
+  /* allow nav to shrink and wrap so it won't be cut off */
   .nav {
-    gap: 30px;
+    flex: 1 1 auto;
+    min-width: 0;               /* allow children to shrink inside flex */
+    gap: 20px;
+    padding: 8px 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 75%;             /* prevent nav pushing headerRight off-screen */
+    background: var(--surface-translucent);
+    box-shadow: none;
+    border-radius: 60px;
+    overflow: visible;
+    z-index: 1;
+  }
+
+  .navButton {
+    min-width: 72px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+  }
+
+  .storeIcon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .main {
+    padding: 120px 24px 24px 24px;
+    width: 92%;
+    margin: 0 auto;
   }
 }

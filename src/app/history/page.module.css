@@ -427,28 +427,106 @@
   }
 }
 
-/* Tablet styles - Keep nav in header */
+/* Tablet only: pin nav to bottom (769px - 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard {
+    padding-bottom: 0;
+    min-height: 100dvh;
+    height: auto;
+  }
+
   .header {
-    padding: 15px 30px;
+    padding: 15px 22px;
   }
 
   .nav {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 18px;
+    width: auto;
+    max-width: calc(100% - 40px);
+    padding: 10px 14px;
+    gap: 8px;
+    justify-content: space-around;
+    background: var(--page-header-bg);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    border-radius: 14px;
+    z-index: 1200;
+    flex-wrap: nowrap;
+    min-height: 70px;
+  }
+
+  .navButton {
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    gap: 6px;
+    min-width: 0;
+    flex: 1 1 auto;
+    background: none;
+    border-radius: 10px;
+  }
+
+  .navIcon { width: 20px; height: 20px; }
+
+  /* prevent content from being hidden behind bottom nav */
+  .main {
+    padding: 120px 20px 120px 20px;
+    width: 94%;
+    margin: 0 auto;
+  }
+}
+
+/* Laptop (1025px - 1449px): keep nav in header and avoid cut-off */
+@media (min-width: 1025px) and (max-width: 1449px) {
+  /* make header flexible so items can wrap instead of overflowing */
+  .header {
+    padding: 16px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .headerLeft,
+  .headerRight {
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  /* allow nav to shrink/wrap inside header so it doesn't push out or get cut */
+  .nav {
     position: static;
-    background-color: var(--surface-translucent);
-    border-radius: 60px;
+    flex: 1 1 auto;
+    min-width: 0;            /* enable children to shrink */
+    max-width: 75%;          /* keep space for headerRight actions */
+    gap: 18px;
+    padding: 8px 12px;
+    justify-content: center;
+    flex-wrap: wrap;         /* buttons will wrap to next line if needed */
+    background: var(--surface-translucent);
     box-shadow: none;
-    gap: 30px;
+    border-radius: 60px;
+    overflow: visible;
+    z-index: 1;
+  }
+
+  .navButton {
+    min-width: 72px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+  }
+
+  .storeIcon {
+    width: 44px;
+    height: 44px;
   }
 
   .main {
-    padding: 120px 24px 24px 24px;
-    width: 100%;
-    max-width: 100%;
+    padding: 120px 20px 24px 20px;
+    width: 92%;
     margin: 0 auto;
-  }
-
-  .cardGrid {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   }
 }

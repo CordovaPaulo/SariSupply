@@ -9,18 +9,19 @@ if (!MONGODB_URI) {
 }
 
 interface MongooseCache {
-  conn: typeof mongoose | null;
-  promise: Promise<typeof mongoose> | null;
+  conn: mongoose.Mongoose | null;
+  promise: Promise<mongoose.Mongoose> | null;
 }
 
 declare global {
+  // attach to globalThis for Node + TS compatibility
   var mongoose: MongooseCache | undefined;
 }
 
-let cached: MongooseCache = global.mongoose ?? { conn: null, promise: null };
+let cached: MongooseCache = (globalThis as any).mongoose ?? { conn: null, promise: null };
 
-if (!global.mongoose) {
-  global.mongoose = cached;
+if (!(globalThis as any).mongoose) {
+  (globalThis as any).mongoose = cached;
 }
 
 async function connectDB() {
@@ -30,10 +31,15 @@ async function connectDB() {
 
   if (!cached.promise) {
     const opts = {
+      // recommended options
       bufferCommands: false,
+      serverSelectionTimeoutMS: 30000,
+      connectTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+      family: 4, // prefer IPv4 if DNS/IPv6 causes issues
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!);
+    cached.promise = mongoose.connect(MONGODB_URI!, opts) as Promise<mongoose.Mongoose>;
   }
 
   try {
@@ -43,7 +49,7 @@ async function connectDB() {
     throw e;
   }
 
-  return { db: cached.conn.connection.db };
+  return { db: cached.conn!.connection.db };
 }
 
 export { connectDB }; // Use ES6 export instead of module.exports

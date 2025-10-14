@@ -1,0 +1,149 @@
+/* Cleaned single copy of styles and class names used by page.tsx */
+
+/* Base layout */
+.changePasswordPage {
+  box-sizing: border-box;
+  min-height: 100dvh;
+  height: 100dvh;
+  width: 100%;
+  background: var(--background);
+  color: var(--alt-text-color);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content */
+.main {
+  margin: 0 auto;
+  width: 94%;
+  max-width: 1100px;
+  padding: 120px 20px 40px 20px; /* top padding to account for fixed header */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Form container */
+.formContainer {
+  width: 100%;
+  max-width: 720px;
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  box-sizing: border-box;
+  color: var(--text-color);
+}
+
+/* Form header */
+.formHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.formHeader h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--alt-text-color);
+}
+.formHeader p {
+  margin: 0;
+  color: var(--muted-text);
+  font-size: 0.95rem;
+}
+
+/* Form fields */
+.form {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+.formRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.label {
+  font-size: 0.9rem;
+  color: var(--muted-text);
+}
+.input {
+  appearance: none;
+  border: 1px solid var(--border-color);
+  background: var(--input-bg, rgba(255,255,255,0.02));
+  color: var(--text-color);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .12s ease;
+}
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+
+/* helper / hint text */
+.helper {
+  font-size: 0.85rem;
+  color: var(--muted-text);
+}
+
+/* buttons row */
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  justify-content: flex-end;
+}
+.submitButton {
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* messages */
+.errorMessage {
+  margin-top: 12px;
+  color: var(--danger);
+  font-size: 0.95rem;
+}
+
+/* small screens adjustments */
+@media (max-width: 480px) {
+  .main { padding: 96px 12px 80px 12px; width: 100%; }
+  .formContainer { padding: 18px; border-radius: 12px; }
+  .submitButton { width: 100%; }
+  .actions { flex-direction: column-reverse; gap: 10px; }
+}
+
+/* Tablet only: fixed bottom nav (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main {
+    padding: 120px 20px 120px 20px;
+    width: 92%;
+    margin: 0 auto;
+  }
+}
+
+/* Laptop screens (1025px - 1449px) */
+@media (min-width: 1025px) and (max-width: 1449px) {
+  .main {
+    padding: 120px 28px 40px 28px;
+    width: 90%;
+    margin: 0 auto;
+  }
+  .formContainer {
+    padding: 32px;
+  }
+}

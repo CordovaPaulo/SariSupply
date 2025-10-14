@@ -261,14 +261,109 @@
   .headerRight { flex: 0 0 auto; width: auto; order: 0; }
 }
 
+/* Tablet only: fixed bottom nav (769px - 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
-  .header { padding: 15px 30px; }
+  .dashboard {
+    padding-bottom: 0;
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .header {
+    padding: 15px 24px;
+  }
+
   .nav {
-    position: static;
-    background-color: var(--surface-translucent);
-    border-radius: 60px;
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 18px;
+    width: auto;
+    max-width: calc(100% - 40px);
+    padding: 12px 16px;
+    gap: 8px;
+    justify-content: space-around;
+    background: var(--page-header-bg);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    border-radius: 14px;
+    z-index: 1200;
+    flex-wrap: nowrap;
+    min-height: 70px;
+  }
+
+  .navButton {
+    flex-direction: column;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    gap: 6px;
+    min-width: 0;
+    flex: 1 1 auto;
+    border-radius: 10px;
+    background: none;
+  }
+
+  .navIcon { width: 20px; height: 20px; }
+
+  /* avoid content hidden behind fixed nav */
+  .main {
+    padding: 120px 24px 120px 24px;
+    width: 92%;
+    margin: 0 auto;
+  }
+
+  .headerRight {
+    padding-right: 8px;
+  }
+}
+
+/* Laptop screens (1025px - 1449px): keep nav in header and prevent it from being cut off */
+@media (min-width: 1025px) and (max-width: 1449px) {
+  .header {
+    padding: 16px 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .headerLeft,
+  .headerRight {
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  .nav {
+    position: static;            /* keep nav in header */
+    flex: 1 1 auto;              /* allow nav to shrink/grow */
+    min-width: 0;                /* enable proper shrinking of children */
+    max-width: 75%;              /* prevents nav pushing headerRight off-screen */
+    gap: 20px;
+    padding: 8px 12px;
+    justify-content: center;
+    flex-wrap: wrap;             /* allow buttons to wrap to next line if needed */
+    background: var(--surface-translucent);
     box-shadow: none;
-    gap: 30px;
+    border-radius: 60px;
+    overflow: visible;
+    z-index: 1;
+  }
+
+  .navButton {
+    min-width: 72px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+  }
+
+  .storeIcon {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* main spacing for laptop */
+  .main {
+    padding: 120px 28px 28px 28px;
+    width: 90%;
+    margin: 0 auto;
   }
 }
 
@@ -344,7 +439,7 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  background: var(--table-header-footer-text);
+  background: var(--table-header-footer);
 }
 
 .table th {
@@ -354,6 +449,7 @@
   color: var(--table-header-footer-text);
   font-size: 14px;
   border-bottom: 1px solid var(--border-color);
+  /* background: var(--table-header-footer); */
 }
 
 .table td {
@@ -450,8 +546,108 @@
   .main { padding: 60px 20px 25px 20px; }
 }
 
+/* Tablet only: fixed bottom nav (769px - 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
-  .header { padding: 15px 30px; }
-  .nav { position: static; background-color: var(--surface-translucent); border-radius: 60px; box-shadow: none; }
-  .main { padding: 120px 30px 20px 30px; width: 90%; }
+  .dashboard {
+    padding-bottom: 0;
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .header {
+    padding: 15px 24px;
+  }
+
+  .nav {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 18px;
+    width: auto;
+    max-width: calc(100% - 40px);
+    padding: 12px 16px;
+    gap: 8px;
+    justify-content: space-around;
+    background: var(--page-header-bg);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    border-radius: 14px;
+    z-index: 1200;
+    flex-wrap: nowrap;
+    min-height: 70px;
+  }
+
+  .navButton {
+    flex-direction: column;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    gap: 6px;
+    min-width: 0;
+    flex: 1 1 auto;
+    border-radius: 10px;
+    background: none;
+  }
+
+  .navIcon { width: 20px; height: 20px; }
+
+  /* avoid content hidden behind fixed nav */
+  .main {
+    padding: 120px 24px 120px 24px;
+    width: 92%;
+    margin: 0 auto;
+  }
+
+  .headerRight {
+    padding-right: 8px;
+  }
+}
+
+/* Laptop screens (1025px - 1449px): keep nav in header and prevent it from being cut off */
+@media (min-width: 1025px) and (max-width: 1449px) {
+  .header {
+    padding: 16px 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .headerLeft,
+  .headerRight {
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  .nav {
+    position: static;            /* keep nav in header */
+    flex: 1 1 auto;              /* allow nav to shrink/grow */
+    min-width: 0;                /* enable proper shrinking of children */
+    max-width: 75%;              /* prevents nav pushing headerRight off-screen */
+    gap: 20px;
+    padding: 8px 12px;
+    justify-content: center;
+    flex-wrap: wrap;             /* allow buttons to wrap to next line if needed */
+    background: var(--surface-translucent);
+    box-shadow: none;
+    border-radius: 60px;
+    overflow: visible;
+    z-index: 1;
+  }
+
+  .navButton {
+    min-width: 72px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+  }
+
+  .storeIcon {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* main spacing for laptop */
+  .main {
+    padding: 120px 28px 28px 28px;
+    width: 90%;
+    margin: 0 auto;
+  }
 }
