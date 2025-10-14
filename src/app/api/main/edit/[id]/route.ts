@@ -3,6 +3,7 @@ import { verifyToken } from '@/lib/jwt';
 import { ProductStatus, ProductCategory, CreateProductRequest } from '../../../../../models/product';
 import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/mongodb/Product';
+import RecentAct from '@/models/mongodb/recentAct';
 import mongoose from 'mongoose';
 
 export async function PUT(
@@ -160,6 +161,14 @@ export async function PUT(
       );
     }
 
+    // record recent activity (edit_product)
+    try {
+      const actor = decoded?.name || decoded?.email || 'unknown';
+      await RecentAct.create({ action: 'Edit Product', username: actor });
+    } catch (e) {
+      console.error('Failed to log recent activity (edit_product):', e);
+    }
+    
     return NextResponse.json({
       success: true,
       message: 'Product updated successfully',

@@ -3,6 +3,7 @@ import { verifyToken, extractTokenFromHeader } from '@/lib/jwt';
 import { ProductStatus } from '../../../../../../models/product';
 import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/mongodb/Product';
+import RecentAct from '@/models/mongodb/recentAct';
 import mongoose from 'mongoose';
 
 export async function POST(
@@ -97,6 +98,14 @@ export async function POST(
         { error: 'Failed to restore product' },
         { status: 500 }
       );
+    }
+
+    // record recent activity (unarchive_product)
+    try {
+      const actor = decoded?.name || decoded?.email || 'unknown';
+      await RecentAct.create({ action: 'Unarchive Product', username: actor });
+    } catch (e) {
+      console.error('Failed to log recent activity (unarchive_product):', e);
     }
 
     return NextResponse.json({

@@ -15,10 +15,10 @@ export async function GET(request: NextRequest) {
     const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100);
 
     // Use existing 'history' collection if present, fallback to last 20 created users
-    const historyExists = await db.listCollections({ name: 'history' }, { nameOnly: true }).toArray();
+    const historyExists = await db.listCollections({ name: 'recent_activities' }, { nameOnly: true }).toArray();
     if (historyExists.length > 0) {
       const docs = await db
-        .collection('history')
+        .collection('recent_activities')
         .find({}, { projection: { password: 0 } })
         .sort({ createdAt: -1 })
         .limit(limit)

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/jwt';
 import { connectDB } from '@/lib/mongodb';
 import mongoose from 'mongoose';
+import { sendInventoryAlert } from '@/lib/mailer'; // added
 
 type CheckoutItem = {
   productId: string;
@@ -80,7 +81,10 @@ async function handleCheckout(request: NextRequest) {
       // Fetch authoritative product data inside transaction (pass session)
       const products = await db
         .collection('products')
-        .find({ _id: { $in: ids } }, { session, projection: { name: 1, price: 1, quantity: 1 } })
+        .find(
+          { _id: { $in: ids } },
+          { session, projection: { name: 1, price: 1, quantity: 1, ownerId: 1, owner: 1, sku: 1, lowStockThreshold: 1 } } // include owner fields + optional sku/threshold
+        )
         .toArray();
 
       const productMap = new Map<string, any>();
@@ -166,6 +170,97 @@ async function handleCheckout(request: NextRequest) {
       const insertRes = await db.collection('history').insertOne(historyDoc, { session });
 
       await session.commitTransaction();
+
+      // --- Inventory alerts for items in this checkout (send AFTER commit) ---
+      try {
+        const DEFAULT_LOW_THRESHOLD = 10;
+
+        // build set of ownerIds referenced by processed products
+        const ownerIdSet = new Set<string>();
+        for (const it of items) {
+          const p = productMap.get(it.productId);
+          if (!p) continue;
+          if (p.ownerId) ownerIdSet.add(String(p.ownerId));
+          else if (p.owner) ownerIdSet.add(String(p.owner)); // fallback if owner stored as string id
+        }
+
+        const ownerIds = Array.from(ownerIdSet)
+          .filter((id) => mongoose.Types.ObjectId.isValid(id))
+          .map((id) => new mongoose.Types.ObjectId(id));
+
+        // fetch owner emails in one query
+        const usersMap = new Map<string, any>();
+        if (ownerIds.length > 0) {
+          const owners = await db.collection('users').find({ _id: { $in: ownerIds } }, { projection: { email: 1 } }).toArray();
+          for (const u of owners) usersMap.set(String(u._id), u);
+        }
+
+        const alerts: {
+          to: string;
+          itemName: string;
+          sku?: string;
+          currentQty: number;
+          threshold: number;
+          status: 'low' | 'out';
+          manageUrl?: string;
+        }[] = [];
+
+        for (const item of items) {
+          const p = productMap.get(item.productId);
+          if (!p) continue;
+
+          const origStock = toInt(p.quantity);
+          const postStock = Math.max(0, origStock - toInt(item.quantity));
+
+          const threshold = toInt(p.lowStockThreshold ?? DEFAULT_LOW_THRESHOLD);
+
+          let status: 'low' | 'out' | null = null;
+          if (postStock <= 0) status = 'out';
+          else if (postStock <= threshold) status = 'low';
+
+          if (!status) continue;
+
+          // resolve owner email via ownerId lookup
+          const ownerKey = p.ownerId ? String(p.ownerId) : p.owner ? String(p.owner) : null;
+          const ownerDoc = ownerKey ? usersMap.get(ownerKey) : null;
+          const ownerEmail = ownerDoc?.email ? String(ownerDoc.email).trim() : null;
+
+          if (!ownerEmail) continue; // skip if we can't resolve email
+
+          alerts.push({
+            to: ownerEmail,
+            itemName: String(p.name ?? item.productId),
+            sku: p.sku ? String(p.sku) : undefined,
+            currentQty: postStock,
+            threshold,
+            status,
+            manageUrl: `${process.env.BASE_URL ?? ''}/inventory`,
+          });
+        }
+
+        // send alerts asynchronously (do not block response)
+        if (alerts.length > 0) {
+          Promise.allSettled(alerts.map((a) => sendInventoryAlert(a as any))).then((results) => {
+            for (const r of results) {
+              if (r.status === 'rejected') console.error('Inventory alert failed to send', r);
+            }
+          }).catch((e) => console.error('Unexpected error sending inventory alerts', e));
+        }
+      } catch (e) {
+        console.error('Error preparing/sending inventory alerts:', e);
+      }
+
+      // --- Recent activity log: record checkout action ---
+      try {
+        const actorName = user?.username || user?.name || user?.email || 'unknown';
+        await db.collection('recent_activities').insertOne({
+          action: 'Checkout',
+          username: actorName,
+          createdAt: new Date(),
+        });
+      } catch (e) {
+        console.error('Failed to log recent activity (checkout):', e);
+      }
 
       const resultSummary = {
         transactionId: String(insertRes.insertedId),

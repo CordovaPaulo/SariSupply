@@ -102,6 +102,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // log recent activity (add_product)
+    try {
+      const actor = user?.name || user?.email || 'unknown';
+      await db.collection('recent_activities').insertOne({
+        action: 'Add Product',
+        username: actor,
+        createdAt: new Date()
+      });
+    } catch (err) {
+      console.error('Failed to log recent activity (add_product):', err);
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Product added successfully',

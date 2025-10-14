@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
     const baseUrl =
       request.headers.get('origin') ||
       `${request.headers.get('x-forwarded-proto') || 'http'}://${request.headers.get('x-forwarded-host') || request.headers.get('host') || 'localhost:3000'}` ||
-      process.env.NEXT_PUBLIC_BASE_URL ||
+      process.env.BASE_URL ||
       'http://localhost:3000';
     const loginUrl = `${baseUrl}/`;
 

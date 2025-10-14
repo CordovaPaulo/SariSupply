@@ -192,8 +192,9 @@ export default function AdminCombinedPage() {
                  <div className={styles.list}>
                    {displayedActivities.length === 0 && <div>No recent activities</div>}
                    {displayedActivities.map((a, i) => (
-                     <div key={a._id || i} className={styles.row}>
-                       <div style={{ fontWeight: 600 }}>{a.type || a.username || a.email || 'Activity'}</div>
+                     <div key={a._id || i} className={styles.row} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+                       <div style={{ fontWeight: 600 }}>{a.username || a.email || 'unknown'}</div>
+                       <div style={{ textTransform: 'capitalize', color: 'var(--text-muted, #6b7280)', fontWeight: 600 }}>{a.action || 'activity'}</div>
                        <div style={{ fontSize: 12, opacity: 0.8 }}>{new Date(a.createdAt || Date.now()).toLocaleString()}</div>
                      </div>
                    ))}
