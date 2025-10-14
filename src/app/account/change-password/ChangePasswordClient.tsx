@@ -13,8 +13,8 @@ export default function ChangePasswordPage() {
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const search = useSearchParams();
-  const returnTo = search?.get('returnTo') || '/';
+//   const search = useSearchParams();
+//   const returnTo = search?.get('returnTo') || '/';
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -34,7 +34,7 @@ export default function ChangePasswordPage() {
         toast.error(message);
       } else {
         toast.success('Password changed successfully');
-        router.replace(returnTo);
+        router.replace('/dashboard');
       }
     } catch (err: any) {
       const errorMessage = err?.message || 'Unexpected error';
