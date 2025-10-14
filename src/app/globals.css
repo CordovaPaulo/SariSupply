@@ -64,6 +64,9 @@
   --inv-Arc-Act-Btn-1-active: #334c81;
   --inv-Arc-Act-Btn-2-active: #853c38;
   --inv-Arc-Act-Btn-3-active: hsl(51, 54%, 56%);
+
+  --admin-stat-card-1: #ff5b53;
+  --admin-stat-card-2: #4a77da;
 }
 
 /* Dark theme overrides */
@@ -118,6 +121,9 @@
 
   --action-warn: #ea580c;
   --action-warn-hover: #c2410c;
+
+  --admin-stat-card-1: #fbbf24;
+  --admin-stat-card-2: #10b981;
 }
 
 @media (prefers-color-scheme: dark) {
