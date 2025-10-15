@@ -78,7 +78,8 @@
 .form {
   flex: 1 1 auto;
   overflow: auto;
-  padding: 1rem 1.25rem;
+  padding: 1rem 1.25rem 0;
+  /* padding-bottom: 1rem; leave space so content won't be hidden behind sticky actions */
 }
 
 .inputRow {
@@ -89,6 +90,16 @@
 
 .inputGroup {
   margin-bottom: 1.5rem;
+}
+
+/* Image preview group */
+.imageGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  /* span across both columns of the .inputRow grid */
+  grid-column: 1 / -1;
+  width: 100%;
 }
 
 .inputGroup label {
@@ -165,12 +176,29 @@
 }
 
 .actions {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
   flex: 0 0 auto;
   padding: 0.75rem 1.25rem;
   border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+  background: var(--surface); /* keep same background so it blends with popup */
+  box-shadow: 0 -6px 20px rgba(0,0,0,0.06);
+}
+
+/* ensure mobile layout preserves sticky behaviour */
+@media (max-width: 640px) {
+  .actions {
+    position: sticky;
+    bottom: 0;
+    padding: 0.75rem 1.25rem;
+    flex-direction: column-reverse;
+  }
 }
 
 .cancelButton {
@@ -249,3 +277,76 @@
     width: 100%;
   }
 }
+
+/* Image preview group */
+.imageGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  /* span across both columns of the .inputRow grid */
+  grid-column: 1 / -1;
+  width: 100%;
+}
+.imagePreviewWrap {
+  width: 200px;
+  height: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  background: var(--surface);
+}
+.imagePlaceholder {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.imagePreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.imageControls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+  width: 100%;
+  align-content: center;
+}
+
+.imageControls input[type="file"] {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.removeImageButton {
+  margin-left: auto;
+  padding: 1rem 0.6rem;
+  background: var(--major-action);
+  color: var(--text-color);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.removeImageButton:hover {
+  background: var(--major-action-hover);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.removeImageButton:active {
+  background: var(--major-action-active);
+  transform: scale(0.95);
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+

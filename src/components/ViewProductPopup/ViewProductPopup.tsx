@@ -69,21 +69,12 @@ export default function ViewProductPopup({ isOpen, onClose, product }: ViewProdu
         </div>
 
         <div className={styles.content}>
-          {/* Display product image if available */}
           {product.productImageUrl ? (
-            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+            <div className={styles.imagePreviewWrap}>
               <img
                 src={product.productImageUrl}
                 alt={product.name}
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '220px',
-                  borderRadius: '8px',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                  objectFit: 'contain',
-                  background: '#f3f4f6',
-                  padding: '8px'
-                }}
+                className={styles.imagePreview}
               />
             </div>
           ) : (

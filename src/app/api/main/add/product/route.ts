@@ -47,6 +47,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (name.length > 100) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Name must be at most 100 characters long'
+        },
+        { status: 400 }
+      );
+    }
+
+    if (description.length > 1000) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Description must be at most 1000 characters long'
+        },
+        { status: 400 }
+      );
+    }
+
     let productImageUrl = '';
     if (image) {
       const arrayBuffer = await image.arrayBuffer();
@@ -76,6 +96,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check for existing product with the exact same name
+    const existingByName = await db.collection('products').findOne({ name });
+    const existingByDescription = await db.collection('products').findOne({ description });
+    if (existingByName && existingByDescription) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'The exact same product already exists'
+        },
+        { status: 409 }
+      );
+    }
+    
     const productData = {
       name,
       description,

@@ -5,6 +5,7 @@ import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/mongodb/Product';
 import RecentAct from '@/models/mongodb/recentAct';
 import mongoose from 'mongoose';
+import cloudinary from '@/utils/cloudinary';
 
 export async function PUT(
   request: NextRequest,
@@ -57,20 +58,18 @@ export async function PUT(
       );
     }
 
-    // Parse request body
-    let requestData: CreateProductRequest;
-    try {
-      requestData = await request.json();
-    } catch (error) {
-      return NextResponse.json(
-        { error: error instanceof Error ? error.message : 'Invalid JSON'},
-        { status: 400 }
-      );
-    }
+    const formData = await request.formData();
+    const name = formData.get('name') as string;
+    const description = formData.get('description') as string;
+    // normalize category value from formData (may be null or non-string)
+    const categoryRaw = formData.get('category');
+    const category = typeof categoryRaw === 'string' ? categoryRaw : String(categoryRaw ?? '');
+    const quantity = parseInt(String(formData.get('quantity')));
+    const price = parseFloat(String(formData.get('price')));
+    // const status = formData.get('status') as string;
+    const image = formData.get('image') as File | null;
 
     // Validate required fields
-    const { name, description, category, quantity, price } = requestData;
-
     if (!name || !description || category === undefined || quantity === undefined || price === undefined) {
       return NextResponse.json(
         { error: 'Missing required fields: name, description, category, quantity, price' },
@@ -93,7 +92,7 @@ export async function PUT(
       );
     }
 
-    if (!Object.values(ProductCategory).includes(category)) {
+    if (!Object.values(ProductCategory).includes(category as ProductCategory)) {
       return NextResponse.json(
         { error: 'Invalid product category' },
         { status: 400 }
@@ -114,10 +113,9 @@ export async function PUT(
       );
     }
 
-    // Check if the product exists and belongs to the user
+    // Check if the product exists
     const existingProduct = await Product.findOne({
       _id: productId,
-    //   ownerId: userId
     });
 
     if (!existingProduct) {
@@ -127,30 +125,57 @@ export async function PUT(
       );
     }
 
-    // // Auto-adjust status based on quantity if status is not explicitly discontinued
-    // let finalStatus = status;
-    // if (status !== ProductStatus.DISCONTINUED) {
-    //   if (quantity === 0) {
-    //     finalStatus = ProductStatus.OUT_OF_STOCK;
-    //   } else if (quantity > 0 && status === ProductStatus.OUT_OF_STOCK) {
-    //     finalStatus = ProductStatus.IN_STOCK;
+    // Handle image upload (same approach as add route)
+    let uploadedImageUrl: string | undefined = undefined;
+
+    if (image && image.size > 0) {
+      try {
+        const arrayBuffer = await image.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        uploadedImageUrl = await new Promise<string>((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: 'products' },
+            (error: any, result: any) => {
+              if (error) reject(error);
+              else resolve(result?.secure_url || '');
+            }
+          );
+          uploadStream.end(buffer);
+        });
+      } catch (err) {
+        console.error('Cloudinary multipart upload failed:', err);
+        return NextResponse.json({ error: 'Image upload failed' }, { status: 500 });
+      }
+    }
+    // } else if (typeof imageBase64 === 'string' && imageBase64.trim() !== '') {
+    //   try {
+    //     const uploadResult = await cloudinary.uploader.upload(imageBase64, { folder: 'products' });
+    //     uploadedImageUrl = uploadResult.secure_url;
+    //   } catch (err) {
+    //     console.error('Cloudinary base64 upload failed:', err);
+    //     return NextResponse.json({ error: 'Image upload failed' }, { status: 500 });
     //   }
     // }
+
+    // Prepare update payload; only set productImageUrl when a new image was uploaded
+    const updatePayload: any = {
+      name: name.trim(),
+      description: description.trim(),
+      category,
+      quantity,
+      price,
+      // status: finalStatus,
+      owner: userId,
+      ownerId: userId,
+      updatedAt: new Date()
+    };
+    if (uploadedImageUrl) updatePayload.productImageUrl = uploadedImageUrl;
 
     // Update the product
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      {
-        name: name.trim(),
-        description: description.trim(),
-        category,
-        quantity,
-        price,
-        // status: finalStatus,
-        owner: userId,
-        ownerId: userId,
-        updatedAt: new Date()
-      },
+      updatePayload,
       { new: true }
     );
 
@@ -161,7 +186,6 @@ export async function PUT(
       );
     }
 
-    // record recent activity (edit_product)
     try {
       const actor = decoded?.name || decoded?.email || 'unknown';
       await RecentAct.create({ action: 'Edit Product', username: actor });
@@ -176,6 +200,7 @@ export async function PUT(
         id: updatedProduct._id,
         name: updatedProduct.name,
         description: updatedProduct.description,
+        productImageUrl: updatedProduct.productImageUrl,
         category: updatedProduct.category,
         quantity: updatedProduct.quantity,
         price: updatedProduct.price,

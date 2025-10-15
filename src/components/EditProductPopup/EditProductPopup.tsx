@@ -24,6 +24,11 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Image states: show existing image and optionally selected image + preview
+  const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   // Initialize form data when product changes
   useEffect(() => {
     if (product && isOpen) {
@@ -35,9 +40,40 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
         category: product.category,
         status: product.status
       });
+      // determine existing image field name(s)
+      const imageUrl = (product as any).productImageUrl || (product as any).image || (product as any).imageUrl || null;
+      setExistingImageUrl(imageUrl);
+      setPreviewUrl(imageUrl);
+      setSelectedImageFile(null);
       setError(''); // Clear any previous errors
     }
   }, [product, isOpen]);
+
+  // Handle image selection and preview
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setSelectedImageFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setPreviewUrl(reader.result as string);
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewUrl(existingImageUrl);
+    }
+  };
+
+  const removeSelectedImage = () => {
+    setSelectedImageFile(null);
+    setPreviewUrl(existingImageUrl);
+  };
+
+  const fileToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
 
   // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -108,20 +144,39 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
         status: formData.status
       };
 
+      // If user selected a new image include base64 in payload; server will upload to Cloudinary
+      if (selectedImageFile) {
+        try {
+          const base64 = await fileToBase64(selectedImageFile);
+          // attach a non-standard field imageBase64 which server will process
+          (productData as any).imageBase64 = base64;
+        } catch (err) {
+          console.error('Failed to convert image to base64', err);
+        }
+      }
+
       console.log('Updating product:', productData); // Debug log
       console.log('Product ID:', product._id); // Debug log
 
       // Use product._id since your products use _id instead of id
       const productId = product._id || (product as any).id;
+
+      // Build FormData so server receives multipart/form-data (file + fields)
+      const fd = new FormData();
+      fd.append('name', productData.name);
+      fd.append('description', productData.description);
+      fd.append('category', String(productData.category));
+      fd.append('quantity', String(productData.quantity));
+      fd.append('price', String(productData.price));
+      fd.append('status', String(productData.status || ''));
+      if (selectedImageFile) {
+        fd.append('image', selectedImageFile);
+      }
+
       const response = await fetch(`/api/main/edit/${productId}`, {
         method: 'PUT',
-        headers:
-         {
-          'Content-Type': 'application/json',
-          
-        },
         credentials: 'include',
-        body: JSON.stringify(productData)
+        body: fd // DO NOT set Content-Type; browser will add the correct multipart boundary
       });
 
       console.log('Response status:', response.status); // Debug log
@@ -160,6 +215,8 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
       status: ProductStatus.IN_STOCK
     });
     setError('');
+    setSelectedImageFile(null);
+    setPreviewUrl(null);
   };
 
   // Handle close button
@@ -284,6 +341,34 @@ export default function EditProductPopup({ isOpen, onClose, onProductUpdated, pr
                   {formatCategoryName(ProductCategory.OTHER)}
                 </option>
               </select>
+            </div>
+
+            <div className={`${styles.inputGroup} ${styles.imageGroup}`}>
+              <label htmlFor="image">Product Image (optional)</label>
+              <div className={styles.imagePreviewWrap}>
+                {previewUrl ? (
+                  <img src={previewUrl} alt="Product preview" className={styles.imagePreview} />
+                ) : (
+                  <div className={styles.imagePlaceholder}>No image</div>
+                )}
+              </div>
+              <div className={styles.imageControls}>
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                {selectedImageFile && (
+                  <button type="button" className={styles.removeImageButton} onClick={removeSelectedImage}>
+                    Remove selected image
+                  </button>
+                )}
+                {!selectedImageFile && existingImageUrl && (
+                  <small className={styles.hint}>Current image shown above. Choose a new file to replace it for preview.</small>
+                )}
+              </div>
             </div>
           </div>
 

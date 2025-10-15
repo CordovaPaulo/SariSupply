@@ -203,3 +203,38 @@
     width: 100%;
   }
 }
+
+.imagePreviewWrap {
+  /* make the image container span the available width and center its content */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface);
+  margin-bottom: 1rem;
+}
+
+/* small placeholder text */
+.imagePlaceholder {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* image itself: constrain size, keep aspect ratio and center inside the wrapper */
+.imagePreview {
+  max-width: 260px;
+  max-height: 220px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: #f3f4f6;
+  padding: 8px;
+}

@@ -150,6 +150,13 @@ export default function InventoryPage() {
         console.log('API Response data:', responseData);
         
         const productsArray = Array.isArray(responseData.data) ? responseData.data : [];
+
+        // Sort by createdAt descending so newest items appear first
+        productsArray.sort((a: any, b: any) => {
+          const ta = a?.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const tb = b?.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return tb - ta;
+        });
         
         setProducts(productsArray);
         setFilteredProducts(productsArray);

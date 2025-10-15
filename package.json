@@ -9,7 +9,8 @@
     "lint": "eslint",
     "register-one": "node scripts/register-one.js",
     "register-many": "node scripts/register-many.js",
-    "backfill": "node scripts/backfill-roles.js"
+    "backfill": "node scripts/backfill-roles.js",
+    "image-backfill": "node scripts/backfill-product-images.js"
   },
   "dependencies": {
     "@zxing/browser": "^0.1.5",
