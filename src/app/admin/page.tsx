@@ -29,7 +29,6 @@ export default function AdminCombinedPage() {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [tableLoading, setTableLoading] = useState(false);
   const [error, setError] = useState('');
   const [showCreate, setShowCreate] = useState(false);
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -53,35 +52,30 @@ export default function AdminCombinedPage() {
   // Debounced search effect (table loader only)
   useEffect(() => {
     if (loading) return; // skip if initial load
-    setTableLoading(true);
     const timeout = setTimeout(async () => {
       if (!checkAuthentication()) { // redirect if unauthenticated
-        setTableLoading(false);
+        setLoading(false);
         return;
       }
-      await loadAll(q, true);
-      setTableLoading(false);
+      await loadAll(q);
+      setLoading(false);
     }, 400);
     return () => clearTimeout(timeout);
     // eslint-disable-next-line
   }, [q]);
 
- const checkAuthentication = async () => {
-    // No client-side token read. Cookie will be sent automatically.
+  const checkAuthentication = async () => {
     try {
       const response = await fetch('/api/auth/admin/me', {
-        credentials: 'include', // send authToken cookie
+        credentials: 'include',
       });
       
       if (response.ok) {
         const responseData = await response.json();
         console.log('API Response:', responseData);
-        
         setUser(responseData.user);
         setIsAuthenticated(true);
-        // ...existing code...
       } else {
-        // ...existing code...
         setLoading(false);
         router.replace('/');
       }
@@ -89,17 +83,14 @@ export default function AdminCombinedPage() {
       console.error('Auth check failed:', error);
       setLoading(false);
       router.replace('/');
-      // ...existing code...
     }
   };
-  
 
-  // Modified loadAll to support table-only loading
-  const loadAll = async (query = '', isSearch = false) => {
+  // Load all data once; searching is now client-side (inventory-style)
+  const loadAll = async (query = '') => {
     try {
-      if (!isSearch) setError('');
-
-      const usersUrl = `/api/admin/users?limit=100${query ? `&q=${encodeURIComponent(query)}` : ''}`;
+      setError('');
+      const usersUrl = `/api/admin/users?limit=100`; // client-side filter; no server query
       const [actRes, usersRes] = await Promise.all([
         fetch('/api/admin/activities', { credentials: 'include' }),
         fetch(usersUrl, { credentials: 'include' }),
@@ -132,9 +123,20 @@ export default function AdminCombinedPage() {
     }
   };
 
+  // Inventory-style, client-side, real-time search across email, username, and role
+  const filteredUsers = useMemo(() => {
+    const term = q.trim().toLowerCase();
+    if (!term) return users;
+    return users.filter((u) =>
+      (u.email || '').toLowerCase().includes(term) ||
+      (u.username || '').toLowerCase().includes(term) ||
+      (u.role || '').toLowerCase().includes(term)
+    );
+  }, [users, q]);
+
   const displayedUsers = useMemo(
-    () => users.slice(usersPage * USER_PAGE_SIZE, usersPage * USER_PAGE_SIZE + USER_PAGE_SIZE),
-    [users, usersPage]
+    () => filteredUsers.slice(usersPage * USER_PAGE_SIZE, usersPage * USER_PAGE_SIZE + USER_PAGE_SIZE),
+    [filteredUsers, usersPage]
   );
 
   const displayedActivities = useMemo(
@@ -142,7 +144,7 @@ export default function AdminCombinedPage() {
     [activities, activitiesPage]
   );
 
-  const usersTotalPages = Math.max(1, Math.ceil(users.length / USER_PAGE_SIZE));
+  const usersTotalPages = Math.max(1, Math.ceil(filteredUsers.length / USER_PAGE_SIZE));
   const activitiesTotalPages = Math.max(1, Math.ceil(activities.length / PAGE_SIZE));
 
   if (loading) return <PageLoader />;
@@ -185,42 +187,42 @@ export default function AdminCombinedPage() {
             </div>
 
             <div className={`${styles.card} ${styles.recentSection}`}>
-               <div className={styles.cardHeader}>
-                 <h3>Recent Activities</h3>
-               </div>
-               <div className={styles.cardBody}>
-                 <div className={styles.list}>
-                   {displayedActivities.length === 0 && <div>No recent activities</div>}
-                   {displayedActivities.map((a, i) => (
-                     <div key={a._id || i} className={styles.row} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-                       <div style={{ fontWeight: 600 }}>{a.username || a.email || 'unknown'}</div>
-                       <div style={{ textTransform: 'capitalize', color: 'var(--text-muted, #6b7280)', fontWeight: 600 }}>{a.action || 'activity'}</div>
-                       <div style={{ fontSize: 12, opacity: 0.8 }}>{new Date(a.createdAt || Date.now()).toLocaleString()}</div>
-                     </div>
-                   ))}
-                 </div>
+              <div className={styles.cardHeader}>
+                <h3>Recent Activities</h3>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.list}>
+                  {displayedActivities.length === 0 && <div>No recent activities</div>}
+                  {displayedActivities.map((a, i) => (
+                    <div key={a._id || i} className={styles.row} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+                      <div style={{ fontWeight: 600 }}>{a.username || a.email || 'unknown'}</div>
+                      <div style={{ textTransform: 'capitalize', color: 'var(--text-muted, #6b7280)', fontWeight: 600 }}>{a.action || 'activity'}</div>
+                      <div style={{ fontSize: 12, opacity: 0.8 }}>{new Date(a.createdAt || Date.now()).toLocaleString()}</div>
+                    </div>
+                  ))}
+                </div>
 
-                 <div className={styles.cardFooter}>
-                   <div className={styles.pagingInfo}>
-                     Showing {activitiesPage * PAGE_SIZE + 1} - {Math.min((activitiesPage + 1) * PAGE_SIZE, activities.length)} of {activities.length}
-                   </div>
-                   <div className={styles.pagingButtons}>
-                     <button
-                       onClick={() => setActivitiesPage((p) => Math.max(0, p - 1))}
-                       disabled={activitiesPage === 0}
-                     >
-                       Prev
-                     </button>
-                     <button
-                       onClick={() => setActivitiesPage((p) => Math.min(activitiesTotalPages - 1, p + 1))}
-                       disabled={activitiesPage >= activitiesTotalPages - 1}
-                     >
-                       Next
-                     </button>
-                   </div>
-                 </div>
-               </div>
-             </div>
+                <div className={styles.cardFooter}>
+                  <div className={styles.pagingInfo}>
+                    Showing {activitiesPage * PAGE_SIZE + 1} - {Math.min((activitiesPage + 1) * PAGE_SIZE, activities.length)} of {activities.length}
+                  </div>
+                  <div className={styles.pagingButtons}>
+                    <button
+                      onClick={() => setActivitiesPage((p) => Math.max(0, p - 1))}
+                      disabled={activitiesPage === 0}
+                    >
+                      Prev
+                    </button>
+                    <button
+                      onClick={() => setActivitiesPage((p) => Math.min(activitiesTotalPages - 1, p + 1))}
+                      disabled={activitiesPage >= activitiesTotalPages - 1}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className={styles.rightCol}>
@@ -232,9 +234,12 @@ export default function AdminCombinedPage() {
                     <div className={styles.actions}>
                       <input
                         className={styles.searchInput}
-                        placeholder="Search email or username..."
+                        placeholder="Search email, username, or role..."
                         value={q}
-                        onChange={(e) => setQ(e.target.value)}
+                        onChange={(e) => {
+                          setQ(e.target.value);
+                          setUsersPage(0);
+                        }}
                       />
                     </div>
                   </div>
@@ -244,41 +249,43 @@ export default function AdminCombinedPage() {
               <div className={styles.cardBody}>
                 {error && <div className={styles.errorText}>{error}</div>}
 
-                <div style={{ marginBottom: 8, opacity: 0.8 }}>{total} total</div>
+                <div style={{ marginBottom: 8, opacity: 0.8 }}>
+                  {filteredUsers.length} shown{q ? ` (filtered from ${users.length} total)` : ` of ${users.length}`}
+                </div>
 
                 <div className={styles.tableWrapper}>
-                  {tableLoading ? (
-                    <div style={{ textAlign: 'center', padding: '32px 0' }}>
-                      <span className={styles.tableLoader}>Loading...</span>
-                    </div>
-                  ) : (
-                    <table className={styles.table}>
-                      <thead>
-                        <tr>
-                          <th>Email</th>
-                          <th>Username</th>
-                          <th>Role</th>
-                          <th>Created</th>
+                  <table className={styles.table}>
+                    <thead>
+                      <tr>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Created</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {displayedUsers.map((u) => (
+                        <tr key={(u as any).id || u._id}>
+                          <td>{u.email}</td>
+                          <td>{u.username}</td>
+                          <td><span className={styles.badge}>{u.role}</span></td>
+                          <td>{u.createdAt ? new Date(u.createdAt).toLocaleString() : '-'}</td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {displayedUsers.map((u) => (
-                          <tr key={(u as any).id || u._id}>
-                            <td>{u.email}</td>
-                            <td>{u.username}</td>
-                            <td><span className={styles.badge}>{u.role}</span></td>
-                            <td>{u.createdAt ? new Date(u.createdAt).toLocaleString() : '-'}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  )}
+                      ))}
+                      {displayedUsers.length === 0 && (
+                        <tr>
+                          <td colSpan={4} style={{ textAlign: 'center', padding: '16px' }}>
+                            No users match your search
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
                 </div>
 
                 <div className={styles.cardFooter}>
                   <div className={styles.pagingInfo}>
-                    Showing {usersPage * USER_PAGE_SIZE + 1} - {Math.min((usersPage + 1) * USER_PAGE_SIZE, users.length)} of {users.length}
-                    {/* {q && <span style={{ marginLeft: 8, fontStyle: 'italic', opacity: 0.7 }}>(filtered from {total} total)</span>} */}
+                    Showing {filteredUsers.length === 0 ? 0 : usersPage * USER_PAGE_SIZE + 1} - {Math.min((usersPage + 1) * USER_PAGE_SIZE, filteredUsers.length)} of {filteredUsers.length}
                   </div>
                   <div className={styles.pagingButtons}>
                     <button
@@ -304,7 +311,7 @@ export default function AdminCombinedPage() {
       <AdminCreateUserModal
         open={showCreate}
         onClose={() => setShowCreate(false)}
-        onCreated={() => loadAll(q)}
+        onCreated={() => loadAll()} // reload list; search stays client-side
       />
       <LogoutConfirmation
         isOpen={showLogoutConfirm}

@@ -85,6 +85,9 @@
   font-size: 1rem;
   box-sizing: border-box;
   transition: border-color 0.2s, box-shadow 0.2s;
+  resize: none;
+  overflow: auto;
+  -webkit-resize: none;
 }
 .input:focus {
   outline: 2px solid var(--accent-color);
@@ -154,4 +157,44 @@
 .submitButton:disabled {
   background: var(--button-disabled);
   color: var(--alt-text-color);
+}
+
+.imagePreview {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+
+.previewImage {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+
+.previewActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* small remove button next to preview */
+.removeImageBtn {
+  padding: 6px 10px;
+  background: var(--button-primary);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.removeImageBtn:hover {
+  background: var(--button-primary-hover);
 }

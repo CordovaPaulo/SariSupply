@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import styles from './addRecordPopup.module.css';
 
@@ -16,8 +16,17 @@ export default function AddRecordPopup({ isOpen, onClose, onRecordAdded }: AddRe
     description: '',
     image: null as File | null,
   });
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    // cleanup on unmount
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   if (!isOpen) return null;
 
@@ -33,16 +42,37 @@ export default function AddRecordPopup({ isOpen, onClose, onRecordAdded }: AddRe
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      // revoke previous preview if any
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
       setFormData((prev) => ({
         ...prev,
-        image: e.target.files![0],
+        image: file,
       }));
     } else {
+      // no file selected
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setPreviewUrl(null);
       setFormData((prev) => ({
         ...prev,
         image: null,
       }));
     }
+  };
+
+  const removeImage = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+    setFormData((prev) => ({ ...prev, image: null }));
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const resetForm = () => {
@@ -51,7 +81,12 @@ export default function AddRecordPopup({ isOpen, onClose, onRecordAdded }: AddRe
       description: '',
       image: null,
     });
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
     setError('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleClose = () => {
@@ -153,13 +188,30 @@ export default function AddRecordPopup({ isOpen, onClose, onRecordAdded }: AddRe
 
           <div className={styles.inputGroup}>
             <label htmlFor="image">Receipt Image *</label>
+
+            {previewUrl ? (
+              <div className={styles.imagePreview}>
+                <img src={previewUrl} alt="Preview" className={styles.previewImage} />
+                <div className={styles.previewActions}>
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    className={styles.removeImageBtn}
+                  >
+                    Remove image
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
             <input
+              ref={fileInputRef}
               type="file"
               id="image"
               name="image"
               accept="image/*"
               onChange={handleImageChange}
-              required
+              required={!previewUrl}
               className={styles.input}
             />
           </div>
