@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { X, Trash2, ShoppingCart, Loader2, Minus, Plus } from 'lucide-react';
 import { toast } from 'react-toastify';
 import styles from './checkoutPopup.module.css';
@@ -42,6 +42,15 @@ export default function CheckoutPopup({
     payment: { amountPaid: number; change: number; currency?: string };
     createdAt?: string;
   }>(null); // added
+
+  useEffect(() => {
+    if (!isOpen) {
+      setAmountPaid('');
+      setError('');
+      setReceipt(null);
+      setLoading(false);
+    }
+  }, [isOpen]);
 
   const toInt = (v: unknown) => {
     const n = Number(v);

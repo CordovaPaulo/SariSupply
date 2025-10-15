@@ -192,6 +192,18 @@ export default function POSPage() {
     stock: deriveStock(p),
   });
 
+  // consider several possible backend representations of "discontinued"
+  const isDiscontinued = (p: BackendProduct): boolean => {
+    const anyP = p as any;
+    const status = typeof anyP.status === 'string' ? anyP.status : typeof anyP.state === 'string' ? anyP.state : '';
+
+    if (typeof status === 'string' && status.toLowerCase().includes('discontinu')) return true;
+    if (anyP.discontinued === true) return true;
+    if (anyP.isDiscontinued === true) return true;
+    // fallback: if there's an 'available' or 'stock' indicator that's zero and an explicit flag exists
+    return false;
+  };
+
   const loadData = async () => {
     try {
       const response = await fetch('/api/main/view/', {
@@ -200,9 +212,10 @@ export default function POSPage() {
 
       if (response.ok) {
         const responseData = await response.json();
-        const productsArray = Array.isArray(responseData.data)
-          ? (responseData.data as BackendProduct[]).map(mapToProductCart)
-          : [];
+        const raw = Array.isArray(responseData.data) ? (responseData.data as BackendProduct[]) : [];
+        // filter out discontinued products before mapping
+        const available = raw.filter(p => !isDiscontinued(p));
+        const productsArray = available.map(mapToProductCart);
         setProducts(productsArray);
         setFilteredProducts(productsArray);
       } else {

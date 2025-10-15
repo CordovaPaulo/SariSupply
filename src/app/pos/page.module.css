@@ -615,7 +615,8 @@
 .paginationContainer {
   display: flex;
   align-items: center;
-  /* gap: 12px; */
+  gap: 12px;
+  padding: 0;
   background: none;
   border: none;
   border-radius: 0;
@@ -912,12 +913,7 @@
   }
 
   .paginationContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    align-items: center;
     margin-top: 15px; /* Reduced from 20px */
-    padding: 0 16px;
     margin-bottom: 25px; /* Reduced from 40px */
   }
 
@@ -1281,16 +1277,15 @@
   }
 }
 
-/* Pagination: base styles */
 .paginationContainer {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
-  background: var(--table-header-footer);
-  border-top: 2px solid var(--border-color);
-  border-radius: 0 0 12px 12px;
+  padding: 10px 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  margin: 0;
 }
 
 .paginationButton {
