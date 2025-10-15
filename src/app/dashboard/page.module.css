@@ -325,8 +325,12 @@
   color: var(--status-in-stock-text);
 }
 
-.statusBadge.out_of_stock,
 .statusBadge.low_stock {
+  background: var(--status-low-stock-bg);
+  color: var(--status-low-stock-text);
+}
+
+.statusBadge.out_of_stock {
   background: var(--status-out-of-stock-bg);
   color: var(--status-out-of-stock-text);
 }
