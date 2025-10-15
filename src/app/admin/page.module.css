@@ -1,354 +1,96 @@
-/* layout root vars & ensure content doesn't hide under fixed header */
+/* Layout root & header offset */
 .dashboard {
-  --admin-header-height: 100px; /* default header height for desktop */
+  --admin-header-height: 100px;
   min-height: 100vh;
   background: var(--background);
   color: var(--text-color);
   position: relative;
-  width: 100%;          /* use 100% to avoid 100vw horizontal scroll issues */
+  width: 100%;
   overflow-x: hidden;
-  padding-top: var(--admin-header-height); /* offset content for fixed header */
+  padding-top: var(--admin-header-height); /* offset for fixed header */
+  box-sizing: border-box;
 }
 
+/* Fixed header */
 .header {
   background: var(--page-header-bg);
   color: var(--table-header-footer-text);
   border: 1px solid var(--border-color);
-  border-radius: 0; /* full-width fixed header shouldn't have rounded corners */
   padding: 12px 25px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  position: fixed;    /* fixed so it stays at viewport top */
-  top: 0;
-  left: 0;
-  right: 0;
+  position: fixed;
+  top: 0; left: 0; right: 0;
   height: var(--admin-header-height);
-  z-index: 120;       /* above page content */
-  margin: 0;
+  z-index: 120;
   width: 100%;
-  backdrop-filter: blur(6px); /* subtle blur for floating effect */
-  height: 100px;
+  box-sizing: border-box;
+  backdrop-filter: blur(6px);
 }
 
-/* Make header content wrap gracefully on small widths */
+/* Header areas */
+.headerLeft { overflow: hidden; }
+.headerLeft h1 { margin: 0; }
+
 .headerRight {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  justify-content: flex-end; /* ALWAYS keep buttons aligned to the right */
+  justify-content: flex-end;
   box-sizing: border-box;
-  width: auto;     /* don't force full-width on desktop */
-  max-width: 100%;
 }
 
-.addButton {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: var(--button-primary);
-  color: var(--text-color);
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 120ms ease, transform 80ms ease, box-shadow 120ms ease;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
-}
-
-.addButton:hover {
-  background: var(--button-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-}
-
-.addButton:active {
-  background: var(--button-primary-active);
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-.logoutButton {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--major-action);
-  background: transparent;
-  color: var(--major-action);
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 120ms ease, color 120ms ease, transform 80ms ease;
-}
-
-.main {
-    padding: 24px 6px 24px 16px;
-    max-width: 1800px; /* widened so cards can occupy more horizontal space */
-    margin: 0 auto;
-}
-
-.logoutButton:hover {
-  background: var(--major-action);
-  color: var(--text-color);
-  transform: translateY(-1px);
-}
-
-.logoutButton:active {
-  transform: translateY(0);
-}
-
-/* top area */
-.topRow {
-  display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 16px;
-  margin-bottom: 16px;
-  height: 50%;
-}
-
-.statsGrid {
-  display: grid;
-  gap: 12px;
-  grid-auto-rows: minmax(80px, auto);
-  height: 100%;
-}
-
-.statCard {
-  background: var(--surface);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  min-height: 80px;
-  height: 230px;
-  display: flex;
-  flex-direction: column;
-  /* justify-content: center; */
-  gap: 6px;
-}
-
-.statCardUsers {
-  background: var(--admin-stat-card-1);
-  color: black;
-}
-
-.statCardActivities {
-  background: var(--admin-stat-card-2);
-  color: black;
-}
-
-.statCard .statTitle {
-  font-size: 1.2rem;
-  color: black;
-  /* font-weight: 600; */
-}
-.statCard .statValue {
-  font-size: 24px;
-  font-weight: 700;
-  color: black;
-}
-
-.recentSection {
-  display: flex;
-  flex-direction: column;
-
-  --admin-activity-row: 52px;
-  --admin-activity-gap: 8px;
-  --admin-page-size: 6;
-}
-
-.recentSection .list {
-  display: grid;
-  gap: var(--admin-activity-gap);
-
-  min-height: calc(var(--admin-activity-row) * var(--admin-page-size) + var(--admin-activity-gap) * (var(--admin-page-size) - 1));
-  max-height: calc(var(--admin-activity-row) * var(--admin-page-size) + var(--admin-activity-gap) * (var(--admin-page-size) - 1));
-
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-
-  align-content: start;
-  align-items: start;
-}
-
-.recentSection .row {
-  align-self: start;
-  flex: 0 0 auto; 
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  background: var(--surface-soft);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.pageSection {
-  margin-top: 8px;
-}
-
-.headerActions {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  /* margin-bottom: 12px; */
-}
-
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.searchInput {
-  padding: 8px 10px;
-  width: 280px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--text-color);
-}
-
-.tableWrapper {
-  width: 100%;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  background: var(--surface);
-  overflow-x: auto;           /* horizontal scroll */
-  overflow-y: auto;           /* vertical if needed */
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 4px;        /* space for horizontal scrollbar when visible */
-  -ms-overflow-style: auto;   /* show scrollbar in IE/Edge for this region */
-  scrollbar-width: auto;      /* show scrollbar in Firefox for this region */
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  display: table;
-  table-layout: auto;
-  background: transparent;
-  min-width: 900px; /* desktop baseline; narrower viewports will scroll horizontally */
-}
-
-.table thead th {
-  background: var(--table-header-footer);
-  color: var(--table-header-footer-text);
-  text-align: left;
-  padding: 10px;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.table tbody td {
-  border-bottom: 1px solid var(--border-color);
-  padding: 10px;
-  color: var(--text-color);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.table tbody tr:hover {
-  background: var(--surface-translucent);
-}
-
-.badge {
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-  background: var(--surface-soft);
-  border: 1px solid var(--border-color);
-  color: var(--text-color);
-}
-
+/* Buttons in header */
+.addButton,
+.logoutButton,
 .headerActions button,
 .actions button,
-.pageSection > div button,
-.recentSection > div button,
 .card > div button {
-  padding: 7px 10px;
+  padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid var(--border-color);
   background: var(--surface);
   color: var(--text-color);
   cursor: pointer;
+  font-weight: 600;
   transition: background 120ms ease, transform 80ms ease;
+  box-sizing: border-box;
+}
+.addButton { background: var(--button-primary); box-shadow: 0 1px 0 rgba(0,0,0,0.04); }
+.logoutButton { background: transparent; border-color: var(--major-action); color: var(--major-action); }
+
+.logoutButton:hover { background: var(--major-action-hover); color: var(--text-color); }
+.addButton:hover { background: var(--button-primary-hover); }
+.addButton:active,
+.logoutButton:active,
+.headerActions button:active,
+.actions button:active,
+.card > div button:active {
+  transform: translateY(1px);
 }
 
-.headerActions button:hover,
-.actions button:hover,
-.pageSection > div button:hover,
-.recentSection > div button:hover,
-.card > div button:hover {
-  background: var(--button-primary-hover);
+/* Main container sizing - widened for more card space */
+.main {
+  padding: 24px 6px 24px 16px;
+  max-width: 1800px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-.headerActions button:disabled,
-.actions button:disabled,
-.pageSection > div button:disabled,
-.recentSection > div button:disabled,
-.card > div button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.paginationControls,
-.paginationContainer {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.paginationControls button,
-.paginationButton {
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: var(--surface);
-  color: var(--text-color);
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.paginationControls button[disabled],
-.paginationButton[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* small page number pill */
-.pageNumber {
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: var(--surface);
-  color: var(--text-color);
-}
-
-/* utility: primary ghost variant */
-.buttonGhost {
-  background: transparent;
-  border-color: var(--border-color);
-}
-
-/* Content grid wraps left (overview + activities) and right (users table) */
+/* Content grid and columns */
 .contentGrid {
   display: grid;
-  grid-template-columns: 520px 1fr; /* make left column wider */
+  grid-template-columns: 520px 1fr;
   gap: 18px;
   align-items: start;
 }
+.leftCol, .rightCol { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 
-/* Columns */
-.leftCol { display: flex; flex-direction: column; gap: 16px; }
-.rightCol { display: flex; flex-direction: column; gap: 16px; }
-
-/* Generic card that visually separates sections */
+/* Cards */
 .card {
   background: var(--surface);
   border: 1px solid var(--border-color);
@@ -357,8 +99,8 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  box-sizing: border-box;
 }
-
 .cardHeader {
   padding: 12px 14px;
   border-bottom: 1px solid var(--border-color);
@@ -369,16 +111,8 @@
   flex-wrap: wrap;
   row-gap: 8px;
 }
-.cardHeader h3 {
-  margin: 0;
-  font-size: 1rem;
-  color: var(--text-color);
-}
-
-.cardBody {
-  padding: 12px 14px;
-}
-
+.cardHeader h3 { margin: 0; font-size: 1rem; color: var(--text-color); }
+.cardBody { padding: 12px 14px; box-sizing: border-box; }
 .cardFooter {
   display: flex;
   justify-content: space-between;
@@ -387,233 +121,39 @@
   padding: 10px 14px;
   border-top: 1px solid var(--border-color);
   background: transparent;
+  box-sizing: border-box;
 }
 
-.pagingInfo { font-size: 12px; opacity: 0.85; }
-.pagingButtons { display: flex; gap: 8px; }
-
-.topRow { display: none; } 
-
+/* Stats grid & stat cards (preserved) */
 .statsGrid { display: grid; gap: 12px; grid-auto-rows: minmax(80px, auto); }
-.statCard { padding: 14px; height: auto; min-height: 90px; }
-
-.list { display: grid; gap: 8px; max-height: 320px; overflow: auto; }
-
-.tableWrapper { width: 100%; border-radius: 8px; overflow: auto; }
-.table { width: 100%; border-collapse: collapse; table-layout: auto; min-width: 700px; }
-
-.table thead th { padding: 10px 12px; font-size: 13px; }
-.table tbody td { padding: 10px 12px; font-size: 13px; }
-
-.errorText { color: var(--danger); margin-bottom: 8px; }
-
-/* Hide scrollbars (WebKit, Firefox, old Edge/IE) */
-.dashboard,
-.main,
-.tableWrapper,
-.recentSection .list {
-  /* still scroll, but no bars */
-  -ms-overflow-style: none;   /* IE/Edge */
-  scrollbar-width: none;      /* Firefox */
-}
-.dashboard::-webkit-scrollbar,
-.main::-webkit-scrollbar,
-.tableWrapper::-webkit-scrollbar,
-.recentSection .list::-webkit-scrollbar {
-  width: 0 !important;
-  height: 0 !important;
-}
-
-/* Ensure these can scroll without showing bars */
-.dashboard { overflow-y: auto; }
-.tableWrapper { overflow: auto; }
-.recentSection .list { overflow-y: auto; }
-
-@media (max-width: 1100px) {
-  .contentGrid { grid-template-columns: 1fr; }
-  .leftCol, .rightCol { width: 100%; }
-  .cardHeader { padding: 10px 12px; }
-  .cardBody { padding: 10px 12px; }
-  .table { min-width: 680px; }
-  .searchInput { width: 100%; max-width: 360px; }
-}
-
-/* Responsive header height and layout adjustments */
-
-/* Small laptop (~1280px and below) */
-@media (max-width: 1280px) {
-  .dashboard { --admin-header-height: 72px; }
-  .main { max-width: 1200px; padding: 20px 12px; } /* slightly larger than before */
-  .searchInput { width: 240px; }
-}
-
-/* Tablet (~1024px and below) */
-@media (max-width: 1024px) {
-  .dashboard { --admin-header-height: 86px; }
-  .header { padding: 14px 16px; }
-  .main { max-width: 92%; padding: 18px 12px; }
-  .contentGrid { grid-template-columns: 360px 1fr; gap: 14px; } /* keep left column roomy on tablets */
-  .searchInput { width: 200px; }
-}
-
-/* Mobile / small screens (phones) */
-@media (max-width: 640px) {
-  .dashboard { --admin-header-height: 112px; }
-
-  .header {
-    box-sizing: border-box;        /* ensure padding doesn't increase visual width */
-    padding: 10px 12px;
-    height: var(--admin-header-height);
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .headerLeft {
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin: 0;
-  }
-  .headerLeft h1 { margin: 0; font-size: 1.25rem; }
-
-  /* make headerRight a full-width row of equal columns */
-  .headerRight {
-    width: 100%;
-    display: flex;
-    gap: 8px;
-    justify-content: space-between; /* distribute items evenly across the row */
-    align-items: center;
-    box-sizing: border-box;
-    padding: 0;                     /* remove any extra internal padding */
-  }
-
-  /* ensure each direct child takes equal space and does not add margins */
-  .headerRight > * {
-    flex: 1 1 0%;
-    min-width: 0;
-    box-sizing: border-box;
-    margin: 0;                       /* override earlier +* margin */
-    display: flex;
-    align-items: center;
-    justify-content: center;        /* center label inside each control */
-  }
-  /* remove the separate sibling margin on mobile so spacing is handled by gap/justify */
-  .headerRight > * + * { margin-left: 0; }
-
-  /* make the clickable controls fill their column and center text */
-  .headerRight button,
-  .headerRight .addButton,
-  .headerRight .logoutButton {
-    width: 100%;
-    padding: 8px 10px;
-    font-size: 14px;
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .main { padding: 14px 10px; max-width: 100%; }
-  .searchInput { width: 100%; max-width: none; }
-}
-
-/* Strong mobile override so header buttons truly span the full width and are evenly spaced */
-@media (max-width: 640px) {
-  /* let header height be determined by its content and ensure padding aligns with .main */
-  .header {
-    height: auto !important;
-    padding: 10px 12px !important;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  /* Title row takes full width and does not shrink headerRight */
-  .headerLeft {
-    width: 100% !important;
-    margin: 0 0 6px 0 !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  /* Make the actions row a full-width flex row — distribute space evenly */
-  .headerRight {
-    width: 100% !important;
-    display: flex !important;
-    gap: 8px !important;
-    justify-content: space-between !important; /* place items across the row */
-    align-items: center !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Ensure each direct child becomes an equal column and centers its content */
-  .headerRight > * {
-    flex: 1 1 0% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    margin: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  /* Buttons fill their column and avoid internal extra padding causing overflow */
-  .headerRight button,
-  .headerRight .addButton,
-  .headerRight .logoutButton {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 8px 10px !important;
-    white-space: nowrap !important;
-  }
-}
-
-/* Responsive stacking: force single-column layout at tablet and below */
-@media (max-width: 1024px) {
-  .contentGrid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  /* reduce any large min-widths applied to child components */
-  .table { min-width: 700px; } /* table still scrolls horizontally when needed */
-}
-
-/* Additional small-screen safety */
-@media (max-width: 640px) {
-  .card { padding-right: 12px; padding-left: 12px; }
-  .main { padding-left: 12px; padding-right: 12px; }
-}
-
-.recentSection {
+.statCard {
+  background: var(--surface);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px;
+  min-height: 90px;
   display: flex;
   flex-direction: column;
-
-  --admin-activity-row: 52px;
-  --admin-activity-gap: 8px;
-  --admin-page-size: 6;
+  gap: 6px;
+  box-sizing: border-box;
 }
+.statCardUsers { background: var(--admin-stat-card-1); color: black; }
+.statCardActivities { background: var(--admin-stat-card-2); color: black; }
+.statCard .statTitle { font-size: 1.2rem; color: black; }
+.statCard .statValue { font-size: 24px; font-weight: 700; color: black; }
 
+/* Recent activities (preserved) */
+.recentSection { display: flex; flex-direction: column; }
 .recentSection .list {
-  display: grid;
-  gap: var(--admin-activity-gap);
-
-  min-height: calc(var(--admin-activity-row) * var(--admin-page-size) + var(--admin-activity-gap) * (var(--admin-page-size) - 1));
-  max-height: calc(var(--admin-activity-row) * var(--admin-page-size) + var(--admin-activity-gap) * (var(--admin-page-size) - 1));
-
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-
+  display: grid; gap: var(--admin-activity-gap, 8px);
+  min-height: calc(var(--admin-activity-row,52px) * var(--admin-page-size,6) + (var(--admin-activity-gap,8px) * (var(--admin-page-size,6) - 1)));
+  max-height: calc(var(--admin-activity-row,52px) * var(--admin-page-size,6) + (var(--admin-activity-gap,8px) * (var(--admin-page-size,6) - 1)));
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
   align-content: start;
-  align-items: start;
+  box-sizing: border-box;
 }
-
 .recentSection .row {
-  align-self: start;
-  flex: 0 0 auto; /* prevent flex children from growing/shrinking */
   padding: 10px;
   border: 1px solid var(--border-color);
   border-radius: 10px;
@@ -621,184 +161,132 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-sizing: border-box;
 }
 
-/* responsive tweaks if needed */
-@media (max-width: 900px) {
-  .recentSection { --admin-activity-row: 48px; }
-}
-@media (max-width: 480px) {
-  .recentSection { --admin-activity-row: 44px; }
-}
-
-.rightCol {
-  --user-table-header: 50px; 
-  --user-table-row: 39.4px;
-  --user-page-size: 15;      
-}
-
-.rightCol > .card > .cardBody {
-  padding: 12px 14px; 
-  display: flex;
-  flex-direction: column;
-
-  min-height: calc(
-    var(--user-table-header)
-    + (var(--user-table-row) * var(--user-page-size))
-    + 36px 
-  );
-}
-
-.rightCol > .card .tableWrapper {
-  flex: 1 1 auto;
-  min-height: 0; 
-  overflow: auto;
-}
-
-.rightCol > .card .table tbody tr {
-  height: auto;
-  line-height: normal;
-}
-
-/* Make header area responsive without hiding content */
-.cardHeader {
-  flex-wrap: wrap;
-  row-gap: 8px;
-}
-
-/* Show a visible scrollbar just for the table region (desktop) */
-.tableWrapper::-webkit-scrollbar {
-  height: 10px;
-}
-.tableWrapper::-webkit-scrollbar-thumb {
-  background: rgba(128,128,128,0.35);
+/* Header actions / search */
+.headerActions { display: flex; justify-content: end; align-items: center; }
+.actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.searchInput {
+  padding: 8px 10px;
+  width: 280px;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-color);
+  box-sizing: border-box;
 }
 
-/* Keep page-level scrollbars hidden, but DO NOT hide the table wrapper scrollbar */
-.dashboard,
-.main,
-.recentSection .list {
-  -ms-overflow-style: none;  /* IE/Edge */
-  scrollbar-width: none;     /* Firefox */
+/* Table wrapper & table (consolidated rules) */
+.tableWrapper {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--surface);
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+  box-sizing: border-box;
+  scrollbar-width: auto;
+  -ms-overflow-style: auto;
 }
-.dashboard::-webkit-scrollbar,
-.main::-webkit-scrollbar,
-.recentSection .list::-webkit-scrollbar {
-  width: 0 !important;
-  height: 0 !important;
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  background: transparent;
+  min-width: 900px;
+}
+.table thead th {
+  background: var(--table-header-footer);
+  color: var(--table-header-footer-text);
+  text-align: left;
+  padding: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.table tbody td {
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.table tbody tr:hover { background: var(--surface-translucent); }
+.badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
-/* Ensure these can scroll without visible bars (page-level) */
+/* Pagination / utility */
+.paginationControls, .paginationContainer { display: flex; gap: 8px; align-items: center; }
+.paginationControls button, .paginationButton, .pageNumber {
+  padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-color);
+  background: var(--surface); color: var(--text-color); cursor: pointer; font-size: 13px;
+}
+.errorText { color: var(--danger); margin-bottom: 8px; }
+
+/* Show table scrollbar in WebKit region (kept visible only for table wrapper) */
+.tableWrapper::-webkit-scrollbar { height: 10px; }
+.tableWrapper::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.35); border-radius: 8px; }
+
+/* Hide page-level scrollbars (but not table wrapper) */
+.dashboard, .main, .recentSection .list {
+  -ms-overflow-style: none; scrollbar-width: none;
+}
+.dashboard::-webkit-scrollbar, .main::-webkit-scrollbar, .recentSection .list::-webkit-scrollbar {
+  width: 0 !important; height: 0 !important;
+}
 .dashboard { overflow-y: auto; }
 .recentSection .list { overflow-y: auto; }
 
-/* Breakpoints: keep table horizontally scrollable and controls usable */
+/* Right column table sizing preserved */
+.rightCol { --user-table-header: 50px; --user-table-row: 39.4px; --user-page-size: 15; }
+.rightCol > .card > .cardBody {
+  padding: 12px 14px; display: flex; flex-direction: column;
+  min-height: calc(var(--user-table-header) + (var(--user-table-row) * var(--user-page-size)) + 36px);
+  box-sizing: border-box;
+}
+.rightCol > .card .tableWrapper { flex: 1 1 auto; min-height: 0; overflow: auto; }
+.rightCol > .card .table tbody tr { height: auto; line-height: normal; }
+
+/* Responsive breakpoints (consolidated) */
 @media (max-width: 1280px) {
+  .dashboard { --admin-header-height: 72px; }
+  .main { max-width: 1200px; padding: 20px 12px; }
   .table { min-width: 840px; }
+  .searchInput { width: 240px; }
 }
-
 @media (max-width: 1024px) {
-  .table { min-width: 780px; }
-  /* Ensure single-column layout at this width and below */
+  .dashboard { --admin-header-height: 86px; }
+  .main { max-width: 92%; padding: 18px 12px; }
   .contentGrid { grid-template-columns: 1fr; gap: 14px; }
+  .table { min-width: 780px; }
+  .searchInput { width: 200px; }
 }
-
 @media (max-width: 768px) {
   .searchInput { width: 100%; max-width: none; }
   .headerActions { width: 100%; }
-}
-
-@media (max-width: 640px) {
   .table { min-width: 680px; }
-  .tableWrapper { margin-bottom: 8px; } /* keep pagination reachable */
 }
-
-@media (max-width: 420px) {
-  .table { min-width: 620px; }
-  .searchInput { font-size: 13px; }
-}
-
-/* Fix card/grid overflow on tablet and smaller:
-   - allow grid columns to shrink (min-width:0)
-   - ensure cards and inner containers use box-sizing and don't exceed parent width
-   - prevent horizontal overflow by hiding overflow inside cards if necessary
-*/
-.contentGrid,
-.leftCol,
-.rightCol,
-.card,
-.cardHeader,
-.cardBody,
-.tableWrapper,
-.recentSection,
-.recentSection .list {
-  box-sizing: border-box;
-  max-width: 100%;
-  width: 100%;
-}
-
-/* Allow grid children to shrink properly (this fixes overflow inside grid columns) */
-.leftCol,
-.rightCol {
-  min-width: 0; /* critical to allow flex/grid items to shrink below their content width */
-}
-
-/* Cards should not force the layout to overflow */
-.card {
-  overflow: hidden;        /* prevent children from forcing width beyond container */
-  word-wrap: break-word;
-  hyphens: auto;
-  display: block;
-}
-
-/* Inner scrollable lists keep internal scrolling but won't overflow the main layout */
-.recentSection .list,
-.tableWrapper {
-  min-width: 0; /* allow the scrollbar region to shrink */
-}
-
-/* Ensure table wrapper uses box-sizing and doesn't push outside the card */
-.tableWrapper {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto; /* keep horizontal scroll for the table itself */
-}
-
-/* Make sure header and controls do not overlap or force width overflow */
-.header,
-.headerActions {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
-}
-
-/* keep headerRight layout but ensure its buttons stay on the right on larger screens */
-.headerRight {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end; /* ALWAYS keep buttons aligned to the right */
-  box-sizing: border-box;
-  width: auto;     /* don't force full-width on desktop */
-  max-width: 100%;
-}
-
-/* Responsive stacking: force single-column layout at tablet and below */
-@media (max-width: 1024px) {
-  .contentGrid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  /* reduce any large min-widths applied to child components */
-  .table { min-width: 700px; } /* table still scrolls horizontally when needed */
-}
-
-/* Additional small-screen safety */
 @media (max-width: 640px) {
-  .card { padding-right: 12px; padding-left: 12px; }
-  .main { padding-left: 12px; padding-right: 12px; }
+  .dashboard { --admin-header-height: 112px; }
+  .header { padding: 10px 12px; height: auto; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .headerLeft { width: 100%; margin: 0 0 6px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .headerRight {
+    width: 100%; display: flex; gap: 8px; justify-content: space-between; align-items: center; padding: 0;
+  }
+  .headerRight > * { flex: 1 1 0%; min-width: 0; margin: 0; display: flex; align-items: center; justify-content: center; }
+  .headerRight button, .headerRight .addButton, .headerRight .logoutButton { width: 100%; padding: 8px 10px; }
+  .main { padding: 14px 10px; max-width: 100%; }
+  .table { min-width: 620px; }
+  .card { padding-left: 12px; padding-right: 12px; }
 }
