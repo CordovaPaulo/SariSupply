@@ -16,6 +16,17 @@ export default function ChangePasswordPage() {
 //   const search = useSearchParams();
 //   const returnTo = search?.get('returnTo') || '/';
 
+  function passwordChecks(pw: string) {
+    const minLength = pw.length >= 8;
+    const hasLetters = /[A-Za-z]/.test(pw);
+    const hasNumbers = /\d/.test(pw);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>\\[\]\/`~;'+=_-]/.test(pw);
+    const noSpaces = !/\s/.test(pw);
+    return { minLength, hasLetters, hasNumbers, hasSpecial, noSpaces };
+  }
+
+  const checks = passwordChecks(newPassword);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setMsg(null);
@@ -87,7 +98,34 @@ export default function ChangePasswordPage() {
                 required
                 minLength={8}
               />
-              <div className={styles.helper}>Minimum 8 characters</div>
+              <div
+                className={styles.helper}
+                style={{ color: checks.minLength ? 'green' : 'red' }}
+                aria-live="polite"
+              >
+                Minimum 8 characters
+              </div>
+
+              <div
+                className={styles.helper}
+                style={{
+                  color:
+                    checks.hasLetters && checks.hasNumbers && checks.hasSpecial
+                      ? 'green'
+                      : 'red',
+                }}
+                aria-live="polite"
+              >
+                Must include letters, numbers, and special characters
+              </div>
+
+              <div
+                className={styles.helper}
+                style={{ color: checks.noSpaces ? 'green' : 'red' }}
+                aria-live="polite"
+              >
+                Must not contain spaces
+              </div>
             </div>
 
             <div className={styles.actions}>

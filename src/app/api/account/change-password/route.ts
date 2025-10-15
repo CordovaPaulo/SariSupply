@@ -19,6 +19,21 @@ export async function POST(req: NextRequest) {
     if (newPassword.length < 8) {
       return NextResponse.json({ success: false, message: 'New password must be at least 8 characters' }, { status: 400 });
     }
+    if (newPassword === currentPassword) {
+      return NextResponse.json({ success: false, message: 'New password must be different from current password' }, { status: 400 });
+    }
+    if (newPassword.toLowerCase().includes(email.split('@')[0])) {
+      return NextResponse.json({ success: false, message: 'New password is too similar to email' }, { status: 400 });
+    }
+    if (!newPassword.includes('') || !/\d/.test(newPassword)) {
+      return NextResponse.json({ success: false, message: 'New password must include letters and numbers' }, { status: 400 });
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPassword)) {
+      return NextResponse.json({ success: false, message: 'New password must include at least one special character' }, { status: 400 });
+    }
+    if (/\s/.test(newPassword)) {
+      return NextResponse.json({ success: false, message: 'New password must not contain spaces' }, { status: 400 });
+    }
 
     const user = await db.collection('users').findOne({ email });
     if (!user) return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 400 });
