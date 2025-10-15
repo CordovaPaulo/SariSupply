@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     if (!newPassword.includes('') || !/\d/.test(newPassword)) {
       return NextResponse.json({ success: false, message: 'New password must include letters and numbers' }, { status: 400 });
     }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPassword)) {
+    if (!/[!@#$%^&*(),.?":{}|<>\\[\]\/`~;'+=_-]/.test(newPassword)) {
       return NextResponse.json({ success: false, message: 'New password must include at least one special character' }, { status: 400 });
     }
     if (/\s/.test(newPassword)) {

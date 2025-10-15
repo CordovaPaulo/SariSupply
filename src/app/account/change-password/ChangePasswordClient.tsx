@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function ChangePasswordPage() {
   const [email, setEmail] = useState('');
@@ -12,6 +13,8 @@ export default function ChangePasswordPage() {
   const [newPassword, setNewPassword] = useState('');
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPasswordCurrent, setShowPasswordCurrent] = useState(false);
+  const [showPasswordNew, setShowPasswordNew] = useState(false);
   const router = useRouter();
 //   const search = useSearchParams();
 //   const returnTo = search?.get('returnTo') || '/';
@@ -26,6 +29,14 @@ export default function ChangePasswordPage() {
   }
 
   const checks = passwordChecks(newPassword);
+
+  const togglePasswordVisibilityCurrent = () => {
+    setShowPasswordCurrent((s) => !s);
+  };
+
+  const togglePasswordVisibilityNew = () => {
+    setShowPasswordNew((s) => !s);
+  };
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -79,25 +90,63 @@ export default function ChangePasswordPage() {
 
             <div className={styles.formRow}>
               <label className={styles.label}>Current password</label>
-              <input
-                className={styles.input}
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                type="password"
-                required
-              />
+
+              <div className={styles.passwordContainer}>
+                <div className={styles.passwordInputWrapper}>
+                  <input
+                    className={styles.input}
+                    type={showPasswordCurrent ? 'text' : 'password'}
+                    id="current-password"
+                    name="current-password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className={styles.passwordToggle}
+                    onClick={togglePasswordVisibilityCurrent}
+                    aria-label={showPasswordCurrent ? 'Hide password' : 'Show password'}
+                  >
+                    {showPasswordCurrent ? (
+                      <Eye className={styles.eyeIcon} />
+                    ) : (
+                      <EyeOff className={styles.eyeIcon} />
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div className={styles.formRow}>
               <label className={styles.label}>New password</label>
-              <input
-                className={styles.input}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                type="password"
-                required
-                minLength={8}
-              />
+
+              <div className={styles.passwordContainer}>
+                <div className={styles.passwordInputWrapper}>
+                  <input
+                    className={styles.input}
+                    type={showPasswordNew ? 'text' : 'password'}
+                    id="new-password"
+                    name="new-password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className={styles.passwordToggle}
+                    onClick={togglePasswordVisibilityNew}
+                    aria-label={showPasswordNew ? 'Hide password' : 'Show password'}
+                  >
+                    {showPasswordNew ? (
+                      <Eye className={styles.eyeIcon} />
+                    ) : (
+                      <EyeOff className={styles.eyeIcon} />
+                    )}
+                  </button>
+                </div>
+              </div>
+
               <div
                 className={styles.helper}
                 style={{ color: checks.minLength ? 'green' : 'red' }}
